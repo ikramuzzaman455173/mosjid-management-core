@@ -11,3 +11,20 @@ VITE_SUPABASE_URL="https://gdikhcwqtvxqohtfseei.supabase.co"
 # Keep-alive cron secret
 CRON_SECRET="my_secure_cron_secret_baytul_789"
 VITE_CRON_SECRET="my_secure_cron_secret_baytul_789"
+
+
+
+
+roles-permissions
+
+
+form onsumbit not working.
+Date picker default use kora jabe na.
+Time picker default use kora jabe na.
+lebel and input field gulu lage gase.
+metting a a current local / online ta add kora jate pare.
+input required field red * sign hobe.
+mobile screen modal margin left-right space add korte hobe.
+mobile form inptu field 2colum use kortase oita 1column hobe.
+pagination page no missing .
+table colum title ta bold kore dite hobe.
