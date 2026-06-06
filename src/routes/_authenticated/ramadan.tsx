@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Moon, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/ramadan")({
   component: RamadanPage,
@@ -47,6 +49,8 @@ const empty = {
 function RamadanPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("ramadan.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Donation | null>(null);
@@ -115,13 +119,17 @@ function RamadanPage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
-          donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
-          donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Ramadan" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
+            donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
+            donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Ramadan" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -132,8 +140,8 @@ function RamadanPage() {
         icon={Moon}
         title={lang === "bn" ? "রমজান ও ফিতরা" : "Ramadan & Fitra"}
         subtitle={`${t("total")} ${lang === "bn" ? "সংগ্রহ" : "Collection"}: ${fmtCurrency(total, lang)}`}
-        actionLabel={lang === "bn" ? "নতুন এন্ট্রি" : "New Entry"}
-        onAction={() => { setEditing(null); setForm(empty); setOpen(true); }}
+        actionLabel={canCreate ? (lang === "bn" ? "নতুন এন্ট্রি" : "New Entry") : undefined}
+        onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

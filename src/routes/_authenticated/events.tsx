@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar, Pencil, Trash2, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/events")({
   component: EventsPage,
@@ -38,6 +40,8 @@ const empty = {
 function EventsPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("events.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<EventRow | null>(null);
@@ -95,13 +99,17 @@ function EventsPage() {
     { key: "type", header: t("type"), cell: (e) => e.event_type ?? "—" },
     { key: "act", header: t("actions"), className: "text-right", cell: (e) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
-          title: e.title, description: e.description ?? "", location: e.location ?? "",
-          event_type: e.event_type ?? "general", event_date: e.event_date.slice(0, 16),
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Events" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
+            title: e.title, description: e.description ?? "", location: e.location ?? "",
+            event_type: e.event_type ?? "general", event_date: e.event_date.slice(0, 16),
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Events" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -109,7 +117,7 @@ function EventsPage() {
   return (
     <div className="space-y-4">
       <PageHeader icon={Calendar} title={t("events")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি ইভেন্ট" : "events"}`}
-        actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+        actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "location"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-2 gap-3">

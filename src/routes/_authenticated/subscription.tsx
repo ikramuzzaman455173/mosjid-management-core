@@ -16,6 +16,8 @@ import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { PrintableReceipt, type ReceiptData } from "@/components/printable-receipt";
 import { sendSms } from "@/lib/sms";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/subscription")({
   component: SubscriptionPage,
@@ -156,10 +158,12 @@ function SubscriptionPage() {
             ))}
           </div>
         </div>
-        <Button variant="outline" className="text-destructive border-destructive hover:bg-destructive/10" onClick={confirmSendDueAlerts} disabled={sendingAlerts}>
-          {sendingAlerts ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Bell className="w-4 h-4 mr-2" />}
-          {lang === "bn" ? "বকেয়া SMS পাঠান" : "Send Due Alerts"}
-        </Button>
+        <PermissionGuard module="Monthly Chanda" action="Create" fallback={<></>}>
+          <Button variant="outline" className="text-destructive border-destructive hover:bg-destructive/10" onClick={confirmSendDueAlerts} disabled={sendingAlerts}>
+            {sendingAlerts ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Bell className="w-4 h-4 mr-2" />}
+            {lang === "bn" ? "বকেয়া SMS পাঠান" : "Send Due Alerts"}
+          </Button>
+        </PermissionGuard>
       </Card>
       <Card className="overflow-x-auto shadow-card">
         <table className="w-full text-sm">
@@ -208,9 +212,11 @@ function SubscriptionPage() {
                           <Printer className="w-4 h-4" />
                         </Button>
                       )}
-                      <Button size="sm" className="bg-primary h-9" onClick={() => openCollectDialog(m, amt)}>
-                        {lang === "bn" ? "আদায়" : "Collect"}
-                      </Button>
+                      <PermissionGuard module="Monthly Chanda" action="Create" fallback={<></>}>
+                        <Button size="sm" className="bg-primary h-9" onClick={() => openCollectDialog(m, amt)}>
+                          {lang === "bn" ? "আদায়" : "Collect"}
+                        </Button>
+                      </PermissionGuard>
                     </div>
                   </td>
                 </tr>

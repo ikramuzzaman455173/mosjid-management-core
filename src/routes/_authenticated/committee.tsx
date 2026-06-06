@@ -17,6 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Pencil, Trash2, ExternalLink, Plus, ThumbsUp, ThumbsDown, Minus } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/committee")({ component: CommitteePage });
 
@@ -29,6 +31,8 @@ const empty = { name: "", tenure_start: new Date().toISOString().slice(0, 10), t
 function CommitteePage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("committee.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Committee | null>(null);
@@ -67,15 +71,19 @@ function CommitteePage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (c) => (
       <div className="flex gap-1 justify-end">
         <Button size="icon" variant="ghost" onClick={() => setDetail(c)}><ExternalLink className="w-4 h-4 text-primary" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(c); setForm({ name: c.name, tenure_start: c.tenure_start, tenure_end: c.tenure_end ?? "", status: c.status, description: c.description ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(c.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        <PermissionGuard module="Committee" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(c); setForm({ name: c.name, tenure_start: c.tenure_start, tenure_end: c.tenure_end ?? "", status: c.status, description: c.description ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(c.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        </PermissionGuard>
       </div>
     )},
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={ShieldCheck} title={t("committee")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি কমিটি" : "committees"}`} actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+      <PageHeader icon={ShieldCheck} title={t("committee")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি কমিটি" : "committees"}`} actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["name"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
@@ -179,7 +187,9 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
             <TabsTrigger value="res">{t("resolutions")}</TabsTrigger>
           </TabsList>
           <TabsContent value="members" className="space-y-3 pt-3">
-            <div className="flex justify-end"><Button size="sm" onClick={() => setMemberOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add_member")}</Button></div>
+            <PermissionGuard module="Committee" action="Create" fallback={<></>}>
+              <div className="flex justify-end"><Button size="sm" onClick={() => setMemberOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add_member")}</Button></div>
+            </PermissionGuard>
             <div className="space-y-1">
               {cmembers?.length ? cmembers.map((cm: any) => (
                 <div key={cm.id} className="flex items-center gap-2 p-2 border rounded-md text-sm">
@@ -187,13 +197,17 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
                     <div className="font-medium">{cm.members?.full_name}</div>
                     <div className="text-xs text-muted-foreground">{t(cm.position)}</div>
                   </div>
-                  <Button size="icon" variant="ghost" onClick={() => delCM.mutate(cm.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                  <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
+                    <Button size="icon" variant="ghost" onClick={() => delCM.mutate(cm.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                  </PermissionGuard>
                 </div>
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
             </div>
           </TabsContent>
           <TabsContent value="res" className="space-y-3 pt-3">
-            <div className="flex justify-end"><Button size="sm" onClick={() => setResOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add")}</Button></div>
+            <PermissionGuard module="Committee" action="Create" fallback={<></>}>
+              <div className="flex justify-end"><Button size="sm" onClick={() => setResOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add")}</Button></div>
+            </PermissionGuard>
             <div className="space-y-2">
               {resolutions?.length ? resolutions.map((r: any) => (
                 <div key={r.id} className="p-3 border rounded-md">
@@ -203,8 +217,12 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
                       <div className="text-xs text-muted-foreground mb-1">{fmtDate(r.resolution_date, lang)} • <Badge variant="outline">{t(r.status)}</Badge></div>
                       {r.content && <p className="text-sm text-muted-foreground whitespace-pre-wrap">{r.content}</p>}
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => setVoteOn(r.id)}>{t("vote")}</Button>
-                    <Button size="icon" variant="ghost" onClick={() => delRes.mutate(r.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                    <PermissionGuard module="Committee" action="Edit" fallback={<></>}>
+                      <Button size="sm" variant="outline" onClick={() => setVoteOn(r.id)}>{t("vote")}</Button>
+                    </PermissionGuard>
+                    <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
+                      <Button size="icon" variant="ghost" onClick={() => delRes.mutate(r.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                    </PermissionGuard>
                   </div>
                 </div>
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
@@ -297,9 +315,13 @@ function VoteDialog({ resolutionId, members, onClose }: { resolutionId: string; 
                   <div className="font-medium">{cm.members?.full_name}</div>
                   <div className="text-xs text-muted-foreground">{t(cm.position)}</div>
                 </div>
-                <Button size="sm" variant={v === "yes" ? "default" : "outline"} className={v === "yes" ? "bg-success hover:bg-success/90" : ""} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "yes" })}><ThumbsUp className="w-3 h-3" /></Button>
-                <Button size="sm" variant={v === "no" ? "default" : "outline"} className={v === "no" ? "bg-destructive hover:bg-destructive/90" : ""} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "no" })}><ThumbsDown className="w-3 h-3" /></Button>
-                <Button size="sm" variant={v === "abstain" ? "default" : "outline"} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "abstain" })}><Minus className="w-3 h-3" /></Button>
+                <PermissionGuard module="Committee" action="Edit" fallback={<></>}>
+                  <div className="flex gap-1">
+                    <Button size="sm" variant={v === "yes" ? "default" : "outline"} className={v === "yes" ? "bg-success hover:bg-success/90" : ""} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "yes" })}><ThumbsUp className="w-3 h-3" /></Button>
+                    <Button size="sm" variant={v === "no" ? "default" : "outline"} className={v === "no" ? "bg-destructive hover:bg-destructive/90" : ""} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "no" })}><ThumbsDown className="w-3 h-3" /></Button>
+                    <Button size="sm" variant={v === "abstain" ? "default" : "outline"} onClick={() => vote.mutate({ member_id: cm.member_id, choice: "abstain" })}><Minus className="w-3 h-3" /></Button>
+                  </div>
+                </PermissionGuard>
               </div>
             );
           }) : <p className="text-sm text-muted-foreground text-center py-4">{lang === "bn" ? "প্রথমে কমিটি সদস্য যোগ করুন" : "Add committee members first"}</p>}

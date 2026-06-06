@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Clock } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/prayer-times")({
   component: PrayerPage,
@@ -27,6 +29,8 @@ const SLOTS = [
 function PrayerPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("prayer schedule.create");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
 
   const { data: existing } = useQuery({
@@ -75,9 +79,11 @@ function PrayerPage() {
             </div>
           ))}
         </div>
-        <Button className="mt-4 bg-primary" onClick={() => save.mutate()} disabled={save.isPending}>
-          {save.isPending ? t("saving") : t("save")}
-        </Button>
+        <PermissionGuard module="Prayer Schedule" action="Edit" fallback={<></>}>
+          <Button className="mt-4 bg-primary" onClick={() => save.mutate()} disabled={save.isPending}>
+            {save.isPending ? t("saving") : t("save")}
+          </Button>
+        </PermissionGuard>
       </Card>
 
       <Card className="p-4">

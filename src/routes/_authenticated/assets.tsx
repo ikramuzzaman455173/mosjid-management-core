@@ -17,6 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Building2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/assets")({ component: AssetsPage });
 
@@ -27,6 +29,8 @@ const empty = { name: "", category: "general", purchase_date: "", purchase_price
 function AssetsPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("assets.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Asset | null>(null);
@@ -75,15 +79,19 @@ function AssetsPage() {
     { key: "cv", header: t("current_value"), cell: (a) => <span className="font-medium text-primary">{fmtCurrency(Number(a.current_value ?? 0), lang)}</span> },
     { key: "act", header: t("actions"), className: "text-right", cell: (a) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, category: a.category, purchase_date: a.purchase_date ?? "", purchase_price: Number(a.purchase_price ?? 0), current_value: Number(a.current_value ?? 0), condition: a.condition, location: a.location ?? "", photo_url: a.photo_url ?? "", notes: a.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        <PermissionGuard module="Assets" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, category: a.category, purchase_date: a.purchase_date ?? "", purchase_price: Number(a.purchase_price ?? 0), current_value: Number(a.current_value ?? 0), condition: a.condition, location: a.location ?? "", photo_url: a.photo_url ?? "", notes: a.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Assets" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        </PermissionGuard>
       </div>
     )},
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Building2} title={t("assets")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি সম্পদ" : "assets"}`} actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+      <PageHeader icon={Building2} title={t("assets")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি সম্পদ" : "assets"}`} actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Card className="p-4"><p className="text-xs text-muted-foreground">{lang === "bn" ? "মোট সম্পদ" : "Total assets"}</p><p className="text-2xl font-bold text-primary">{data?.length ?? 0}</p></Card>

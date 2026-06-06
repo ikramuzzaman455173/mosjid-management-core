@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Image as ImageIcon, Plus, Trash2, Loader2, UploadCloud, Video, Youtube } from "lucide-react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/gallery")({
   component: GalleryPage,
@@ -23,6 +25,8 @@ export const Route = createFileRoute("/_authenticated/gallery")({
 function GalleryPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("gallery.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
@@ -119,8 +123,8 @@ function GalleryPage() {
         icon={ImageIcon}
         title={lang === "bn" ? "গ্যালারি" : "Gallery"}
         subtitle={`${images?.length ?? 0} ${lang === "bn" ? "টি ছবি" : "photos"}`}
-        actionLabel={lang === "bn" ? "ছবি আপলোড" : "Upload Photo"}
-        onAction={() => setOpen(true)}
+        actionLabel={canCreate ? (lang === "bn" ? "ছবি আপলোড" : "Upload Photo") : undefined}
+        onAction={canCreate ? () => setOpen(true) : undefined}
       />
 
       {isLoading ? (
@@ -149,14 +153,16 @@ function GalleryPage() {
                   <h4 className="text-white font-medium text-sm truncate">{img.title ?? "Untitled"}</h4>
                   <p className="text-white/70 text-xs truncate">{fmtDate(img.created_at, lang)}</p>
                 </div>
-                <Button 
-                  size="icon" 
-                  variant="destructive" 
-                  className="absolute top-2 right-2 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => setDeleteId(img)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <PermissionGuard module="Gallery" action="Delete" fallback={<></>}>
+                  <Button 
+                    size="icon" 
+                    variant="destructive" 
+                    className="absolute top-2 right-2 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => setDeleteId(img)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </PermissionGuard>
                 {img.category && (
                   <Badge variant="secondary" className="absolute top-2 left-2 bg-background/80 backdrop-blur-sm shadow-sm pointer-events-none">
                     {img.category}

@@ -365,11 +365,13 @@ function RolesPermissionsPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{lang === "bn" ? "ভূমিকা সমূহ" : "All Roles"}</h2>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-              <DialogTrigger asChild>
-                <Button size="icon" variant="outline" className="h-8 w-8 rounded-full bg-primary/5 border-primary/20 text-primary hover:bg-primary/10">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </DialogTrigger>
+              <PermissionGuard module="Role & Permission" action="Create" fallback={<></>}>
+                <DialogTrigger asChild>
+                  <Button size="icon" variant="outline" className="h-8 w-8 rounded-full bg-primary/5 border-primary/20 text-primary hover:bg-primary/10">
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </DialogTrigger>
+              </PermissionGuard>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>{lang === "bn" ? "নতুন রোল তৈরি" : "Create New Role"}</DialogTitle>
@@ -466,11 +468,13 @@ function RolesPermissionsPage() {
                   {!selectedRole?.is_system && selectedRole && (
                     <>
                       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" onClick={openEditDialog} className="hover:bg-primary/5 hover:text-primary border-primary/20">
-                            <Edit2 className="w-4 h-4 mr-2" /> {lang === "bn" ? "এডিট" : "Edit"}
-                          </Button>
-                        </DialogTrigger>
+                        <PermissionGuard module="Role & Permission" action="Edit" fallback={<></>}>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" onClick={openEditDialog} className="hover:bg-primary/5 hover:text-primary border-primary/20">
+                              <Edit2 className="w-4 h-4 mr-2" /> {lang === "bn" ? "এডিট" : "Edit"}
+                            </Button>
+                          </DialogTrigger>
+                        </PermissionGuard>
                         <DialogContent>
                           <DialogHeader>
                             <DialogTitle>{lang === "bn" ? "রোল আপডেট" : "Update Role"}</DialogTitle>
@@ -503,23 +507,27 @@ function RolesPermissionsPage() {
                         </DialogContent>
                       </Dialog>
 
-                      <Button variant="outline" size="sm" onClick={() => setRoleToDelete(selectedRole)} className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
-                        <Trash2 className="w-4 h-4 mr-2" /> {lang === "bn" ? "ডিলিট" : "Delete"}
-                      </Button>
+                      <PermissionGuard module="Role & Permission" action="Delete" fallback={<></>}>
+                        <Button variant="outline" size="sm" onClick={() => setRoleToDelete(selectedRole)} className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+                          <Trash2 className="w-4 h-4 mr-2" /> {lang === "bn" ? "ডিলিট" : "Delete"}
+                        </Button>
+                      </PermissionGuard>
                     </>
                   )}
-                <Button 
-                  onClick={handleSave} 
-                  disabled={!hasChanges || isSuper || savePermsMutation.isPending}
-                  className={cn("shadow-sm transition-all", hasChanges ? "bg-primary animate-in fade-in zoom-in" : "opacity-50")}
-                >
-                  {savePermsMutation.isPending ? "Saving..." : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
-                      {lang === "bn" ? "সংরক্ষণ করুন" : "Save Changes"}
-                    </>
-                  )}
-                </Button>
+                <PermissionGuard module="Role & Permission" action="Edit" fallback={<></>}>
+                  <Button 
+                    onClick={handleSave} 
+                    disabled={!hasChanges || isSuper || savePermsMutation.isPending}
+                    className={cn("shadow-sm transition-all", hasChanges ? "bg-primary animate-in fade-in zoom-in" : "opacity-50")}
+                  >
+                    {savePermsMutation.isPending ? "Saving..." : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        {lang === "bn" ? "সংরক্ষণ করুন" : "Save Changes"}
+                      </>
+                    )}
+                  </Button>
+                </PermissionGuard>
               </div>
            </div>
            
