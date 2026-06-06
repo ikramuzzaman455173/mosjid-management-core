@@ -144,10 +144,10 @@ export function AppSidebar() {
         )}
       </SidebarHeader>
 
-      <SidebarContent className="overflow-auto">
+      <SidebarContent className="overflow-auto gap-0">
         {filteredGroups.map((grp) => (
-          <SidebarGroup key={grp.label} className={cn(collapsed ? "p-1" : "p-2")}>
-            {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-2">{grp.label}</SidebarGroupLabel>}
+          <SidebarGroup key={grp.label} className={cn(collapsed ? "p-1" : "px-2 py-1")}>
+            {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-2 py-1">{grp.label}</SidebarGroupLabel>}
             <SidebarGroupContent>
               <SidebarMenu>
                 {grp.items.map((item) => {
