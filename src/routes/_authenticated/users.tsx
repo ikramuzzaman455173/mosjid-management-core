@@ -44,8 +44,8 @@ function UsersPage() {
     queryFn: async () => {
       const [profiles, userRoles, rolesData] = await Promise.all([
         supabase.from("profiles").select("*"),
-        supabase.from("user_roles").select("*"),
-        supabase.from("roles").select("*"),
+        supabase.from("user_roles" as any).select("*"),
+        supabase.from("roles" as any).select("*"),
       ]);
       return (profiles.data ?? []).map((p: any) => {
         const userRoleIds = (userRoles.data ?? []).filter((r: any) => r.user_id === p.id).map((r: any) => r.role_id);
@@ -101,19 +101,19 @@ function UsersPage() {
       // Sync roles properly to avoid losing admin rights instantly
       // ❌ Block role change for protected super admin
       if (userId !== PROTECTED_SUPER_ADMIN_ID) {
-        const { data: currentRoles } = await supabase.from("user_roles").select("role_id").eq("user_id", userId as string);
+        const { data: currentRoles } = await supabase.from("user_roles" as any).select("role_id").eq("user_id", userId as string);
         const existingRoles = currentRoles?.map(r => r.role_id) || [];
         
         const rolesToAdd = roles.filter(r => !(existingRoles as string[]).includes(r));
         const rolesToRemove = existingRoles.filter(r => !roles.includes(r));
 
         if (rolesToRemove.length > 0) {
-          const { error } = await supabase.from("user_roles").delete().eq("user_id", userId as string).in("role_id", rolesToRemove);
+          const { error } = await supabase.from("user_roles" as any).delete().eq("user_id", userId as string).in("role_id", rolesToRemove);
           if (error) throw error;
         }
         if (rolesToAdd.length > 0) {
           const inserts = rolesToAdd.map(r => ({ user_id: userId as string, role_id: r }));
-          const { error } = await supabase.from("user_roles").insert(inserts);
+          const { error } = await supabase.from("user_roles" as any).insert(inserts);
           if (error) throw error;
         }
       }
@@ -141,7 +141,7 @@ function UsersPage() {
             : "The default super admin cannot be deleted."
         );
       }
-      await supabase.from("user_roles").delete().eq("user_id", id);
+      await supabase.from("user_roles" as any).delete().eq("user_id", id);
       const { error } = await supabase.from("profiles").delete().eq("id", id);
       if (error) throw error;
     },

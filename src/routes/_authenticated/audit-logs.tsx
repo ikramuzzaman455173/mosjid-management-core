@@ -32,7 +32,7 @@ function AuditLogsPage() {
   const { data: roleMap } = useQuery({
     queryKey: ["user_roles_map"],
     queryFn: async () => {
-      const { data } = await supabase.from("user_roles").select("user_id, role");
+      const { data } = await supabase.from("user_roles" as any).select("user_id, role");
       const m: Record<string, string[]> = {};
       data?.forEach((r: any) => { (m[r.user_id] ??= []).push(r.role); });
       return m;

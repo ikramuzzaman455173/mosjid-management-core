@@ -14,7 +14,7 @@ export function usePermissions() {
 
       // 1. Get user's roles
       const { data: userRoles, error: rolesError } = await supabase
-        .from("user_roles")
+        .from("user_roles" as any)
         .select(`
           role_id,
           roles (
@@ -39,7 +39,7 @@ export function usePermissions() {
       // 2. Get permissions for those roles
       if (roleIds.length > 0) {
         const { data: perms, error: permsError } = await supabase
-          .from("role_permissions")
+          .from("role_permissions" as any)
           .select(`
             permissions (
               module,
@@ -51,7 +51,13 @@ export function usePermissions() {
         if (!permsError && perms) {
           perms.forEach((rp: any) => {
             const p = rp.permissions;
-            if (p && p.module && p.action) {
+            if (Array.isArray(p)) {
+              p.forEach((px: any) => {
+                if (px && px.module && px.action) {
+                  permSet.add(`${px.module}.${px.action}`);
+                }
+              });
+            } else if (p && p.module && p.action) {
               permSet.add(`${p.module}.${p.action}`);
             }
           });

@@ -25,6 +25,36 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { useRouterState } from "@tanstack/react-router";
+
+const routePermissions: Record<string, { module: string; action: string }> = {
+  "/dashboard": { module: "Dashboard", action: "View" },
+  "/members": { module: "Members", action: "View" },
+  "/subscription": { module: "Monthly Chanda", action: "View" },
+  "/donations": { module: "Donations & Zakat", action: "View" },
+  "/income": { module: "Income & Expense", action: "View" },
+  "/expenses": { module: "Income & Expense", action: "View" },
+  "/cash": { module: "Cash Management", action: "View" },
+  "/bank": { module: "Bank & Mobile Banking", action: "View" },
+  "/mobile-banking": { module: "Bank & Mobile Banking", action: "View" },
+  "/assets": { module: "Assets", action: "View" },
+  "/inventory": { module: "Inventory", action: "View" },
+  "/meetings": { module: "Meetings", action: "View" },
+  "/committee": { module: "Members", action: "View" },
+  "/notices": { module: "Notice Board", action: "View" },
+  "/prayer-times": { module: "Prayer Schedule", action: "View" },
+  "/events": { module: "Events", action: "View" },
+  "/zakat": { module: "Donations & Zakat", action: "View" },
+  "/qurbani": { module: "Qurbani", action: "View" },
+  "/ramadan": { module: "Ramadan", action: "View" },
+  "/gallery": { module: "Gallery", action: "View" },
+  "/reports": { module: "Reports", action: "View" },
+  "/users": { module: "User Management", action: "View" },
+  "/roles-permissions": { module: "Role & Permission", action: "View" },
+  "/audit-logs": { module: "Audit Logs", action: "View" },
+  "/settings": { module: "Settings", action: "View" },
+};
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -100,6 +130,12 @@ function Layout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [openCommand, setOpenCommand] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // Find required permissions based on pathname matching a known route prefix
+  const requiredPermission = Object.entries(routePermissions).find(([path]) => 
+    pathname === path || pathname.startsWith(path + "/")
+  )?.[1];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -166,7 +202,13 @@ function Layout() {
             </DropdownMenu>
           </header>
           <main className="flex-1 p-4 md:p-6">
-            <Outlet />
+            {requiredPermission ? (
+              <PermissionGuard module={requiredPermission.module} action={requiredPermission.action} fallbackType="page">
+                <Outlet />
+              </PermissionGuard>
+            ) : (
+              <Outlet />
+            )}
           </main>
         </div>
       </div>
