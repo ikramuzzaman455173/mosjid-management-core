@@ -51,7 +51,8 @@ function UsersPage() {
       ]);
       return (profiles.data ?? []).map((p: any) => {
         const userRoleIds = (userRoles.data ?? []).filter((r: any) => r.user_id === p.id).map((r: any) => r.role_id);
-        const roleNames = userRoleIds.map(rId => rolesData.data?.find((role: any) => role.id === rId)?.name).filter(Boolean);
+        const roleList = (rolesData.data as any[]) ?? [];
+        const roleNames = userRoleIds.map(rId => roleList.find((role: any) => role.id === rId)?.name).filter(Boolean);
         return {
           ...p,
           roleIds: userRoleIds,
@@ -104,7 +105,7 @@ function UsersPage() {
       // ❌ Block role change for protected super admin
       if (userId !== PROTECTED_SUPER_ADMIN_ID) {
         const { data: currentRoles } = await supabase.from("user_roles" as any).select("role_id").eq("user_id", userId as string);
-        const existingRoles = currentRoles?.map(r => r.role_id) || [];
+        const existingRoles = (currentRoles as any[])?.map(r => r.role_id) || [];
         
         const rolesToAdd = roles.filter(r => !(existingRoles as string[]).includes(r));
         const rolesToRemove = existingRoles.filter(r => !roles.includes(r));
