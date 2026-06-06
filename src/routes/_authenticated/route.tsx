@@ -27,6 +27,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useRouterState } from "@tanstack/react-router";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const routePermissions: Record<string, { module: string; action: string }> = {
   "/dashboard": { module: "Dashboard", action: "View" },
@@ -131,6 +132,19 @@ function Layout() {
   const navigate = useNavigate();
   const [openCommand, setOpenCommand] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { data: permData, isLoading: permLoading } = usePermissions();
+
+  const filteredGroups = groups.map(grp => ({
+    ...grp,
+    items: grp.items.filter(item => {
+      if (permLoading) return true;
+      if (permData?.isSuperAdmin) return true;
+      const permInfo = routePermissions[item.url];
+      if (!permInfo) return true;
+      const requiredPerm = `${permInfo.module.toLowerCase()}.view`;
+      return permData?.permissions?.has(requiredPerm) ?? false;
+    })
+  })).filter(grp => grp.items.length > 0);
 
   // Find required permissions based on pathname matching a known route prefix
   const requiredPermission = Object.entries(routePermissions).find(([path]) => 
@@ -217,7 +231,7 @@ function Layout() {
         <CommandInput placeholder={lang === "bn" ? "মেনু খুঁজুন..." : "Search menu..."} />
         <CommandList>
           <CommandEmpty>{lang === "bn" ? "কোনো ফলাফল পাওয়া যায়নি" : "No results found"}</CommandEmpty>
-          {groups.map((grp) => (
+          {filteredGroups.map((grp) => (
             <CommandGroup key={grp.label} heading={grp.label}>
               {grp.items.map((item) => (
                 <CommandItem

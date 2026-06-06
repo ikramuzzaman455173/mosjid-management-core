@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useI18n, type DictKey } from "@/lib/i18n";
 
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Item = { key: DictKey; url: string; icon: any; module: string };
 
@@ -83,16 +84,25 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { data: permData, isLoading } = usePermissions();
 
   // We are not capturing Cmd+K in the sidebar anymore, we will leave it for the global search.
   // The sidebar search is just a local filter now.
 
   const filteredGroups = groups.map(grp => ({
     ...grp,
-    items: grp.items.filter(item => 
-      t(item.key).toLowerCase().includes(searchQuery.toLowerCase()) || 
-      item.key.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    items: grp.items.filter(item => {
+      // 1. Text filter
+      const matchesSearch = t(item.key).toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.key.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
+
+      // 2. Permission filter
+      if (isLoading) return true; // Prevent layout shift while loading
+      if (permData?.isSuperAdmin) return true;
+      const requiredPerm = `${item.module.toLowerCase()}.view`;
+      return permData?.permissions?.has(requiredPerm) ?? false;
+    })
   })).filter(grp => grp.items.length > 0);
 
   return (
