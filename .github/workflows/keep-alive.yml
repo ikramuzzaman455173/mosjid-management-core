@@ -11,34 +11,38 @@ jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Keep-Alive API
+      - name: Ping Supabase Directly
         env:
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          API_URL: ${{ secrets.PRODUCTION_API_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          if [ -z "$API_URL" ]; then
-            echo "Error: PRODUCTION_API_URL secret is not set."
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "Error: SUPABASE_URL secret is not set."
             exit 1
           fi
           
-          if [ -z "$CRON_SECRET" ]; then
-            echo "Error: CRON_SECRET secret is not set."
+          if [ -z "$SUPABASE_KEY" ]; then
+            echo "Error: SUPABASE_KEY secret is not set."
             exit 1
           fi
 
-          # Hit the API endpoint
-          echo "Sending keep-alive request to $API_URL/api/cron/supabase-keep-alive..."
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Sending keep-alive request to Supabase directly..."
           
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$API_URL/api/cron/supabase-keep-alive" \
-            -H "x-cron-secret: $CRON_SECRET")
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH "$SUPABASE_URL/rest/v1/app_health_checks?serviceName=eq.main" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d "{\"status\": \"active\", \"lastCheckedAt\": \"$NOW\", \"updatedAt\": \"$NOW\"}")
             
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
           
           echo "Status Code: $HTTP_STATUS"
-          echo "Response Body: $BODY"
           
-          if [ "$HTTP_STATUS" -ne 200 ]; then
+          if [ "$HTTP_STATUS" -ne 200 ] && [ "$HTTP_STATUS" -ne 204 ]; then
             echo "Failed with status $HTTP_STATUS"
+            echo "Response: $RESPONSE"
             exit 1
           fi
+          echo "Successfully pinged Supabase."

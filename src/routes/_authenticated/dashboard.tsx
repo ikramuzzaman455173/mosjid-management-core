@@ -24,22 +24,22 @@ function Dashboard() {
   const [isTestingCron, setIsTestingCron] = useState(false);
 
   const handleTestCron = async () => {
-    const secret = import.meta.env.VITE_CRON_SECRET || window.prompt("Enter CRON_SECRET to test:");
-    if (!secret) return;
-
     setIsTestingCron(true);
     try {
-      const res = await fetch("/api/cron/supabase-keep-alive", {
-        headers: { "x-cron-secret": secret }
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok) {
-        toast.success("Cron test successful!");
-      } else {
-        toast.error(`Cron test failed: ${data.error || 'Unknown error'}`);
-      }
+      const now = new Date().toISOString();
+      const { error } = await supabase
+        .from('app_health_checks' as any)
+        .update({
+          status: 'active',
+          lastCheckedAt: now,
+          updatedAt: now
+        } as any)
+        .eq('serviceName', 'main');
+
+      if (error) throw error;
+      toast.success("Cron test successful!");
     } catch (error: any) {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Cron test failed: ${error.message}`);
     } finally {
       setIsTestingCron(false);
     }
