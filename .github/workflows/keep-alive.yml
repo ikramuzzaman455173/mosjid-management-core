@@ -1,0 +1,44 @@
+name: Supabase Keep-Alive Cron
+
+on:
+  schedule:
+    # Runs at 00:00 every 2 days
+    - cron: '0 0 */2 * *'
+  workflow_dispatch:
+    # Allows manual triggering from the GitHub Actions tab
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Keep-Alive API
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          API_URL: ${{ secrets.PRODUCTION_API_URL }}
+        run: |
+          if [ -z "$API_URL" ]; then
+            echo "Error: PRODUCTION_API_URL secret is not set."
+            exit 1
+          fi
+          
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Error: CRON_SECRET secret is not set."
+            exit 1
+          fi
+
+          # Hit the API endpoint
+          echo "Sending keep-alive request to $API_URL/api/cron/supabase-keep-alive..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "$API_URL/api/cron/supabase-keep-alive" \
+            -H "x-cron-secret: $CRON_SECRET")
+            
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "Status Code: $HTTP_STATUS"
+          echo "Response Body: $BODY"
+          
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Failed with status $HTTP_STATUS"
+            exit 1
+          fi
