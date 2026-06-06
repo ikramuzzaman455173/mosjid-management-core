@@ -28,7 +28,12 @@ export function usePermissions() {
         return { permissions: new Set<string>(), roles: [], isAdmin: false };
       }
 
-      const roles = (userRoles || []).map((ur: any) => ur.roles?.name).filter(Boolean) as string[];
+      const roles = (userRoles || []).flatMap((ur: any) => {
+        if (Array.isArray(ur.roles)) {
+          return ur.roles.map((r: any) => r.name);
+        }
+        return ur.roles?.name ? [ur.roles.name] : [];
+      }).filter(Boolean) as string[];
       const roleIds = (userRoles || []).map((ur: any) => ur.role_id).filter(Boolean) as string[];
       
       const isAdmin = roles.includes("super_admin") || roles.includes("mosque_admin");
