@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyQrTokenRouteImport } from './routes/verify.$qrToken'
 import { Route as AuthenticatedZakatRouteImport } from './routes/_authenticated/zakat'
+import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -61,6 +62,11 @@ const VerifyQrTokenRoute = VerifyQrTokenRouteImport.update({
 const AuthenticatedZakatRoute = AuthenticatedZakatRouteImport.update({
   id: '/zakat',
   path: '/zakat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedWelcomeRoute = AuthenticatedWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/users': typeof AuthenticatedUsersRoute
+  '/welcome': typeof AuthenticatedWelcomeRoute
   '/zakat': typeof AuthenticatedZakatRoute
   '/verify/$qrToken': typeof VerifyQrTokenRoute
 }
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/users': typeof AuthenticatedUsersRoute
+  '/welcome': typeof AuthenticatedWelcomeRoute
   '/zakat': typeof AuthenticatedZakatRoute
   '/verify/$qrToken': typeof VerifyQrTokenRoute
 }
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
   '/_authenticated/users': typeof AuthenticatedUsersRoute
+  '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/_authenticated/zakat': typeof AuthenticatedZakatRoute
   '/verify/$qrToken': typeof VerifyQrTokenRoute
 }
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/subscription'
     | '/users'
+    | '/welcome'
     | '/zakat'
     | '/verify/$qrToken'
   fileRoutesByTo: FileRoutesByTo
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/subscription'
     | '/users'
+    | '/welcome'
     | '/zakat'
     | '/verify/$qrToken'
   id:
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
     | '/_authenticated/users'
+    | '/_authenticated/welcome'
     | '/_authenticated/zakat'
     | '/verify/$qrToken'
   fileRoutesById: FileRoutesById
@@ -416,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/zakat'
       fullPath: '/zakat'
       preLoaderRoute: typeof AuthenticatedZakatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/welcome': {
+      id: '/_authenticated/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof AuthenticatedWelcomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/users': {
@@ -614,6 +633,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSubscriptionRoute: typeof AuthenticatedSubscriptionRoute
   AuthenticatedUsersRoute: typeof AuthenticatedUsersRoute
+  AuthenticatedWelcomeRoute: typeof AuthenticatedWelcomeRoute
   AuthenticatedZakatRoute: typeof AuthenticatedZakatRoute
 }
 
@@ -642,6 +662,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSubscriptionRoute: AuthenticatedSubscriptionRoute,
   AuthenticatedUsersRoute: AuthenticatedUsersRoute,
+  AuthenticatedWelcomeRoute: AuthenticatedWelcomeRoute,
   AuthenticatedZakatRoute: AuthenticatedZakatRoute,
 }
 
