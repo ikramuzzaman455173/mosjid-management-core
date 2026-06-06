@@ -34,10 +34,12 @@ export function usePermissions() {
         }
         return ur.roles?.name ? [ur.roles.name] : [];
       }).filter(Boolean) as string[];
+      
+      const normalizedRoles = roles.map(r => r.toLowerCase().trim().replace(/ /g, "_"));
       const roleIds = (userRoles || []).map((ur: any) => ur.role_id).filter(Boolean) as string[];
       
-      const isAdmin = roles.includes("super_admin") || roles.includes("mosque_admin");
-      const isSuperAdmin = roles.includes("super_admin");
+      const isAdmin = normalizedRoles.includes("super_admin") || normalizedRoles.includes("mosque_admin");
+      const isSuperAdmin = normalizedRoles.includes("super_admin");
       
       const permSet = new Set<string>();
 
@@ -59,11 +61,11 @@ export function usePermissions() {
             if (Array.isArray(p)) {
               p.forEach((px: any) => {
                 if (px && px.module && px.action) {
-                  permSet.add(`${px.module}.${px.action}`);
+                  permSet.add(`${px.module.toLowerCase()}.${px.action.toLowerCase()}`);
                 }
               });
             } else if (p && p.module && p.action) {
-              permSet.add(`${p.module}.${p.action}`);
+              permSet.add(`${p.module.toLowerCase()}.${p.action.toLowerCase()}`);
             }
           });
         }

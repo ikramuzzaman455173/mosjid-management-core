@@ -39,7 +39,7 @@ export function PermissionGuard({
 
   // If no specific action is required, just checking if they have ANY permission for this module
   if (!action) {
-    const hasAnyModuleAccess = Array.from(data?.permissions || []).some(p => p.startsWith(`${module}.`));
+    const hasAnyModuleAccess = Array.from(data?.permissions || []).some(p => p.startsWith(`${module.toLowerCase()}.`));
     if (!hasAnyModuleAccess) {
       const defaultFallback = fallbackType === "page" ? <AccessDenied /> : null;
       const renderFallback = fallback !== undefined ? fallback : defaultFallback;
@@ -52,7 +52,7 @@ export function PermissionGuard({
   const renderFallback = fallback !== undefined ? fallback : defaultFallback;
 
   // Check specific module and action
-  const hasAccess = data?.permissions?.has(`${module}.${action}`);
+  const hasAccess = data?.permissions?.has(`${module.toLowerCase()}.${action.toLowerCase()}`);
 
   if (!hasAccess) {
     return <>{renderFallback}</>;
