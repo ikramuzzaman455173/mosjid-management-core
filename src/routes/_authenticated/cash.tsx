@@ -12,10 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wallet, Trash2, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 function AccountsByKind({ kind, icon, titleKey }: { kind: "cash" | "bank" | "mobile_banking"; icon: any; titleKey: any }) {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const moduleName = kind === "cash" ? "Cash Management" : "Bank & Mobile Banking";
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has(`${moduleName.toLowerCase()}.create`);
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<any>(null);
@@ -60,10 +65,14 @@ function AccountsByKind({ kind, icon, titleKey }: { kind: "cash" | "bank" | "mob
     { key: "bal", header: t("balance"), className: "text-right", cell: (a) => <span className="font-bold text-primary">{fmtCurrency(Number(a.current_balance ?? 0), lang)}</span> },
     { key: "act", header: t("actions"), className: "text-right", cell: (a) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, bank_name: a.bank_name ?? "", account_no: a.account_no ?? "", opening_balance: Number(a.opening_balance ?? 0) }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module={moduleName} action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, bank_name: a.bank_name ?? "", account_no: a.account_no ?? "", opening_balance: Number(a.opening_balance ?? 0) }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module={moduleName} action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -71,7 +80,7 @@ function AccountsByKind({ kind, icon, titleKey }: { kind: "cash" | "bank" | "mob
   return (
     <div className="space-y-4">
       <PageHeader icon={icon} title={t(titleKey)} subtitle={`${t("total")}: ${fmtCurrency(total, lang)}`}
-        actionLabel={t("add")} onAction={() => { setEditing(null); setForm({ name: "", bank_name: "", account_no: "", opening_balance: 0 }); setOpen(true); }} />
+        actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm({ name: "", bank_name: "", account_no: "", opening_balance: 0 }); setOpen(true); } : undefined} />
       <DataTable data={data as any[]} columns={columns} loading={isLoading} searchKeys={["name", "bank_name"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="space-y-3">

@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 import { TrendingUp, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -41,6 +43,8 @@ const empty = {
 function IncomePage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("income & expense.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Income | null>(null);
@@ -99,13 +103,17 @@ function IncomePage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (i) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({
-          category: i.category, source: i.source ?? "", amount: Number(i.amount), income_date: i.income_date ?? "",
-          account_id: i.account_id ?? "", notes: i.notes ?? "",
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Income & Expense" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({
+            category: i.category, source: i.source ?? "", amount: Number(i.amount), income_date: i.income_date ?? "",
+            account_id: i.account_id ?? "", notes: i.notes ?? "",
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Income & Expense" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -113,7 +121,7 @@ function IncomePage() {
   return (
     <div className="space-y-4">
       <PageHeader icon={TrendingUp} title={t("income")} subtitle={`${t("total")}: ${fmtCurrency(total, lang)}`}
-        actionLabel={t("new_entry")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+        actionLabel={canCreate ? t("new_entry") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["category", "source"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("new_entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-2 gap-3">

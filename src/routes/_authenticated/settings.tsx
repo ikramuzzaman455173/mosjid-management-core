@@ -13,6 +13,8 @@ import { useAuth } from "@/lib/auth-context";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useAppSettings } from "@/lib/use-app-settings";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 function SettingsPage() {
   const { t, lang, setLang } = useI18n();
@@ -143,111 +145,113 @@ function SettingsPage() {
         </div>
       </Card>
 
-      <Card className="p-6 shadow-card space-y-4">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600"><SettingsIcon className="w-5 h-5" /></div>
-          <div className="flex-1">
-            <h3 className="font-semibold mb-1">{lang === "bn" ? "সিস্টেম ডিফল্ট (System Defaults)" : "System Defaults"}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{lang === "bn" ? "যাকাত, ফিতরা এবং নামাজের ডিফল্ট মানগুলো সেট করুন" : "Set default values for Zakat, Fitra, and Prayers"}</p>
-            
-            {isLoaded && (
-              <div className="space-y-6">
-                
-                {/* Zakat */}
-                <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
-                  <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "যাকাত নিসাব (Zakat Nisab)" : "Zakat Nisab"}</h4>
-                  <div>
-                    <Label>{lang === "bn" ? "ডিফল্ট নিসাবের পরিমাণ" : "Default Nisab Value"}</Label>
-                    <Input 
-                      type="number" 
-                      value={settings.defaultNisab} 
-                      onChange={(e) => updateSettings({ defaultNisab: Number(e.target.value) })}
-                      className="max-w-[200px] mt-1" 
-                    />
-                  </div>
-                </div>
-
-                {/* Fitra */}
-                <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
-                  <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ফিতরা মূল্য (প্রতি কেজি)" : "Fitra Prices (per KG)"}</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <PermissionGuard module="Settings" action="View" fallback={<></>}>
+        <Card className="p-6 shadow-card space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600"><SettingsIcon className="w-5 h-5" /></div>
+            <div className="flex-1">
+              <h3 className="font-semibold mb-1">{lang === "bn" ? "সিস্টেম ডিফল্ট (System Defaults)" : "System Defaults"}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{lang === "bn" ? "যাকাত, ফিতরা এবং নামাজের ডিফল্ট মানগুলো সেট করুন" : "Set default values for Zakat, Fitra, and Prayers"}</p>
+              
+              {isLoaded && (
+                <div className="space-y-6">
+                  
+                  {/* Zakat */}
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "যাকাত নিসাব (Zakat Nisab)" : "Zakat Nisab"}</h4>
                     <div>
-                      <Label>{lang === "bn" ? "গম/আটা" : "Wheat"}</Label>
-                      <Input type="number" value={settings.fitraPrices.wheat} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, wheat: Number(e.target.value) }})} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>{lang === "bn" ? "যব" : "Barley"}</Label>
-                      <Input type="number" value={settings.fitraPrices.barley} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, barley: Number(e.target.value) }})} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>{lang === "bn" ? "কিশমিশ" : "Raisins"}</Label>
-                      <Input type="number" value={settings.fitraPrices.raisins} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, raisins: Number(e.target.value) }})} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>{lang === "bn" ? "খেজুর" : "Dates"}</Label>
-                      <Input type="number" value={settings.fitraPrices.dates} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, dates: Number(e.target.value) }})} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>{lang === "bn" ? "পনির" : "Cheese"}</Label>
-                      <Input type="number" value={settings.fitraPrices.cheese} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, cheese: Number(e.target.value) }})} className="mt-1" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Prayer */}
-                <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
-                  <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ইফতার ও সেহরি লোকেশন" : "Iftar & Sehri Location"}</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label>{lang === "bn" ? "শহর" : "City"}</Label>
-                      <Input value={settings.prayerCity} onChange={(e) => updateSettings({ prayerCity: e.target.value })} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>{lang === "bn" ? "দেশ" : "Country"}</Label>
-                      <Input value={settings.prayerCountry} onChange={(e) => updateSettings({ prayerCountry: e.target.value })} className="mt-1" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* SMS Provider Settings */}
-                <div className="space-y-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-4 h-4 text-primary" />
-                    <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "এসএমএস এপিআই (SMS API)" : "SMS API Settings"}</h4>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <Label>{lang === "bn" ? "এপিআই ইউআরএল (API URL)" : "API URL"}</Label>
+                      <Label>{lang === "bn" ? "ডিফল্ট নিসাবের পরিমাণ" : "Default Nisab Value"}</Label>
                       <Input 
-                        value={settings.smsApiUrl} 
-                        onChange={(e) => updateSettings({ smsApiUrl: e.target.value })} 
-                        className="mt-1"
-                        placeholder="http://api.greenweb.com.bd/api.php" 
+                        type="number" 
+                        value={settings.defaultNisab} 
+                        onChange={(e) => updateSettings({ defaultNisab: Number(e.target.value) })}
+                        className="max-w-[200px] mt-1" 
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                  </div>
+
+                  {/* Fitra */}
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ফিতরা মূল্য (প্রতি কেজি)" : "Fitra Prices (per KG)"}</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       <div>
-                        <Label>{lang === "bn" ? "এপিআই কি (Token/Key)" : "API Key/Token"}</Label>
-                        <Input type="password" value={settings.smsApiKey} onChange={(e) => updateSettings({ smsApiKey: e.target.value })} className="mt-1" />
+                        <Label>{lang === "bn" ? "গম/আটা" : "Wheat"}</Label>
+                        <Input type="number" value={settings.fitraPrices.wheat} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, wheat: Number(e.target.value) }})} className="mt-1" />
                       </div>
                       <div>
-                        <Label>{lang === "bn" ? "সেন্ডার আইডি (ঐচ্ছিক)" : "Sender ID (Optional)"}</Label>
-                        <Input value={settings.smsSenderId} onChange={(e) => updateSettings({ smsSenderId: e.target.value })} className="mt-1" />
+                        <Label>{lang === "bn" ? "যব" : "Barley"}</Label>
+                        <Input type="number" value={settings.fitraPrices.barley} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, barley: Number(e.target.value) }})} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>{lang === "bn" ? "কিশমিশ" : "Raisins"}</Label>
+                        <Input type="number" value={settings.fitraPrices.raisins} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, raisins: Number(e.target.value) }})} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>{lang === "bn" ? "খেজুর" : "Dates"}</Label>
+                        <Input type="number" value={settings.fitraPrices.dates} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, dates: Number(e.target.value) }})} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>{lang === "bn" ? "পনির" : "Cheese"}</Label>
+                        <Input type="number" value={settings.fitraPrices.cheese} onChange={(e) => updateSettings({ fitraPrices: { ...settings.fitraPrices, cheese: Number(e.target.value) }})} className="mt-1" />
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {lang === "bn" 
-                        ? "Greenweb SMS বা অন্যান্য যেকোনো HTTP API সাপোর্ট করে। অটোমেশনের জন্য এটি সেটআপ করা জরুরি।" 
-                        : "Supports Greenweb SMS or similar generic HTTP APIs. Required for sending alerts."}
-                    </p>
                   </div>
-                </div>
 
-              </div>
-            )}
+                  {/* Prayer */}
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ইফতার ও সেহরি লোকেশন" : "Iftar & Sehri Location"}</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>{lang === "bn" ? "শহর" : "City"}</Label>
+                        <Input value={settings.prayerCity} onChange={(e) => updateSettings({ prayerCity: e.target.value })} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>{lang === "bn" ? "দেশ" : "Country"}</Label>
+                        <Input value={settings.prayerCountry} onChange={(e) => updateSettings({ prayerCountry: e.target.value })} className="mt-1" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SMS Provider Settings */}
+                  <div className="space-y-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="w-4 h-4 text-primary" />
+                      <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "এসএমএস এপিআই (SMS API)" : "SMS API Settings"}</h4>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>{lang === "bn" ? "এপিআই ইউআরএল (API URL)" : "API URL"}</Label>
+                        <Input 
+                          value={settings.smsApiUrl} 
+                          onChange={(e) => updateSettings({ smsApiUrl: e.target.value })} 
+                          className="mt-1"
+                          placeholder="http://api.greenweb.com.bd/api.php" 
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label>{lang === "bn" ? "এপিআই কি (Token/Key)" : "API Key/Token"}</Label>
+                          <Input type="password" value={settings.smsApiKey} onChange={(e) => updateSettings({ smsApiKey: e.target.value })} className="mt-1" />
+                        </div>
+                        <div>
+                          <Label>{lang === "bn" ? "সেন্ডার আইডি (ঐচ্ছিক)" : "Sender ID (Optional)"}</Label>
+                          <Input value={settings.smsSenderId} onChange={(e) => updateSettings({ smsSenderId: e.target.value })} className="mt-1" />
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {lang === "bn" 
+                          ? "Greenweb SMS বা অন্যান্য যেকোনো HTTP API সাপোর্ট করে। অটোমেশনের জন্য এটি সেটআপ করা জরুরি।" 
+                          : "Supports Greenweb SMS or similar generic HTTP APIs. Required for sending alerts."}
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </PermissionGuard>
 
       <Card className="p-6 shadow-card border-destructive/30">
         <div className="flex items-center justify-between gap-4">

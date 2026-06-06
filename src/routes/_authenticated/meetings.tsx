@@ -20,6 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Users2, Pencil, Trash2, ExternalLink, FileText, Check, X, Clock, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { deleteFile } from "@/lib/storage";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/meetings")({ component: MeetingsPage });
 
@@ -30,6 +32,8 @@ const empty = { title: "", meeting_date: new Date().toISOString().slice(0, 16), 
 function MeetingsPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("meetings.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Meeting | null>(null);
@@ -82,15 +86,19 @@ function MeetingsPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (m) => (
       <div className="flex gap-1 justify-end">
         <Button size="icon" variant="ghost" onClick={() => setDetail(m)}><ExternalLink className="w-4 h-4 text-primary" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        <PermissionGuard module="Meetings" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Meetings" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        </PermissionGuard>
       </div>
     )},
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Users2} title={t("meetings")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি সভা" : "meetings"}`} actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+      <PageHeader icon={Users2} title={t("meetings")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি সভা" : "meetings"}`} actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "location"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>

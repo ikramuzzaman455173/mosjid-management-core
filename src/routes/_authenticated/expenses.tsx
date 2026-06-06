@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 import { Receipt, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -45,6 +47,8 @@ const empty = {
 function ExpensesPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("income & expense.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Expense | null>(null);
@@ -105,13 +109,17 @@ function ExpensesPage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (e) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
-          category: e.category ? e.category.toLowerCase() : "utility", vendor: e.vendor ?? "", amount: Number(e.amount), expense_date: e.expense_date ?? "",
-          account_id: e.account_id ?? "", bill_no: e.bill_no ?? "", notes: e.notes ?? "",
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Income & Expense" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
+            category: e.category ? e.category.toLowerCase() : "utility", vendor: e.vendor ?? "", amount: Number(e.amount), expense_date: e.expense_date ?? "",
+            account_id: e.account_id ?? "", bill_no: e.bill_no ?? "", notes: e.notes ?? "",
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Income & Expense" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -119,7 +127,7 @@ function ExpensesPage() {
   return (
     <div className="space-y-4">
       <PageHeader icon={Receipt} title={t("expenses")} subtitle={`${t("total")}: ${fmtCurrency(total, lang)}`}
-        actionLabel={t("expense_entry")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+        actionLabel={canCreate ? t("expense_entry") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["category", "vendor", "bill_no"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("expense_entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-2 gap-3">

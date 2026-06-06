@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Package, Pencil, Trash2, ArrowDownToLine, ArrowUpFromLine, History } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/inventory")({ component: InventoryPage });
 
@@ -26,6 +28,8 @@ const empty = { name: "", category: "general", unit: "pcs", current_stock: 0, mi
 function InventoryPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("inventory.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Item | null>(null);
@@ -63,18 +67,24 @@ function InventoryPage() {
     { key: "price", header: t("amount"), cell: (i) => fmtCurrency(Number(i.unit_price ?? 0), lang) },
     { key: "act", header: t("actions"), className: "text-right", cell: (i) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" title={t("stock_in")} onClick={() => setStockOn({ item: i, kind: "in" })}><ArrowDownToLine className="w-4 h-4 text-success" /></Button>
-        <Button size="icon" variant="ghost" title={t("stock_out")} onClick={() => setStockOn({ item: i, kind: "out" })}><ArrowUpFromLine className="w-4 h-4 text-destructive" /></Button>
+        <PermissionGuard module="Inventory" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" title={t("stock_in")} onClick={() => setStockOn({ item: i, kind: "in" })}><ArrowDownToLine className="w-4 h-4 text-success" /></Button>
+          <Button size="icon" variant="ghost" title={t("stock_out")} onClick={() => setStockOn({ item: i, kind: "out" })}><ArrowUpFromLine className="w-4 h-4 text-destructive" /></Button>
+        </PermissionGuard>
         <Button size="icon" variant="ghost" title={t("transactions")} onClick={() => setHistoryOn(i)}><History className="w-4 h-4 text-primary" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({ name: i.name, category: i.category, unit: i.unit, current_stock: Number(i.current_stock), min_stock: Number(i.min_stock), unit_price: Number(i.unit_price ?? 0), notes: i.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        <PermissionGuard module="Inventory" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({ name: i.name, category: i.category, unit: i.unit, current_stock: Number(i.current_stock), min_stock: Number(i.min_stock), unit_price: Number(i.unit_price ?? 0), notes: i.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Inventory" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+        </PermissionGuard>
       </div>
     )},
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Package} title={t("inventory")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি আইটেম" : "items"}`} actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+      <PageHeader icon={Package} title={t("inventory")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি আইটেম" : "items"}`} actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["name", "category"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>

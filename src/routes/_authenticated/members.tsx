@@ -15,6 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 import { Users, Pencil, Trash2, IdCard, Plus, X, MessageSquare, Send, Loader2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
@@ -62,6 +64,8 @@ const empty = {
 function MembersPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("members.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Member | null>(null);
@@ -293,10 +297,14 @@ function MembersPage() {
         }}>
           <IdCard className="w-4 h-4" />
         </Button>
-        <Button size="icon" variant="ghost" onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Members" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Members" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -307,8 +315,8 @@ function MembersPage() {
         icon={Users}
         title={t("members")}
         subtitle={`${data?.length ?? 0} ${t("persons")}`}
-        actionLabel={t("new_member")}
-        onAction={openAdd}
+        actionLabel={canCreate ? t("new_member") : undefined}
+        onAction={canCreate ? openAdd : undefined}
       />
 
       <DataTable

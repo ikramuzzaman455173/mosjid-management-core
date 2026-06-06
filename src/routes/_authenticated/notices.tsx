@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Bell, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/notices")({
   component: NoticesPage,
@@ -41,6 +43,8 @@ const empty = {
 function NoticesPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("notices.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Notice | null>(null);
@@ -93,13 +97,17 @@ function NoticesPage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (n) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(n); setForm({
-          title: n.title, content: n.content ?? "", kind: n.kind ?? "general",
-          notice_date: n.notice_date ?? "", published: n.published ?? true,
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(n.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Notices" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(n); setForm({
+            title: n.title, content: n.content ?? "", kind: n.kind ?? "general",
+            notice_date: n.notice_date ?? "", published: n.published ?? true,
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Notices" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(n.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -107,7 +115,7 @@ function NoticesPage() {
   return (
     <div className="space-y-4">
       <PageHeader icon={Bell} title={t("notices")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি নোটিশ" : "notices"}`}
-        actionLabel={t("add")} onAction={() => { setEditing(null); setForm(empty); setOpen(true); }} />
+        actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "content"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-2 gap-3">

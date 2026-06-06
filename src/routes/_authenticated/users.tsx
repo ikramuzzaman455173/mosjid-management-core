@@ -15,6 +15,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 import { rolesService } from "@/services/roles.service";
 
@@ -211,14 +213,18 @@ function UsersPage() {
       const isProtected = u.id === PROTECTED_SUPER_ADMIN_ID;
       return (
         <div className="flex items-center gap-2 justify-end">
-          <Button variant="ghost" size="sm" onClick={() => handleEditUser(u)}>
-            <Edit className="w-4 h-4 text-primary" />
-          </Button>
+          <PermissionGuard module="User Management" action="Edit" fallback={<></>}>
+            <Button variant="ghost" size="sm" onClick={() => handleEditUser(u)}>
+              <Edit className="w-4 h-4 text-primary" />
+            </Button>
+          </PermissionGuard>
           {/* Hide delete button for the protected default super admin */}
           {!isProtected && (
-            <Button variant="ghost" size="sm" onClick={() => setDeleteId(u.id)}>
-              <Trash2 className="w-4 h-4 text-destructive" />
-            </Button>
+            <PermissionGuard module="User Management" action="Delete" fallback={<></>}>
+              <Button variant="ghost" size="sm" onClick={() => setDeleteId(u.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </PermissionGuard>
           )}
           {isProtected && (
             <span title={lang === "bn" ? "সুরক্ষিত সুপার অ্যাডমিন" : "Protected super admin"}
@@ -235,10 +241,12 @@ function UsersPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <PageHeader icon={Shield} title={t("users")} subtitle={`${data?.length ?? 0} ${t("persons")}`} />
-        <Button onClick={handleAddUser}>
-          <Plus className="w-4 h-4 mr-2" />
-          {lang === "bn" ? "নতুন ইউজার" : "New User"}
-        </Button>
+        <PermissionGuard module="User Management" action="Create" fallback={<></>}>
+          <Button onClick={handleAddUser}>
+            <Plus className="w-4 h-4 mr-2" />
+            {lang === "bn" ? "নতুন ইউজার" : "New User"}
+          </Button>
+        </PermissionGuard>
       </div>
       <DataTable data={data as any[]} columns={columns} loading={isLoading} searchKeys={["full_name", "email"]} />
 

@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 import { HandCoins, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
@@ -45,6 +47,8 @@ const empty = {
 function ZakatPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
+  const { data: permData } = usePermissions();
+  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("donations & zakat.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Donation | null>(null);
@@ -104,13 +108,17 @@ function ZakatPage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
-          donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
-          donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-        }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-        <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
-          <Trash2 className="w-4 h-4 text-destructive" />
-        </Button>
+        <PermissionGuard module="Donations & Zakat" action="Edit" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
+            donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
+            donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+        </PermissionGuard>
+        <PermissionGuard module="Donations & Zakat" action="Delete" fallback={<></>}>
+          <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+            <Trash2 className="w-4 h-4 text-destructive" />
+          </Button>
+        </PermissionGuard>
       </div>
     )},
   ];
@@ -121,8 +129,8 @@ function ZakatPage() {
         icon={HandCoins}
         title={lang === "bn" ? "যাকাত" : "Zakat"}
         subtitle={`${t("total")} ${lang === "bn" ? "সংগ্রহ" : "Collection"}: ${fmtCurrency(total, lang)}`}
-        actionLabel={lang === "bn" ? "নতুন যাকাত এন্ট্রি" : "New Zakat Entry"}
-        onAction={() => { setEditing(null); setForm(empty); setOpen(true); }}
+        actionLabel={canCreate ? (lang === "bn" ? "নতুন যাকাত এন্ট্রি" : "New Zakat Entry") : undefined}
+        onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
