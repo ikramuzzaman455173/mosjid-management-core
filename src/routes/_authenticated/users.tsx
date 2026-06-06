@@ -42,14 +42,20 @@ function UsersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["users-roles"],
     queryFn: async () => {
-      const [profiles, roles] = await Promise.all([
+      const [profiles, userRoles, rolesData] = await Promise.all([
         supabase.from("profiles").select("*"),
         supabase.from("user_roles").select("*"),
+        supabase.from("roles").select("*"),
       ]);
-      return (profiles.data ?? []).map((p: any) => ({
-        ...p,
-        roles: (roles.data ?? []).filter((r: any) => r.user_id === p.id).map((r: any) => r.role),
-      }));
+      return (profiles.data ?? []).map((p: any) => {
+        const userRoleIds = (userRoles.data ?? []).filter((r: any) => r.user_id === p.id).map((r: any) => r.role_id);
+        const roleNames = userRoleIds.map(rId => rolesData.data?.find((role: any) => role.id === rId)?.name).filter(Boolean);
+        return {
+          ...p,
+          roleIds: userRoleIds,
+          roles: roleNames,
+        };
+      });
     },
   });
 
@@ -95,18 +101,18 @@ function UsersPage() {
       // Sync roles properly to avoid losing admin rights instantly
       // ❌ Block role change for protected super admin
       if (userId !== PROTECTED_SUPER_ADMIN_ID) {
-        const { data: currentRoles } = await supabase.from("user_roles").select("role").eq("user_id", userId as string);
-        const existingRoles = currentRoles?.map(r => r.role) || [];
+        const { data: currentRoles } = await supabase.from("user_roles").select("role_id").eq("user_id", userId as string);
+        const existingRoles = currentRoles?.map(r => r.role_id) || [];
         
         const rolesToAdd = roles.filter(r => !(existingRoles as string[]).includes(r));
         const rolesToRemove = existingRoles.filter(r => !roles.includes(r));
 
         if (rolesToRemove.length > 0) {
-          const { error } = await supabase.from("user_roles").delete().eq("user_id", userId as string).in("role", rolesToRemove);
+          const { error } = await supabase.from("user_roles").delete().eq("user_id", userId as string).in("role_id", rolesToRemove);
           if (error) throw error;
         }
         if (rolesToAdd.length > 0) {
-          const inserts = rolesToAdd.map(r => ({ user_id: userId as string, role: r as any }));
+          const inserts = rolesToAdd.map(r => ({ user_id: userId as string, role_id: r }));
           const { error } = await supabase.from("user_roles").insert(inserts);
           if (error) throw error;
         }
@@ -155,7 +161,10 @@ function UsersPage() {
     setFormData({ full_name: "", email: "", password: "", confirm_password: "" });
     setShowPassword(false);
     setShowConfirmPassword(false);
-    setSelectedRoles(["member"]); // Default role member
+    
+    // Find the member role ID to set as default
+    const memberRole = availableRoles.find((r: any) => r.name === "member");
+    setSelectedRoles(memberRole ? [memberRole.id] : []); 
     setDialogOpen(true);
   };
 
@@ -164,7 +173,14 @@ function UsersPage() {
     setFormData({ full_name: user.full_name ?? "", email: user.email ?? "", password: "", confirm_password: "" });
     setShowPassword(false);
     setShowConfirmPassword(false);
-    setSelectedRoles(user.roles && user.roles.length > 0 ? user.roles : ["member"]);
+    
+    // user.roleIds contains the database role_ids now
+    if (user.roleIds && user.roleIds.length > 0) {
+      setSelectedRoles(user.roleIds);
+    } else {
+      const memberRole = availableRoles.find((r: any) => r.name === "member");
+      setSelectedRoles(memberRole ? [memberRole.id] : []);
+    }
     setDialogOpen(true);
   };
 
@@ -300,22 +316,23 @@ function UsersPage() {
                 )}
               </div>
               <div className="grid grid-cols-2 gap-3 border rounded-md p-3 bg-muted/20">
-                {availableRoles.map(roleObj => {
-                  const role = roleObj.name;
+                {availableRoles.map((roleObj: any) => {
+                  const roleName = roleObj.name;
+                  const roleId = roleObj.id;
                   const isDisabled = selectedUser?.id === PROTECTED_SUPER_ADMIN_ID;
                   return (
-                    <div key={role} className="flex items-center space-x-2">
+                    <div key={roleId} className="flex items-center space-x-2">
                       <Checkbox 
-                        id={`role-${role}`} 
-                        checked={selectedRoles.includes(role)} 
+                        id={`role-${roleId}`} 
+                        checked={selectedRoles.includes(roleId)} 
                         disabled={isDisabled}
-                        onCheckedChange={(checked) => toggleRole(role, checked as boolean)} 
+                        onCheckedChange={(checked) => toggleRole(roleId, checked as boolean)} 
                       />
                       <Label 
-                        htmlFor={`role-${role}`} 
+                        htmlFor={`role-${roleId}`} 
                         className={`text-sm capitalize ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                       >
-                        {role.replace(/_/g, " ")}
+                        {roleName.replace(/_/g, " ")}
                       </Label>
                     </div>
                   );

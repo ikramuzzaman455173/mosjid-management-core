@@ -167,7 +167,7 @@ function Dashboard() {
               </Button>
             </Link>
           ))}
-          <Button 
+          {/* <Button 
             variant="secondary" 
             size="sm" 
             className="shadow-sm"
@@ -176,7 +176,7 @@ function Dashboard() {
           >
             <Activity className={`w-4 h-4 mr-2 ${isTestingCron ? "animate-spin" : "text-primary"}`} />
             {isTestingCron ? "Testing..." : "Test Cron"}
-          </Button>
+          </Button> */}
           <Link to="/reports">
             <Button variant="default" size="sm" className="shadow-sm">
               {t("reports")}
