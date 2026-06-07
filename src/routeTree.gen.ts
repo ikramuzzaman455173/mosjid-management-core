@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TvDisplayRouteImport } from './routes/tv-display'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -41,6 +42,11 @@ import { Route as AuthenticatedBankRouteImport } from './routes/_authenticated/b
 import { Route as AuthenticatedAuditLogsRouteImport } from './routes/_authenticated/audit-logs'
 import { Route as AuthenticatedAssetsRouteImport } from './routes/_authenticated/assets'
 
+const TvDisplayRoute = TvDisplayRouteImport.update({
+  id: '/tv-display',
+  path: '/tv-display',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -203,6 +209,7 @@ const AuthenticatedAssetsRoute = AuthenticatedAssetsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tv-display': typeof TvDisplayRoute
   '/assets': typeof AuthenticatedAssetsRoute
   '/audit-logs': typeof AuthenticatedAuditLogsRoute
   '/bank': typeof AuthenticatedBankRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tv-display': typeof TvDisplayRoute
   '/assets': typeof AuthenticatedAssetsRoute
   '/audit-logs': typeof AuthenticatedAuditLogsRoute
   '/bank': typeof AuthenticatedBankRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/tv-display': typeof TvDisplayRoute
   '/_authenticated/assets': typeof AuthenticatedAssetsRoute
   '/_authenticated/audit-logs': typeof AuthenticatedAuditLogsRoute
   '/_authenticated/bank': typeof AuthenticatedBankRoute
@@ -303,6 +312,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/tv-display'
     | '/assets'
     | '/audit-logs'
     | '/bank'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/tv-display'
     | '/assets'
     | '/audit-logs'
     | '/bank'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/tv-display'
     | '/_authenticated/assets'
     | '/_authenticated/audit-logs'
     | '/_authenticated/bank'
@@ -402,11 +414,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  TvDisplayRoute: typeof TvDisplayRoute
   VerifyQrTokenRoute: typeof VerifyQrTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tv-display': {
+      id: '/tv-display'
+      path: '/tv-display'
+      fullPath: '/tv-display'
+      preLoaderRoute: typeof TvDisplayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -694,6 +714,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  TvDisplayRoute: TvDisplayRoute,
   VerifyQrTokenRoute: VerifyQrTokenRoute,
 }
 export const routeTree = rootRouteImport

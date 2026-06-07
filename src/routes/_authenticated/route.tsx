@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Hint } from "@/components/ui/hint";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
@@ -9,7 +10,7 @@ import { Bell, LogOut, Search,
   LayoutDashboard, Users, HandCoins, Gift, TrendingUp, TrendingDown,
   Wallet, Landmark, Smartphone, Package, Boxes, CalendarDays, UsersRound,
   Megaphone, Moon, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
-  BarChart3, Settings, ShieldCheck, FileText, User as UserIcon
+  BarChart3, Settings, ShieldCheck, FileText, User as UserIcon, MonitorPlay
 } from "lucide-react";
 import {
   CommandDialog,
@@ -28,7 +29,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useRouterState } from "@tanstack/react-router";
 import { usePermissions } from "@/hooks/usePermissions";
-import { Hint } from "@/components/ui/hint";
 
 const routePermissions: Record<string, { module: string; action: string }> = {
   "/dashboard": { module: "Dashboard", action: "View" },
@@ -194,6 +194,13 @@ function Layout() {
             </div>
             
             <div className="flex-1" />
+            
+            <Hint label={lang === "bn" ? "টিভি ডিসপ্লে ওপেন করুন" : "Open TV Display"}>
+              <Button size="icon" variant="ghost" onClick={() => window.open("/tv-display", "_blank")}>
+                <MonitorPlay className="w-5 h-5 text-primary" />
+              </Button>
+            </Hint>
+
             <Button size="sm" variant="ghost" onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
               {lang === "bn" ? "EN" : "বাং"}
             </Button>
