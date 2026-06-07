@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
-  SidebarMenuSkeleton
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -86,7 +85,8 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { data: permData, isLoading } = usePermissions();
+  const { data: permData } = usePermissions();
+  const isPermsLoading = !permData;
 
   // We are not capturing Cmd+K in the sidebar anymore, we will leave it for the global search.
   // The sidebar search is just a local filter now.
@@ -100,7 +100,7 @@ export function AppSidebar() {
       if (!matchesSearch) return false;
 
       // 2. Permission filter
-      if (isLoading) return true; // Prevent layout shift while loading
+      if (isPermsLoading) return true; // Prevent layout shift while loading
       if (permData?.isSuperAdmin) return true;
       const requiredPerm = `${item.module.toLowerCase()}.view`;
       return permData?.permissions?.has(requiredPerm) ?? false;
@@ -147,28 +147,29 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="overflow-auto gap-0">
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, gIdx) => (
-            <SidebarGroup key={`skel-grp-${gIdx}`} className={cn(collapsed ? "p-1" : "px-2 py-1")}>
-              {!collapsed && <Skeleton className="h-3 w-16 mb-2 mt-1 ml-2" />}
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <SidebarMenuItem key={`skel-item-${gIdx}-${i}`}>
-                      <SidebarMenuSkeleton showIcon />
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ))
-        ) : filteredGroups.map((grp) => (
+        {filteredGroups.map((grp) => (
           <SidebarGroup key={grp.label} className={cn(collapsed ? "p-1" : "px-2 py-1")}>
-            {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-2 py-1">{grp.label}</SidebarGroupLabel>}
+            {!collapsed && (
+              <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-2 py-1">
+                {isPermsLoading ? <Skeleton className="h-3 w-16" /> : grp.label}
+              </SidebarGroupLabel>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>
                 {grp.items.map((item) => {
                   const active = pathname === item.url || pathname.startsWith(item.url + "/");
+                  
+                  if (isPermsLoading) {
+                    return (
+                      <SidebarMenuItem key={`skel-${item.url}`}>
+                        <div className={cn("flex w-full items-center gap-2 overflow-hidden rounded-md", collapsed ? "justify-center p-2 size-8" : "p-2 h-8")}>
+                          <Skeleton className={cn("shrink-0 rounded-md", collapsed ? "w-5 h-5" : "w-4 h-4")} />
+                          {!collapsed && <Skeleton className="h-3.5 flex-1 max-w-[60%]" />}
+                        </div>
+                      </SidebarMenuItem>
+                    );
+                  }
+
                   return (
                     <PermissionGuard key={item.url} module={item.module} action="View">
                       <SidebarMenuItem>
