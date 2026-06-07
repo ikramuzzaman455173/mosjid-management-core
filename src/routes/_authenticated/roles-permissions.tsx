@@ -351,14 +351,14 @@ function RolesPermissionsPage() {
   return (
     <PermissionGuard module="Role & Permission" action="View" fallbackType="page">
       <div className="h-full flex flex-col pb-4">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{lang === "bn" ? "রোল ও পারমিশন" : "Role Management"}</h1>
           <p className="text-muted-foreground">{lang === "bn" ? "রোল ভিত্তিক পারমিশন সেট করুন এবং ব্যবহারকারীদের এক্সেস নিয়ন্ত্রণ করুন" : "Manage roles and configure granular access controls"}</p>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0 overflow-y-auto lg:overflow-visible lg:pb-0">
+      <div className="flex flex-col lg:flex-row flex-1 gap-4 lg:gap-5 min-h-0 overflow-y-auto lg:overflow-visible lg:pb-0">
         
         {/* Left Sidebar - Roles */}
         <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4 lg:sticky lg:top-20 lg:h-[calc(100vh-7rem)]">
@@ -453,7 +453,7 @@ function RolesPermissionsPage() {
         {/* Right Content - Permissions Layout */}
         <div className="flex-1 flex flex-col bg-card rounded-2xl border shadow-sm overflow-hidden min-w-0 mb-4 lg:mb-0">
            {/* Header */}
-           <div className="px-5 py-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row justify-between items-start gap-4 bg-gradient-to-b from-muted/30 to-background border-b">
+           <div className="px-4 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row justify-between items-start gap-4 bg-gradient-to-b from-muted/30 to-background border-b">
               <div>
                 <h2 className="text-2xl font-bold capitalize flex items-center gap-3">
                   {selectedRole?.name.replace("_", " ") || "Select a role"}
@@ -536,7 +536,7 @@ function RolesPermissionsPage() {
            </div>
            
            {/* Permissions Toolbar */}
-           <div className="px-5 py-4 sm:px-6 lg:px-8 border-b flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-muted/10">
+           <div className="px-4 py-3 sm:px-6 border-b flex flex-col xl:flex-row xl:items-center justify-between gap-3 bg-muted/10">
               <h3 className="font-semibold text-lg flex items-center gap-2 text-foreground/90 shrink-0">
                 <Settings2 className="w-5 h-5 text-primary" /> {lang === "bn" ? "মডিউল পারমিশন" : "Module Permissions"}
               </h3>
@@ -587,8 +587,8 @@ function RolesPermissionsPage() {
            </div>
 
            <ScrollArea className="flex-1 bg-muted/5">
-              <div className="p-8 max-w-4xl mx-auto">
-                <Accordion type="multiple" value={expandedModules} onValueChange={setExpandedModules} className="space-y-4 pb-6">
+              <div className="p-4 sm:p-6 max-w-4xl mx-auto">
+                <Accordion type="multiple" value={expandedModules} onValueChange={setExpandedModules} className="space-y-3 pb-4">
                    {filteredModules.map(([moduleName, moduleActions]) => {
                       // Count allowed actions in this module
                       const allowedCount = moduleActions.filter(a => draftPermissions.includes(a.id)).length;
