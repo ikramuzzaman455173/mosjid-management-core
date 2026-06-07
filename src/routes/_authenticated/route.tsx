@@ -135,16 +135,18 @@ function Layout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { data: permData, isLoading: permLoading } = usePermissions();
 
+  const hasPerm = (path: string) => {
+    if (permLoading) return true;
+    if (permData?.isSuperAdmin) return true;
+    const permInfo = routePermissions[path];
+    if (!permInfo) return true;
+    const requiredPerm = `${permInfo.module.toLowerCase()}.view`;
+    return permData?.permissions?.has(requiredPerm) ?? false;
+  };
+
   const filteredGroups = groups.map(grp => ({
     ...grp,
-    items: grp.items.filter(item => {
-      if (permLoading) return true;
-      if (permData?.isSuperAdmin) return true;
-      const permInfo = routePermissions[item.url];
-      if (!permInfo) return true;
-      const requiredPerm = `${permInfo.module.toLowerCase()}.view`;
-      return permData?.permissions?.has(requiredPerm) ?? false;
-    })
+    items: grp.items.filter(item => hasPerm(item.url))
   })).filter(grp => grp.items.length > 0);
 
   // Find required permissions based on pathname matching a known route prefix
@@ -202,14 +204,30 @@ function Layout() {
                   <Avatar className="w-7 h-7">
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
                   </Avatar>
-                  <span className="text-sm hidden sm:inline">{t("admin")}</span>
+                  <span className="text-sm hidden sm:inline">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || t("admin")}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="w-4 h-4 mr-2" /> {t("logout")}
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex flex-col space-y-1.5 p-2">
+                  <p className="text-sm font-medium leading-none capitalize">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Admin"}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                </div>
+                {hasPerm("/settings") && (
+                  <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
+                    <Settings className="w-4 h-4 mr-2" />
+                    <span>{lang === "bn" ? "সেটিংস" : "Settings"}</span>
+                  </DropdownMenuItem>
+                )}
+                {hasPerm("/roles-permissions") && (
+                  <DropdownMenuItem onClick={() => navigate({ to: "/roles-permissions" })} className="cursor-pointer">
+                    <ShieldCheck className="w-4 h-4 mr-2" />
+                    <span>{lang === "bn" ? "রোলস ও পারমিশন" : "Roles & Permissions"}</span>
+                  </DropdownMenuItem>
+                )}
+                {(hasPerm("/settings") || hasPerm("/roles-permissions")) && <DropdownMenuSeparator />}
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  <span>{t("logout")}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
