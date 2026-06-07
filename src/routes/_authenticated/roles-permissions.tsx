@@ -358,10 +358,10 @@ function RolesPermissionsPage() {
         </div>
       </div>
 
-      <div className="flex flex-1 gap-6 min-h-0">
+      <div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0 overflow-y-auto lg:overflow-hidden lg:pb-0">
         
         {/* Left Sidebar - Roles */}
-        <div className="w-80 flex-shrink-0 flex flex-col gap-4">
+        <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{lang === "bn" ? "ভূমিকা সমূহ" : "All Roles"}</h2>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -415,7 +415,7 @@ function RolesPermissionsPage() {
             />
           </div>
 
-          <ScrollArea className="flex-1 -mx-2 px-2">
+          <ScrollArea className="max-h-[250px] lg:max-h-none flex-1 -mx-2 px-2">
             <div className="space-y-2 pb-4">
               {filteredRoles.map(role => (
                 <button 
@@ -447,9 +447,9 @@ function RolesPermissionsPage() {
         </div>
 
         {/* Right Content - Permissions Layout */}
-        <div className="flex-1 flex flex-col bg-card rounded-2xl border shadow-sm overflow-hidden min-w-0">
+        <div className="flex-1 flex flex-col bg-card rounded-2xl border shadow-sm overflow-hidden min-w-0 mb-4 lg:mb-0">
            {/* Header */}
-           <div className="px-8 py-6 flex justify-between items-start bg-gradient-to-b from-muted/30 to-background border-b">
+           <div className="px-5 py-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row justify-between items-start gap-4 bg-gradient-to-b from-muted/30 to-background border-b">
               <div>
                 <h2 className="text-2xl font-bold capitalize flex items-center gap-3">
                   {selectedRole?.name.replace("_", " ") || "Select a role"}
@@ -464,7 +464,7 @@ function RolesPermissionsPage() {
                    <span>{assignedUsers.length} {lang === "bn" ? "জন ব্যবহারকারী যুক্ত আছেন" : "Users Assigned"}</span>
                 </div>
               </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   {!selectedRole?.is_system && selectedRole && (
                     <>
                       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
@@ -532,7 +532,7 @@ function RolesPermissionsPage() {
            </div>
            
            {/* Permissions Toolbar */}
-           <div className="px-6 lg:px-8 py-4 border-b flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-muted/10">
+           <div className="px-5 py-4 sm:px-6 lg:px-8 border-b flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-muted/10">
               <h3 className="font-semibold text-lg flex items-center gap-2 text-foreground/90 shrink-0">
                 <Settings2 className="w-5 h-5 text-primary" /> {lang === "bn" ? "মডিউল পারমিশন" : "Module Permissions"}
               </h3>
