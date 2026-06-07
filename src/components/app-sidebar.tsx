@@ -10,7 +10,9 @@ import { Input } from "@/components/ui/input";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
+  SidebarMenuSkeleton
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useI18n, type DictKey } from "@/lib/i18n";
 
@@ -145,7 +147,22 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="overflow-auto gap-0">
-        {filteredGroups.map((grp) => (
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, gIdx) => (
+            <SidebarGroup key={`skel-grp-${gIdx}`} className={cn(collapsed ? "p-1" : "px-2 py-1")}>
+              {!collapsed && <Skeleton className="h-3 w-16 mb-2 mt-1 ml-2" />}
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <SidebarMenuItem key={`skel-item-${gIdx}-${i}`}>
+                      <SidebarMenuSkeleton showIcon />
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))
+        ) : filteredGroups.map((grp) => (
           <SidebarGroup key={grp.label} className={cn(collapsed ? "p-1" : "px-2 py-1")}>
             {!collapsed && <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-2 py-1">{grp.label}</SidebarGroupLabel>}
             <SidebarGroupContent>
