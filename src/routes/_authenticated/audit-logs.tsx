@@ -33,9 +33,15 @@ function AuditLogsPage() {
   const { data: roleMap } = useQuery({
     queryKey: ["user_roles_map"],
     queryFn: async () => {
-      const { data } = await supabase.from("user_roles" as any).select("user_id, role");
+      const { data, error } = await supabase.from("user_roles" as any).select("user_id, roles(name)");
+      if (error) console.error("Error fetching roles map:", error);
       const m: Record<string, string[]> = {};
-      data?.forEach((r: any) => { (m[r.user_id] ??= []).push(r.role); });
+      data?.forEach((r: any) => { 
+        const roleName = r.roles?.name?.toLowerCase().replace(/ /g, "_");
+        if (roleName) {
+          (m[r.user_id] ??= []).push(roleName); 
+        }
+      });
       return m;
     },
   });
