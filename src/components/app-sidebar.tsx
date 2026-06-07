@@ -2,9 +2,10 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, HandCoins, Gift, TrendingUp, TrendingDown,
   Wallet, Landmark, Smartphone, Package, Boxes, CalendarDays, UsersRound,
-  Megaphone, Moon, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
+  Megaphone, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
   BarChart3, Settings, ShieldCheck, FileText, Search, X
 } from "lucide-react";
+import { MosqueIcon } from "@/components/ui/mosque-icon";
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -53,7 +54,7 @@ const groups: { label: string; items: Item[] }[] = [
       { key: "meetings", url: "/meetings", icon: CalendarDays, module: "Meetings" },
       { key: "committee", url: "/committee", icon: UsersRound, module: "Members" },
       { key: "notices", url: "/notices", icon: Megaphone, module: "Notice Board" },
-      { key: "prayer_times", url: "/prayer-times", icon: Moon, module: "Prayer Schedule" },
+      { key: "prayer_times", url: "/prayer-times", icon: MosqueIcon, module: "Prayer Schedule" },
       { key: "events", url: "/events", icon: CalendarHeart, module: "Events" },
     ],
   },
@@ -112,7 +113,7 @@ export function AppSidebar() {
       <SidebarHeader className={cn("border-b border-sidebar-border py-4 transition-all duration-200", collapsed ? "px-0 items-center" : "px-3")}>
         <div className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}>
           <div className={cn("rounded-md bg-gradient-gold flex items-center justify-center shrink-0 transition-all duration-200", collapsed ? "w-8 h-8" : "w-9 h-9")}>
-            <Moon className={cn("text-primary", collapsed ? "w-4 h-4" : "w-5 h-5")} />
+            <MosqueIcon className={cn("text-primary", collapsed ? "w-4 h-4" : "w-5 h-5")} />
           </div>
           {!collapsed && (
             <div className="leading-tight truncate">

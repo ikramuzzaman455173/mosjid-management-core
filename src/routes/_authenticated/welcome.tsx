@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
-import { Moon, Menu, Calendar, Clock, LayoutGrid } from "lucide-react";
+import { Menu, Calendar, Clock, LayoutGrid } from "lucide-react";
+import { MosqueIcon } from "@/components/ui/mosque-icon";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -74,11 +75,11 @@ function WelcomePage() {
           <div className="w-full bg-card border border-border/40 rounded-2xl p-5 sm:p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col items-center">
             
             {/* Decorative Corner Moon */}
-            <Moon className="absolute -top-10 -right-10 w-32 h-32 sm:w-40 sm:h-40 text-primary/[0.03] rotate-12 pointer-events-none" />
+            <MosqueIcon className="absolute -top-10 -right-10 w-32 h-32 sm:w-40 sm:h-40 text-primary/[0.03] rotate-12 pointer-events-none" />
             
             {/* Icon */}
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-4 sm:mb-6 ring-1 ring-primary/20 shadow-sm">
-              <Moon className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+              <MosqueIcon className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
             
             {/* Greetings */}

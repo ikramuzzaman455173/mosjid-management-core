@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Moon, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { MosqueIcon } from "@/components/ui/mosque-icon";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "লগইন | বায়তুল মামুর মসজিদ" }] }),
@@ -88,7 +89,7 @@ function AuthPage() {
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
               style={{ background: "var(--gradient-gold)" }}>
-              <Moon className="w-8 h-8 text-primary" />
+              <MosqueIcon className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-primary">{t("app_name")}</h1>
             <p className="text-sm text-muted-foreground mt-1">{t("tagline")}</p>
