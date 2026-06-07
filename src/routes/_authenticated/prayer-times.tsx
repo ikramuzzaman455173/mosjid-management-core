@@ -57,8 +57,22 @@ function PrayerPage() {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
 
   const { data: existing } = useQuery({
-    queryKey: ["prayer", date],
+    queryKey: ["prayer", "exact", date],
     queryFn: async () => (await supabase.from("prayer_times").select("*").eq("effective_date", date).maybeSingle()).data,
+  });
+
+  const { data: active } = useQuery({
+    queryKey: ["prayer", "active", date],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("prayer_times")
+        .select("*")
+        .lte("effective_date", date)
+        .order("effective_date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    }
   });
   const { data: list, isLoading } = useQuery({
     queryKey: ["prayer-list"],
@@ -71,11 +85,11 @@ function PrayerPage() {
     mutationFn: async () => {
       let payload: any = { effective_date: date };
       
-      // If there is no existing record, pre-fill with defaults
+      // If there is no exact record, we will create a new one. Pre-fill with the active record's values so unaffected times carry over.
       if (!existing) {
         SLOTS.forEach(s => {
-          payload[s.key] = DEFAULT_TIMES[s.key].azan;
-          payload[`${s.key}_iqamah`] = DEFAULT_TIMES[s.key].iqamah;
+          payload[s.key] = (active as any)?.[s.key] ?? DEFAULT_TIMES[s.key].azan;
+          payload[`${s.key}_iqamah`] = (active as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah;
         });
       }
 
@@ -94,7 +108,11 @@ function PrayerPage() {
         if (error) throw error;
       }
     },
-    onSuccess: () => { toast.success(t("saved")); qc.invalidateQueries({ queryKey: ["prayer", date] }); qc.invalidateQueries({ queryKey: ["prayer-list"] }); },
+    onSuccess: () => { 
+      toast.success(t("saved")); 
+      qc.invalidateQueries({ queryKey: ["prayer"] }); 
+      qc.invalidateQueries({ queryKey: ["prayer-list"] }); 
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -122,11 +140,11 @@ function PrayerPage() {
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-sm font-medium text-muted-foreground">{lang === "bn" ? "আযান/শুরু" : "Azan/Start"}</span>
-                    <TimePicker value={form[s.key] ?? (existing as any)?.[s.key] ?? DEFAULT_TIMES[s.key].azan} onChange={(v) => setForm({ ...form, [s.key]: v })} />
+                    <TimePicker value={form[s.key] ?? (existing as any)?.[s.key] ?? (active as any)?.[s.key] ?? DEFAULT_TIMES[s.key].azan} onChange={(v) => setForm({ ...form, [s.key]: v })} />
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-sm font-medium text-muted-foreground">{lang === "bn" ? "ইকামত" : "Iqamah"}</span>
-                    <TimePicker value={form[`${s.key}_iqamah`] ?? (existing as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah} onChange={(v) => setForm({ ...form, [`${s.key}_iqamah`]: v })} />
+                    <TimePicker value={form[`${s.key}_iqamah`] ?? (existing as any)?.[`${s.key}_iqamah`] ?? (active as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah} onChange={(v) => setForm({ ...form, [`${s.key}_iqamah`]: v })} />
                   </div>
                 </div>
               </div>
