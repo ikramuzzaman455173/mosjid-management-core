@@ -77,16 +77,19 @@ function TvDisplayPage() {
   const formatTime = (t: Date) => {
     let hours = t.getHours();
     const minutes = t.getMinutes();
+    const seconds = t.getSeconds();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-    return { hours, minutes: minutesStr, ampm };
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
+    const secondsStr = seconds < 10 ? '0' + seconds : seconds.toString();
+    return { hours, minutes: minutesStr, seconds: secondsStr, ampm };
   };
 
-  const { hours, minutes, ampm } = formatTime(time);
+  const { hours, minutes, seconds, ampm } = formatTime(time);
   const bdHours = toBnNum(hours.toString(), "bn");
   const bdMinutes = toBnNum(minutes.toString(), "bn");
+  const bdSeconds = toBnNum(seconds.toString(), "bn");
   const bdAmPm = ampm === "AM" ? "AM" : "PM";
 
   const nextPrayer = () => {
@@ -142,8 +145,10 @@ function TvDisplayPage() {
           </div>
         </div>
         <div className="text-right flex items-baseline justify-center gap-2 sm:gap-3 bg-card/30 px-5 sm:px-6 py-3 rounded-3xl border border-border/50 shadow-inner">
-          <span className="text-4xl sm:text-5xl xl:text-6xl font-black tracking-tighter text-foreground drop-shadow-lg tabular-nums">
-            {bdHours}<span className="text-primary/70 animate-pulse mx-0.5">:</span>{bdMinutes}
+          <span className="text-4xl sm:text-5xl xl:text-6xl font-black tracking-tighter text-foreground drop-shadow-lg tabular-nums flex items-baseline">
+            {bdHours}<span className="text-primary/70 mx-1">:</span>{bdMinutes}
+            <span className="text-primary/70 mx-1 opacity-60">:</span>
+            <span className="text-3xl sm:text-4xl xl:text-5xl text-muted-foreground/80 font-bold">{bdSeconds}</span>
           </span>
           <span className="text-xl sm:text-2xl xl:text-3xl font-bold text-muted-foreground ml-1">{bdAmPm}</span>
         </div>
