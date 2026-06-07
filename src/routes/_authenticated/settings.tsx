@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Settings as SettingsIcon, Globe, User, LogOut, Palette, Save, Loader2, MessageSquare } from "lucide-react";
+import { Settings as SettingsIcon, Globe, LogOut, Palette, Save, Loader2, MessageSquare } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
@@ -18,42 +18,9 @@ import { usePermissions } from "@/hooks/usePermissions";
 
 function SettingsPage() {
   const { t, lang, setLang } = useI18n();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
-  const qc = useQueryClient();
   const { settings, updateSettings, isLoaded } = useAppSettings();
-
-  const [form, setForm] = useState({ full_name: "", phone: "" });
-
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ["profile", user?.id],
-    queryFn: async () => {
-      if (!user) return null;
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user,
-  });
-
-  useEffect(() => {
-    if (profile) {
-      setForm({ full_name: profile.full_name ?? "", phone: profile.phone ?? "" });
-    }
-  }, [profile]);
-
-  const updateProfile = useMutation({
-    mutationFn: async () => {
-      if (!user) throw new Error("Not logged in");
-      const { error } = await supabase.from("profiles").update(form).eq("id", user.id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success(lang === "bn" ? "প্রোফাইল আপডেট হয়েছে" : "Profile updated");
-      qc.invalidateQueries({ queryKey: ["profile", user?.id] });
-    },
-    onError: (e: any) => toast.error(e.message),
-  });
 
   const handleLogout = async () => {
     await signOut();
@@ -63,34 +30,7 @@ function SettingsPage() {
 
   return (
     <div className="space-y-4 max-w-4xl">
-      <PageHeader icon={SettingsIcon} title={t("settings")} subtitle={lang === "bn" ? "অ্যাকাউন্ট ও সিস্টেম প্রেফারেন্স" : "Account & system preferences"} />
-
-      <Card className="p-6 shadow-card space-y-5">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User className="w-5 h-5" /></div>
-          <div className="flex-1">
-            <h3 className="font-semibold mb-1">{lang === "bn" ? "প্রোফাইল সেটিংস" : "Profile Settings"}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{user?.email ?? "—"}</p>
-            
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-              <div className="space-y-4 max-w-sm">
-                <div>
-                  <Label>{t("name")}</Label>
-                  <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} className="mt-1" placeholder="Abdur Rahman" />
-                </div>
-                <div>
-                  <Label>{t("phone")}</Label>
-                  <Input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="mt-1" placeholder="01XXXXXXXXX" />
-                </div>
-                <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending}>
-                  {updateProfile.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                  {lang === "bn" ? "সেভ করুন" : "Save Changes"}
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </Card>
+      <PageHeader icon={SettingsIcon} title={t("settings")} subtitle={lang === "bn" ? "সিস্টেম প্রেফারেন্স" : "System preferences"} />
 
       <Card className="p-6 shadow-card space-y-4">
         <div className="flex items-start gap-3">

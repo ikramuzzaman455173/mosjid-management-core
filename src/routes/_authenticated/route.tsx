@@ -9,7 +9,7 @@ import { Bell, LogOut, Search,
   LayoutDashboard, Users, HandCoins, Gift, TrendingUp, TrendingDown,
   Wallet, Landmark, Smartphone, Package, Boxes, CalendarDays, UsersRound,
   Megaphone, Moon, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
-  BarChart3, Settings, ShieldCheck, FileText
+  BarChart3, Settings, ShieldCheck, FileText, User as UserIcon
 } from "lucide-react";
 import {
   CommandDialog,
@@ -212,6 +212,11 @@ function Layout() {
                   <p className="text-sm font-medium leading-none capitalize">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Admin"}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })} className="cursor-pointer">
+                  <UserIcon className="w-4 h-4 mr-2" />
+                  <span>{lang === "bn" ? "আমার প্রোফাইল" : "My Profile"}</span>
+                </DropdownMenuItem>
                 {hasPerm("/settings") && (
                   <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
                     <Settings className="w-4 h-4 mr-2" />

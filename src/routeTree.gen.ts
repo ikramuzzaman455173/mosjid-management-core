@@ -22,6 +22,7 @@ import { Route as AuthenticatedRolesPermissionsRouteImport } from './routes/_aut
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedRamadanRouteImport } from './routes/_authenticated/ramadan'
 import { Route as AuthenticatedQurbaniRouteImport } from './routes/_authenticated/qurbani'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPrayerTimesRouteImport } from './routes/_authenticated/prayer-times'
 import { Route as AuthenticatedNoticesRouteImport } from './routes/_authenticated/notices'
 import { Route as AuthenticatedMobileBankingRouteImport } from './routes/_authenticated/mobile-banking'
@@ -104,6 +105,11 @@ const AuthenticatedRamadanRoute = AuthenticatedRamadanRouteImport.update({
 const AuthenticatedQurbaniRoute = AuthenticatedQurbaniRouteImport.update({
   id: '/qurbani',
   path: '/qurbani',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPrayerTimesRoute =
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/mobile-banking': typeof AuthenticatedMobileBankingRoute
   '/notices': typeof AuthenticatedNoticesRoute
   '/prayer-times': typeof AuthenticatedPrayerTimesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/qurbani': typeof AuthenticatedQurbaniRoute
   '/ramadan': typeof AuthenticatedRamadanRoute
   '/reports': typeof AuthenticatedReportsRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/mobile-banking': typeof AuthenticatedMobileBankingRoute
   '/notices': typeof AuthenticatedNoticesRoute
   '/prayer-times': typeof AuthenticatedPrayerTimesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/qurbani': typeof AuthenticatedQurbaniRoute
   '/ramadan': typeof AuthenticatedRamadanRoute
   '/reports': typeof AuthenticatedReportsRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/_authenticated/mobile-banking': typeof AuthenticatedMobileBankingRoute
   '/_authenticated/notices': typeof AuthenticatedNoticesRoute
   '/_authenticated/prayer-times': typeof AuthenticatedPrayerTimesRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/qurbani': typeof AuthenticatedQurbaniRoute
   '/_authenticated/ramadan': typeof AuthenticatedRamadanRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/mobile-banking'
     | '/notices'
     | '/prayer-times'
+    | '/profile'
     | '/qurbani'
     | '/ramadan'
     | '/reports'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/mobile-banking'
     | '/notices'
     | '/prayer-times'
+    | '/profile'
     | '/qurbani'
     | '/ramadan'
     | '/reports'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mobile-banking'
     | '/_authenticated/notices'
     | '/_authenticated/prayer-times'
+    | '/_authenticated/profile'
     | '/_authenticated/qurbani'
     | '/_authenticated/ramadan'
     | '/_authenticated/reports'
@@ -484,6 +496,13 @@ declare module '@tanstack/react-router' {
       path: '/qurbani'
       fullPath: '/qurbani'
       preLoaderRoute: typeof AuthenticatedQurbaniRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/prayer-times': {
@@ -626,6 +645,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMobileBankingRoute: typeof AuthenticatedMobileBankingRoute
   AuthenticatedNoticesRoute: typeof AuthenticatedNoticesRoute
   AuthenticatedPrayerTimesRoute: typeof AuthenticatedPrayerTimesRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedQurbaniRoute: typeof AuthenticatedQurbaniRoute
   AuthenticatedRamadanRoute: typeof AuthenticatedRamadanRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
@@ -655,6 +675,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMobileBankingRoute: AuthenticatedMobileBankingRoute,
   AuthenticatedNoticesRoute: AuthenticatedNoticesRoute,
   AuthenticatedPrayerTimesRoute: AuthenticatedPrayerTimesRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedQurbaniRoute: AuthenticatedQurbaniRoute,
   AuthenticatedRamadanRoute: AuthenticatedRamadanRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
