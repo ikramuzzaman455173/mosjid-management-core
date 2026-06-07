@@ -12,6 +12,7 @@ import { FileUpload } from "@/components/file-upload";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -107,7 +108,7 @@ function AssetsPage() {
           <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
           <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
           <div><Label>{t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></div>
-          <div><Label>{t("purchase_date")}</Label><Input type="date" value={form.purchase_date} onChange={(e) => setForm({ ...form, purchase_date: e.target.value })} /></div>
+          <div><Label>{t("purchase_date")}</Label><DatePicker  value={form.purchase_date} onChange={(v) => setForm({ ...form, purchase_date: v })} /></div>
           <div><Label>{t("condition")}</Label>
             <Select value={form.condition} onValueChange={(v) => setForm({ ...form, condition: v })}>
               <SelectTrigger><SelectValue /></SelectTrigger>

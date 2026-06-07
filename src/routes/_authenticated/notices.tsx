@@ -10,6 +10,7 @@ import { DataTable, type Column } from "@/components/data-table";
 import { CrudDialog } from "@/components/crud-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -138,7 +139,7 @@ function NoticesPage() {
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <Input type="date" value={form.notice_date} onChange={(e) => setForm({ ...form, notice_date: e.target.value })} />
+            <DatePicker  value={form.notice_date} onChange={(v) => setForm({ ...form, notice_date: v })} />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("description")}</Label>

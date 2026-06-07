@@ -11,6 +11,7 @@ import { QurbaniAnimalCosts } from "@/components/qurbani-animal-costs";
 import { QurbaniShareManagement } from "@/components/qurbani-share-management";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -172,7 +173,7 @@ function QurbaniPage() {
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <Input type="date" value={form.donation_date} onChange={(e) => setForm({ ...form, donation_date: e.target.value })} />
+            <DatePicker  value={form.donation_date} onChange={(v) => setForm({ ...form, donation_date: v })} />
           </div>
           <div>
             <Label>{lang === "bn" ? "রসিদ নং" : "Receipt No"}</Label>

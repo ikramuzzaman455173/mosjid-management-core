@@ -11,6 +11,7 @@ import { CrudDialog } from "@/components/crud-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -143,7 +144,7 @@ function StockTxnDialog({ item, kind, onClose }: { item: Item; kind: "in" | "out
         <div className="space-y-4">
           <p className="text-xs text-muted-foreground">{t("current_stock")}: <strong>{toBnNum(item.current_stock, lang)} {item.unit}</strong></p>
           <div><Label required>{t("quantity")}</Label><Input type="number" min="0" step="0.01" value={qty} onChange={(e) => setQty(Number(e.target.value))} placeholder="5" /></div>
-          <div><Label>{t("date")}</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
+          <div><Label>{t("date")}</Label><DatePicker  value={date} onChange={(v) => setDate(v)} /></div>
           <div><Label>{t("reason")}</Label><Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={lang === "bn" ? "যেমন: নষ্ট হয়ে গেছে" : "e.g. Damaged"} /></div>
           <Button onClick={() => submit.mutate()} disabled={submit.isPending} className="w-full">{t("save")}</Button>
         </div>

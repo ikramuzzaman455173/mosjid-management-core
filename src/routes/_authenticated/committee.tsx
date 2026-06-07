@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -90,8 +91,8 @@ function CommitteePage() {
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: পরিচালনা কমিটি ২০২৪-২৬" : "e.g. Managing Committee 2024-26"} /></div>
-          <div><Label required>{lang === "bn" ? "শুরু" : "Start"}</Label><Input type="date" required value={form.tenure_start} onChange={(e) => setForm({ ...form, tenure_start: e.target.value })} /></div>
-          <div><Label>{lang === "bn" ? "শেষ" : "End"}</Label><Input type="date" value={form.tenure_end} onChange={(e) => setForm({ ...form, tenure_end: e.target.value })} /></div>
+          <div><Label required>{lang === "bn" ? "শুরু" : "Start"}</Label><DatePicker  required value={form.tenure_start} onChange={(v) => setForm({ ...form, tenure_start: v })} /></div>
+          <div><Label>{lang === "bn" ? "শেষ" : "End"}</Label><DatePicker  value={form.tenure_end} onChange={(v) => setForm({ ...form, tenure_end: v })} /></div>
           <div className="col-span-1 md:col-span-2"><Label>{t("status")}</Label>
             <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -257,7 +258,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
             <div><Label required>{t("title")}</Label><Input required value={resForm.title} onChange={(e) => setResForm({ ...resForm, title: e.target.value })} placeholder={lang === "bn" ? "সিদ্ধান্তের শিরোনাম" : "Resolution Title"} /></div>
             <div><Label>{t("description")}</Label><Textarea rows={3} value={resForm.content} onChange={(e) => setResForm({ ...resForm, content: e.target.value })} placeholder={lang === "bn" ? "সিদ্ধান্তের বিস্তারিত বিবরণ..." : "Resolution details..."} /></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><Label>{t("date")}</Label><Input type="date" value={resForm.resolution_date} onChange={(e) => setResForm({ ...resForm, resolution_date: e.target.value })} /></div>
+              <div><Label>{t("date")}</Label><DatePicker  value={resForm.resolution_date} onChange={(v) => setResForm({ ...resForm, resolution_date: v })} /></div>
               <div><Label>{t("status")}</Label>
                 <Select value={resForm.status} onValueChange={(v) => setResForm({ ...resForm, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>

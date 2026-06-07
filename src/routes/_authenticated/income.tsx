@@ -10,6 +10,7 @@ import { DataTable, type Column } from "@/components/data-table";
 import { CrudDialog } from "@/components/crud-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -140,7 +141,7 @@ function IncomePage() {
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <Input type="date" value={form.income_date} onChange={(e) => setForm({ ...form, income_date: e.target.value })} />
+            <DatePicker  value={form.income_date} onChange={(v) => setForm({ ...form, income_date: v })} />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("account")}</Label>

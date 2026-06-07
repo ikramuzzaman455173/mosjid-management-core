@@ -6,6 +6,7 @@ import { useI18n, fmtDate } from "@/lib/i18n";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -139,11 +140,11 @@ function AuditLogsPage() {
           </div>
           <div>
             <Label className="text-xs">{t("from_date")}</Label>
-            <Input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(0); }} className="h-9" />
+            <DatePicker  value={from} onChange={(v) => { setFrom(v); setPage(0); }} className="h-9" />
           </div>
           <div>
             <Label className="text-xs">{t("to_date")}</Label>
-            <Input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(0); }} className="h-9" />
+            <DatePicker  value={to} onChange={(v) => { setTo(v); setPage(0); }} className="h-9" />
           </div>
         </div>
       </Card>

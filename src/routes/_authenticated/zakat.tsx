@@ -10,6 +10,7 @@ import { CrudDialog } from "@/components/crud-dialog";
 import { ZakatCalculator } from "@/components/zakat-calculator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -162,7 +163,7 @@ function ZakatPage() {
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <Input type="date" value={form.donation_date} onChange={(e) => setForm({ ...form, donation_date: e.target.value })} />
+            <DatePicker  value={form.donation_date} onChange={(v) => setForm({ ...form, donation_date: v })} />
           </div>
           <div>
             <Label>{lang === "bn" ? "রসিদ নং" : "Receipt No"}</Label>
