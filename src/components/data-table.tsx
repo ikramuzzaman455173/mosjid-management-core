@@ -24,6 +24,7 @@ interface DataTableProps<T extends { id: string }> {
   searchKeys?: (keyof T)[];
   emptyMessage?: string;
   toolbar?: ReactNode;
+  hidePagination?: boolean;
 }
 
 export function DataTable<T extends { id: string }>({
@@ -33,6 +34,7 @@ export function DataTable<T extends { id: string }>({
   searchKeys,
   emptyMessage,
   toolbar,
+  hidePagination,
 }: DataTableProps<T>) {
   const { t, lang } = useI18n();
   const [q, setQ] = useState("");
@@ -57,30 +59,33 @@ export function DataTable<T extends { id: string }>({
   }, [data, q, searchKeys]);
 
   const paginatedData = useMemo(() => {
+    if (hidePagination) return filtered;
     const start = pageIndex * pageSize;
     const end = start + pageSize;
     return filtered.slice(start, end);
-  }, [filtered, pageIndex, pageSize]);
+  }, [filtered, pageIndex, pageSize, hidePagination]);
 
   const totalPages = Math.ceil(filtered.length / pageSize);
   const hasData = filtered.length > 0;
 
   return (
     <Card className="shadow-sm border rounded-xl overflow-hidden bg-card">
-      <div className="p-4 border-b flex items-center gap-4 flex-wrap bg-muted/20">
-        {searchKeys && searchKeys.length > 0 && (
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={t("search")}
-              className="pl-8 h-9"
-            />
-          </div>
-        )}
-        <div className="ml-auto flex items-center gap-2">{toolbar}</div>
-      </div>
+      {((searchKeys && searchKeys.length > 0) || toolbar) && (
+        <div className="p-4 border-b flex items-center gap-4 flex-wrap bg-muted/20">
+          {searchKeys && searchKeys.length > 0 && (
+            <div className="relative flex-1 min-w-[200px] max-w-sm">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder={t("search")}
+                className="pl-8 h-9"
+              />
+            </div>
+          )}
+          {toolbar && <div className="ml-auto flex items-center gap-2">{toolbar}</div>}
+        </div>
+      )}
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="bg-muted/50 border-b">
@@ -126,7 +131,8 @@ export function DataTable<T extends { id: string }>({
       </div>
       
       {/* Pagination Footer */}
-      <div className="flex items-center justify-between px-4 py-3 border-t bg-muted/10">
+      {!hidePagination && (
+        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted/10">
         <div className="flex-1 flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="hidden sm:inline">{lang === "bn" ? "প্রতি পৃষ্ঠায়:" : "Rows per page:"}</span>
@@ -232,6 +238,7 @@ export function DataTable<T extends { id: string }>({
           </Pagination>
         </div>
       </div>
+      )}
     </Card>
   );
 }

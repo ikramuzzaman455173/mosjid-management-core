@@ -12,6 +12,7 @@ import { Clock } from "lucide-react";
 import { toast } from "sonner";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
+import { DataTable, type Column } from "@/components/data-table";
 
 export const Route = createFileRoute("/_authenticated/prayer-times")({
   component: PrayerPage,
@@ -37,7 +38,7 @@ function PrayerPage() {
     queryKey: ["prayer", date],
     queryFn: async () => (await supabase.from("prayer_times").select("*").eq("effective_date", date).maybeSingle()).data,
   });
-  const { data: list } = useQuery({
+  const { data: list, isLoading } = useQuery({
     queryKey: ["prayer-list"],
     queryFn: async () => (await supabase.from("prayer_times").select("*").order("effective_date", { ascending: false }).limit(20)).data ?? [],
   });
@@ -86,28 +87,26 @@ function PrayerPage() {
         </PermissionGuard>
       </Card>
 
-      <Card className="p-4">
-        <h3 className="font-semibold text-primary mb-3">{lang === "bn" ? "সাম্প্রতিক সময়সূচী" : "Recent schedules"}</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40">
-              <tr>
-                <th className="text-left p-2">{t("date")}</th>
-                {SLOTS.map(s => <th key={s.key} className="p-2 text-center">{lang === "bn" ? s.bn : s.en}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {(list ?? []).map((r: any) => (
-                <tr key={r.id} className="border-t hover:bg-muted/30">
-                  <td className="p-2 font-medium">{fmtDate(r.effective_date, lang)}</td>
-                  {SLOTS.map(s => <td key={s.key} className="p-2 text-center text-xs">{r[s.key] ? toBnNum(r[s.key].slice(0, 5), lang) : "—"}</td>)}
-                </tr>
-              ))}
-              {(list ?? []).length === 0 && <tr><td colSpan={7} className="text-center py-6 text-muted-foreground">{t("no_data")}</td></tr>}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      <div className="space-y-3">
+        <h3 className="font-semibold text-primary px-1">{lang === "bn" ? "সাম্প্রতিক সময়সূচী" : "Recent schedules"}</h3>
+        <DataTable
+          data={list as any[]}
+          columns={[
+            {
+              key: "effective_date",
+              header: t("date"),
+              cell: (r) => <span className="font-medium">{fmtDate(r.effective_date, lang)}</span>,
+            },
+            ...SLOTS.map(s => ({
+              key: s.key,
+              header: lang === "bn" ? s.bn : s.en,
+              cell: (r: any) => <span className="text-xs">{r[s.key] ? toBnNum(r[s.key].slice(0, 5), lang) : "—"}</span>,
+            }))
+          ]}
+          loading={isLoading}
+          hidePagination
+        />
+      </div>
     </div>
   );
 }
