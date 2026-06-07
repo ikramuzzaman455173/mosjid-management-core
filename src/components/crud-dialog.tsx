@@ -24,6 +24,7 @@ export function CrudDialog({ open, onOpenChange, title, children, onSubmit, savi
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             onSubmit();
           }}
           className="space-y-3"

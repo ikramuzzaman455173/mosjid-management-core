@@ -383,7 +383,7 @@ function UsersPage() {
               <Trash2 className="w-5 h-5" />
               {lang === "bn" ? "ইউজার ডিলিট নিশ্চিত করুন" : "Confirm User Deletion"}
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3">
+            <AlertDialogDescription className="space-y-4">
               <p className="text-sm">
                 {lang === "bn"
                   ? "এই ইউজারকে স্থায়ীভাবে মুছে ফেলা হবে। এই কাজটি আর পূর্বাবস্থায় ফেরানো যাবে না।"

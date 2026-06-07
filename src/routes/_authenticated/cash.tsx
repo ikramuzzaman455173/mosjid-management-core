@@ -83,9 +83,9 @@ function AccountsByKind({ kind, icon, titleKey }: { kind: "cash" | "bank" | "mob
         actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm({ name: "", bank_name: "", account_no: "", opening_balance: 0 }); setOpen(true); } : undefined} />
       <DataTable data={data as any[]} columns={columns} loading={isLoading} searchKeys={["name", "bank_name"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <Label>{t("name")} *</Label>
+            <Label required>{t("name")}</Label>
             <Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: ক্যাশ বাক্স" : "e.g. Cash Box"} />
           </div>
           {kind !== "cash" && (

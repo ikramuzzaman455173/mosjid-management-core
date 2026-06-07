@@ -87,11 +87,11 @@ function CommitteePage() {
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["name"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2"><Label>{t("name")} *</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: পরিচালনা কমিটি ২০২৪-২৬" : "e.g. Managing Committee 2024-26"} /></div>
-          <div><Label>{lang === "bn" ? "শুরু" : "Start"} *</Label><Input type="date" required value={form.tenure_start} onChange={(e) => setForm({ ...form, tenure_start: e.target.value })} /></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: পরিচালনা কমিটি ২০২৪-২৬" : "e.g. Managing Committee 2024-26"} /></div>
+          <div><Label required>{lang === "bn" ? "শুরু" : "Start"}</Label><Input type="date" required value={form.tenure_start} onChange={(e) => setForm({ ...form, tenure_start: e.target.value })} /></div>
           <div><Label>{lang === "bn" ? "শেষ" : "End"}</Label><Input type="date" value={form.tenure_end} onChange={(e) => setForm({ ...form, tenure_end: e.target.value })} /></div>
-          <div className="col-span-2"><Label>{t("status")}</Label>
+          <div className="col-span-1 md:col-span-2"><Label>{t("status")}</Label>
             <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -101,7 +101,7 @@ function CommitteePage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-2"><Label>{t("description")}</Label><Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("description")}</Label><Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
@@ -186,7 +186,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
             <TabsTrigger value="members">{lang === "bn" ? "সদস্যবৃন্দ" : "Members"}</TabsTrigger>
             <TabsTrigger value="res">{t("resolutions")}</TabsTrigger>
           </TabsList>
-          <TabsContent value="members" className="space-y-3 pt-3">
+          <TabsContent value="members" className="space-y-4 pt-3">
             <PermissionGuard module="Committee" action="Create" fallback={<></>}>
               <div className="flex justify-end"><Button size="sm" onClick={() => setMemberOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add_member")}</Button></div>
             </PermissionGuard>
@@ -204,7 +204,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
             </div>
           </TabsContent>
-          <TabsContent value="res" className="space-y-3 pt-3">
+          <TabsContent value="res" className="space-y-4 pt-3">
             <PermissionGuard module="Committee" action="Create" fallback={<></>}>
               <div className="flex justify-end"><Button size="sm" onClick={() => setResOpen(true)}><Plus className="w-4 h-4 mr-1" />{t("add")}</Button></div>
             </PermissionGuard>
@@ -233,7 +233,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
         <Dialog open={memberOpen} onOpenChange={setMemberOpen}>
           <DialogContent>
             <DialogHeader><DialogTitle>{t("add_member")}</DialogTitle></DialogHeader>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div><Label>{t("name")}</Label>
                 <Select value={selMember} onValueChange={setSelMember}>
                   <SelectTrigger><SelectValue placeholder={t("select_option")} /></SelectTrigger>
@@ -252,10 +252,10 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
         </Dialog>
 
         <CrudDialog open={resOpen} onOpenChange={setResOpen} title={t("add")} onSubmit={() => saveRes.mutate()} saving={saveRes.isPending}>
-          <div className="space-y-3">
-            <div><Label>{t("title")} *</Label><Input required value={resForm.title} onChange={(e) => setResForm({ ...resForm, title: e.target.value })} placeholder={lang === "bn" ? "সিদ্ধান্তের শিরোনাম" : "Resolution Title"} /></div>
+          <div className="space-y-4">
+            <div><Label required>{t("title")}</Label><Input required value={resForm.title} onChange={(e) => setResForm({ ...resForm, title: e.target.value })} placeholder={lang === "bn" ? "সিদ্ধান্তের শিরোনাম" : "Resolution Title"} /></div>
             <div><Label>{t("description")}</Label><Textarea rows={3} value={resForm.content} onChange={(e) => setResForm({ ...resForm, content: e.target.value })} placeholder={lang === "bn" ? "সিদ্ধান্তের বিস্তারিত বিবরণ..." : "Resolution details..."} /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div><Label>{t("date")}</Label><Input type="date" value={resForm.resolution_date} onChange={(e) => setResForm({ ...resForm, resolution_date: e.target.value })} /></div>
               <div><Label>{t("status")}</Label>
                 <Select value={resForm.status} onValueChange={(v) => setResForm({ ...resForm, status: v })}>

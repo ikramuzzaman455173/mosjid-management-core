@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "@/lib/i18n";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "@/components/ui/pagination";
 import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useMemo, useEffect, type ReactNode } from "react";
 
@@ -156,29 +157,53 @@ export function DataTable<T extends { id: string }>({
         </div>
         
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-            disabled={!hasData || pageIndex === 0}
-            className="h-8 w-8 p-0 lg:w-auto lg:px-3"
-          >
-            <ChevronLeft className="h-4 w-4 lg:mr-1" />
-            <span className="hidden lg:inline">{lang === "bn" ? "পূর্ববর্তী" : "Prev"}</span>
-          </Button>
-          <div className="text-sm font-medium mx-2 sm:hidden">
-            {pageIndex + 1} / {Math.max(1, totalPages)}
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={!hasData || pageIndex >= totalPages - 1}
-            className="h-8 w-8 p-0 lg:w-auto lg:px-3"
-          >
-            <span className="hidden lg:inline">{lang === "bn" ? "পরবর্তী" : "Next"}</span>
-            <ChevronRight className="h-4 w-4 lg:ml-1" />
-          </Button>
+          <Pagination className="mx-0 justify-end w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+                  className={!hasData || pageIndex === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              
+              <div className="hidden sm:flex flex-row items-center gap-1">
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  if (i === 0 || i === totalPages - 1 || (i >= pageIndex - 1 && i <= pageIndex + 1)) {
+                    return (
+                      <PaginationItem key={i}>
+                        <PaginationLink
+                          isActive={pageIndex === i}
+                          onClick={() => setPageIndex(i)}
+                          className="cursor-pointer"
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  }
+                  if (i === pageIndex - 2 || i === pageIndex + 2) {
+                    return (
+                      <PaginationItem key={i}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+
+              <div className="text-sm font-medium mx-2 sm:hidden flex items-center">
+                {pageIndex + 1} / {Math.max(1, totalPages)}
+              </div>
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
+                  className={!hasData || pageIndex >= totalPages - 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </Card>

@@ -165,9 +165,9 @@ function DonationsPage() {
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["donor_name", "donor_phone", "receipt_no"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("receive_donation")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2">
-            <Label>{lang === "bn" ? "দাতার নাম" : "Donor name"} *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2">
+            <Label required>{lang === "bn" ? "দাতার নাম" : "Donor name"}</Label>
             <Input required value={form.donor_name} onChange={(e) => setForm({ ...form, donor_name: e.target.value })} placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"} />
           </div>
           <div>
@@ -175,7 +175,7 @@ function DonationsPage() {
             <Input value={form.donor_phone} onChange={(e) => setForm({ ...form, donor_phone: e.target.value })} placeholder="01XXXXXXXXX" />
           </div>
           <div>
-            <Label>{t("amount")} (৳) *</Label>
+            <Label required>{t("amount")} (৳)</Label>
             <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="5000" />
           </div>
           <div>
@@ -196,11 +196,11 @@ function DonationsPage() {
             <Label>{t("date")}</Label>
             <Input type="date" value={form.donation_date} onChange={(e) => setForm({ ...form, donation_date: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{lang === "bn" ? "রসিদ নং" : "Receipt No"}</Label>
             <Input value={form.receipt_no} onChange={(e) => setForm({ ...form, receipt_no: e.target.value })} placeholder={lang === "bn" ? "রসিদ নং (ঐচ্ছিক)" : "Receipt No (optional)"} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
             <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
           </div>

@@ -25,9 +25,9 @@ import { usePermissions } from "@/hooks/usePermissions";
 
 export const Route = createFileRoute("/_authenticated/meetings")({ component: MeetingsPage });
 
-type Meeting = { id: string; title: string; meeting_date: string; location: string | null; kind: string; status: string; agenda: string | null; minutes: string | null };
+type Meeting = { id: string; title: string; meeting_date: string; location: string | null; kind: string; meeting_type: string | null; status: string; agenda: string | null; minutes: string | null };
 
-const empty = { title: "", meeting_date: new Date().toISOString().slice(0, 16), location: "", kind: "general", status: "scheduled", agenda: "", minutes: "" };
+const empty = { title: "", meeting_date: new Date().toISOString().slice(0, 16), location: "", kind: "general", meeting_type: "local", status: "scheduled", agenda: "", minutes: "" };
 
 function MeetingsPage() {
   const { t, lang } = useI18n();
@@ -45,7 +45,7 @@ function MeetingsPage() {
     queryFn: async () => {
       const { data, error } = await supabase.from("meetings").select("*").order("meeting_date", { ascending: false });
       if (error) throw error;
-      return data as Meeting[];
+      return data as unknown as Meeting[];
     },
   });
 
@@ -82,12 +82,13 @@ function MeetingsPage() {
       </div>
     )},
     { key: "kind", header: t("type"), cell: (m) => <Badge variant="outline">{m.kind}</Badge> },
+    { key: "meeting_type", header: lang === "bn" ? "মাধ্যম" : "Mode", cell: (m) => <Badge variant="secondary">{m.meeting_type === 'online' ? (lang === 'bn' ? 'অনলাইন' : 'Online') : (lang === 'bn' ? 'লোকাল' : 'Local')}</Badge> },
     { key: "status", header: t("status"), cell: (m) => statusBadge(m.status) },
     { key: "act", header: t("actions"), className: "text-right", cell: (m) => (
       <div className="flex gap-1 justify-end">
         <Button size="icon" variant="ghost" onClick={() => setDetail(m)}><ExternalLink className="w-4 h-4 text-primary" /></Button>
         <PermissionGuard module="Meetings" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, meeting_type: m.meeting_type ?? "local", status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
         </PermissionGuard>
         <PermissionGuard module="Meetings" action="Delete" fallback={<></>}>
           <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
@@ -102,10 +103,19 @@ function MeetingsPage() {
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "location"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2"><Label>{t("title")} *</Label><Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={lang === "bn" ? "যেমন: মাসিক সাধারণ সভা" : "e.g. Monthly General Meeting"} /></div>
-          <div><Label>{t("date")} *</Label><Input type="datetime-local" required value={form.meeting_date} onChange={(e) => setForm({ ...form, meeting_date: e.target.value })} /></div>
-          <div><Label>{t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={lang === "bn" ? "যেমন: মসজিদ প্রাঙ্গণ" : "e.g. Mosque Premises"} /></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2"><Label required>{t("title")}</Label><Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={lang === "bn" ? "যেমন: মাসিক সাধারণ সভা" : "e.g. Monthly General Meeting"} /></div>
+          <div><Label required>{t("date")}</Label><Input type="datetime-local" required value={form.meeting_date} onChange={(e) => setForm({ ...form, meeting_date: e.target.value })} /></div>
+          <div><Label>{lang === "bn" ? "মাধ্যম" : "Mode"}</Label>
+            <Select value={form.meeting_type} onValueChange={(v) => setForm({ ...form, meeting_type: v })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="local">{lang === "bn" ? "লোকাল" : "Local"}</SelectItem>
+                <SelectItem value="online">{lang === "bn" ? "অনলাইন" : "Online"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div><Label>{form.meeting_type === 'online' ? (lang === 'bn' ? 'মিটিং লিঙ্ক' : 'Meeting Link') : t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={form.meeting_type === 'online' ? "https://zoom.us/..." : (lang === "bn" ? "যেমন: মসজিদ প্রাঙ্গণ" : "e.g. Mosque Premises")} /></div>
           <div><Label>{t("type")}</Label>
             <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -127,8 +137,8 @@ function MeetingsPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-2"><Label>{t("agenda")}</Label><Textarea rows={3} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} /></div>
-          <div className="col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.minutes} onChange={(e) => setForm({ ...form, minutes: e.target.value })} placeholder={lang === "bn" ? "সভার আলোচ্য বিষয় বা সিদ্ধান্ত..." : "Meeting agenda or decisions..."} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("agenda")}</Label><Textarea rows={3} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.minutes} onChange={(e) => setForm({ ...form, minutes: e.target.value })} placeholder={lang === "bn" ? "সভার আলোচ্য বিষয় বা সিদ্ধান্ত..." : "Meeting agenda or decisions..."} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
@@ -213,7 +223,7 @@ function MeetingDetailDialog({ meeting, onClose }: { meeting: Meeting; onClose: 
         <DialogHeader className="flex flex-row items-start justify-between pr-8">
           <div>
             <DialogTitle className="text-primary">{meeting.title}</DialogTitle>
-            <p className="text-xs text-muted-foreground">{fmtDate(meeting.meeting_date, lang)} • {meeting.location ?? "—"}</p>
+            <p className="text-xs text-muted-foreground">{fmtDate(meeting.meeting_date, lang)} • {meeting.meeting_type === 'online' ? 'Online' : 'Local'} • {meeting.location ?? "—"}</p>
           </div>
           <Button variant="outline" size="sm" onClick={() => handlePrint()} className="text-primary border-primary">
             <Printer className="w-4 h-4 mr-2" />
@@ -236,7 +246,7 @@ function MeetingDetailDialog({ meeting, onClose }: { meeting: Meeting; onClose: 
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{meeting.minutes || "—"}</p>
             </div>
           </TabsContent>
-          <TabsContent value="docs" className="space-y-3 pt-3">
+          <TabsContent value="docs" className="space-y-4 pt-3">
             <FileUpload folder={`meetings/${meeting.id}`} onUploaded={(i) => addDoc.mutate(i)} />
             <div className="space-y-1">
               {docs?.length ? docs.map((d: any) => (
@@ -248,7 +258,7 @@ function MeetingDetailDialog({ meeting, onClose }: { meeting: Meeting; onClose: 
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
             </div>
           </TabsContent>
-          <TabsContent value="att" className="space-y-3 pt-3">
+          <TabsContent value="att" className="space-y-4 pt-3">
             <div className="flex justify-end">
               <Button size="sm" variant="outline" onClick={() => markAll.mutate()}>{t("mark_all_present")}</Button>
             </div>

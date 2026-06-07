@@ -28,3 +28,5 @@ mobile screen modal margin left-right space add korte hobe.
 mobile form inptu field 2colum use kortase oita 1column hobe.
 pagination page no missing .
 table colum title ta bold kore dite hobe.
+
+er akta bisoy shob component proper ruseable koro full application all jaygay same style follow kisu jay input file level lage gase aber kisu jaygay space kisu jaygare input kisu boro chuto etc onek problem ase eigula fixed hobe real application wise.

@@ -333,8 +333,8 @@ function MembersPage() {
         onSubmit={() => save.mutate()}
         saving={save.isPending}
       >
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2 flex items-center gap-4 border p-3 rounded-md bg-muted/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2 flex items-center gap-4 border p-3 rounded-md bg-muted/10">
             <div className="w-16 h-16 rounded-full bg-muted border overflow-hidden flex items-center justify-center shrink-0">
               {form.photo_url ? (
                 <img src={form.photo_url} alt="Profile" className="w-full h-full object-cover" />
@@ -353,7 +353,7 @@ function MembersPage() {
             <Input value={form.member_code} onChange={(e) => setForm({ ...form, member_code: e.target.value })} placeholder="M-001" />
           </div>
           <div>
-            <Label>{t("name")} *</Label>
+            <Label required>{t("name")}</Label>
             <Input required value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"} />
           </div>
           <div>
@@ -405,12 +405,12 @@ function MembersPage() {
             <Label>{lang === "bn" ? "মেয়াদোত্তীর্ণের তারিখ" : "Expiry Date"}</Label>
             <Input type="date" value={form.expiry_date} onChange={(e) => setForm({ ...form, expiry_date: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("address")}</Label>
             <Textarea rows={2} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder={lang === "bn" ? "সম্পূর্ণ ঠিকানা লিখুন..." : "Enter full address..."} />
           </div>
 
-          <div className="col-span-2 border-t pt-4 mt-2">
+          <div className="col-span-1 md:col-span-2 border-t pt-4 mt-2">
             <div className="flex items-center justify-between mb-3">
               <Label className="text-base font-semibold text-primary">{lang === "bn" ? "পরিবারভিত্তিক তথ্য" : "Family Information"}</Label>
               <Button type="button" variant="outline" size="sm" onClick={addFamilyMember}>
@@ -418,7 +418,7 @@ function MembersPage() {
               </Button>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               {form.family_info.map((fm, idx) => (
                 <div key={idx} className="flex gap-2 items-start bg-muted/20 p-2 rounded-md border border-border/50">
                   <div className="flex-1 grid grid-cols-3 gap-2">

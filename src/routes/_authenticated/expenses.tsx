@@ -130,9 +130,9 @@ function ExpensesPage() {
         actionLabel={canCreate ? t("expense_entry") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["category", "vendor", "bill_no"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("expense_entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label>{t("category")} *</Label>
+            <Label required>{t("category")}</Label>
             <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -150,7 +150,7 @@ function ExpensesPage() {
             <Input required value={form.vendor} onChange={(e) => setForm({ ...form, vendor: e.target.value })} placeholder={lang === "bn" ? "যেমন: জননী স্টোর" : "e.g. Janani Store"} />
           </div>
           <div>
-            <Label>{t("amount")} (৳) *</Label>
+            <Label required>{t("amount")} (৳)</Label>
             <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="1500" />
           </div>
           <div>
@@ -170,7 +170,7 @@ function ExpensesPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
             <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
           </div>

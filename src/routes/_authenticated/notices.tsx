@@ -118,9 +118,9 @@ function NoticesPage() {
         actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "content"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2">
-            <Label>{t("title")} *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2">
+            <Label required>{t("title")}</Label>
             <Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={lang === "bn" ? "যেমন: জুমার নামাজের সময়সূচি" : "e.g. Jummah Prayer Time"} />
           </div>
           <div>
@@ -139,11 +139,11 @@ function NoticesPage() {
             <Label>{t("date")}</Label>
             <Input type="date" value={form.notice_date} onChange={(e) => setForm({ ...form, notice_date: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("description")}</Label>
             <Textarea required rows={4} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} placeholder={lang === "bn" ? "নোটিশের বিস্তারিত লিখুন..." : "Enter notice details..."} />
           </div>
-          <div className="col-span-2 flex items-center gap-2">
+          <div className="col-span-1 md:col-span-2 flex items-center gap-2">
             <Switch checked={form.published} onCheckedChange={(v) => setForm({ ...form, published: v })} />
             <Label>{lang === "bn" ? "প্রকাশ করুন" : "Publish"}</Label>
           </div>

@@ -120,9 +120,9 @@ function EventsPage() {
         actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "location"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2">
-            <Label>{t("title")} *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2">
+            <Label required>{t("title")}</Label>
             <Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={lang === "bn" ? "যেমন: মিলাদ মাহফিল" : "e.g. Milad Mahfil"} />
           </div>
           <div>
@@ -133,11 +133,11 @@ function EventsPage() {
             <Label>{t("type")}</Label>
             <Input value={form.event_type} onChange={(e) => setForm({ ...form, event_type: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{lang === "bn" ? "স্থান" : "Location"}</Label>
             <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("description")}</Label>
             <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>

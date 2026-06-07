@@ -187,6 +187,7 @@ CREATE TABLE IF NOT EXISTS meetings (
   created_by TEXT,
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   kind TEXT,
+  meeting_type TEXT,
   location TEXT,
   meeting_date TEXT,
   minutes TEXT,

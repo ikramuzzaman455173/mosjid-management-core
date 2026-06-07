@@ -194,14 +194,14 @@ function GalleryPage() {
           <div className="space-y-4 py-2">
             {form.media_type === "image" ? (
               <div>
-                <Label>{lang === "bn" ? "ছবি নির্বাচন করুন" : "Select Image"} *</Label>
+                <Label required>{lang === "bn" ? "ছবি নির্বাচন করুন" : "Select Image"}</Label>
                 <div className="mt-1 flex items-center gap-3">
                   <Input type="file" accept="image/*" onChange={(e) => setForm({ ...form, file: e.target.files?.[0] ?? null })} className="cursor-pointer" />
                 </div>
               </div>
             ) : (
               <div>
-                <Label>{lang === "bn" ? "ভিডিও বা ইউটিউব লিংক" : "Video or YouTube Link"} *</Label>
+                <Label required>{lang === "bn" ? "ভিডিও বা ইউটিউব লিংক" : "Video or YouTube Link"}</Label>
                 <div className="mt-1">
                   <Input value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} placeholder="https://youtube.com/watch?v=..." />
                 </div>

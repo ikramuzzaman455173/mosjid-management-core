@@ -88,8 +88,8 @@ function InventoryPage() {
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["name", "category"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2"><Label>{t("name")} *</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: জায়নামাজ" : "e.g. Prayer Mat"} /></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: জায়নামাজ" : "e.g. Prayer Mat"} /></div>
           <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder={lang === "bn" ? "যেমন: কার্পেট" : "e.g. Carpet"} /></div>
           <div><Label>{t("unit")}</Label>
             <Select value={form.unit} onValueChange={(v) => setForm({ ...form, unit: v })}>
@@ -106,7 +106,7 @@ function InventoryPage() {
           {!editing && <div><Label>{t("current_stock")}</Label><Input type="number" value={form.current_stock} onChange={(e) => setForm({ ...form, current_stock: Number(e.target.value) })} placeholder="10" /></div>}
           <div><Label>{t("min_stock")}</Label><Input type="number" value={form.min_stock} onChange={(e) => setForm({ ...form, min_stock: Number(e.target.value) })} placeholder="5" /></div>
           <div className={editing ? "col-span-2" : ""}><Label>{lang === "bn" ? "একক মূল্য" : "Unit price"}</Label><Input type="number" step="0.01" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })} placeholder="1200" /></div>
-          <div className="col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
@@ -139,9 +139,9 @@ function StockTxnDialog({ item, kind, onClose }: { item: Item; kind: "in" | "out
     <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader><DialogTitle>{kind === "in" ? t("stock_in") : t("stock_out")} — {item.name}</DialogTitle></DialogHeader>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <p className="text-xs text-muted-foreground">{t("current_stock")}: <strong>{toBnNum(item.current_stock, lang)} {item.unit}</strong></p>
-          <div><Label>{t("quantity")} *</Label><Input type="number" min="0" step="0.01" value={qty} onChange={(e) => setQty(Number(e.target.value))} placeholder="5" /></div>
+          <div><Label required>{t("quantity")}</Label><Input type="number" min="0" step="0.01" value={qty} onChange={(e) => setQty(Number(e.target.value))} placeholder="5" /></div>
           <div><Label>{t("date")}</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
           <div><Label>{t("reason")}</Label><Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={lang === "bn" ? "যেমন: নষ্ট হয়ে গেছে" : "e.g. Damaged"} /></div>
           <Button onClick={() => submit.mutate()} disabled={submit.isPending} className="w-full">{t("save")}</Button>

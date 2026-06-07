@@ -124,9 +124,9 @@ function IncomePage() {
         actionLabel={canCreate ? t("new_entry") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["category", "source"]} />
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("new_entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label>{t("category")} *</Label>
+            <Label required>{t("category")}</Label>
             <Input required value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder={lang === "bn" ? "যেমন: ভাড়া" : "e.g. Rent"} />
           </div>
           <div>
@@ -134,14 +134,14 @@ function IncomePage() {
             <Input value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} placeholder={lang === "bn" ? "যেমন: দোকান নং ২" : "e.g. Shop No 2"} />
           </div>
           <div>
-            <Label>{t("amount")} (৳) *</Label>
+            <Label required>{t("amount")} (৳)</Label>
             <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="5000" />
           </div>
           <div>
             <Label>{t("date")}</Label>
             <Input type="date" value={form.income_date} onChange={(e) => setForm({ ...form, income_date: e.target.value })} />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("account")}</Label>
             <Select value={form.account_id} onValueChange={(v) => setForm({ ...form, account_id: v })}>
               <SelectTrigger><SelectValue placeholder={t("select_option")} /></SelectTrigger>
@@ -150,7 +150,7 @@ function IncomePage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
             <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
           </div>

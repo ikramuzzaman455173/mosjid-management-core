@@ -157,7 +157,7 @@ function SettingsPage() {
                 <div className="space-y-6">
                   
                   {/* Zakat */}
-                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                  <div className="space-y-4 p-4 bg-muted/50 rounded-lg border">
                     <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "যাকাত নিসাব (Zakat Nisab)" : "Zakat Nisab"}</h4>
                     <div>
                       <Label>{lang === "bn" ? "ডিফল্ট নিসাবের পরিমাণ" : "Default Nisab Value"}</Label>
@@ -171,7 +171,7 @@ function SettingsPage() {
                   </div>
 
                   {/* Fitra */}
-                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                  <div className="space-y-4 p-4 bg-muted/50 rounded-lg border">
                     <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ফিতরা মূল্য (প্রতি কেজি)" : "Fitra Prices (per KG)"}</h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       <div>
@@ -198,9 +198,9 @@ function SettingsPage() {
                   </div>
 
                   {/* Prayer */}
-                  <div className="space-y-3 p-4 bg-muted/50 rounded-lg border">
+                  <div className="space-y-4 p-4 bg-muted/50 rounded-lg border">
                     <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "ইফতার ও সেহরি লোকেশন" : "Iftar & Sehri Location"}</h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>{lang === "bn" ? "শহর" : "City"}</Label>
                         <Input value={settings.prayerCity} onChange={(e) => updateSettings({ prayerCity: e.target.value })} className="mt-1" />
@@ -213,12 +213,12 @@ function SettingsPage() {
                   </div>
 
                   {/* SMS Provider Settings */}
-                  <div className="space-y-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                  <div className="space-y-4 p-4 bg-primary/5 rounded-lg border border-primary/20">
                     <div className="flex items-center gap-2 mb-2">
                       <MessageSquare className="w-4 h-4 text-primary" />
                       <h4 className="font-medium text-sm text-primary">{lang === "bn" ? "এসএমএস এপিআই (SMS API)" : "SMS API Settings"}</h4>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div>
                         <Label>{lang === "bn" ? "এপিআই ইউআরএল (API URL)" : "API URL"}</Label>
                         <Input 
@@ -228,7 +228,7 @@ function SettingsPage() {
                           placeholder="http://api.greenweb.com.bd/api.php" 
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label>{lang === "bn" ? "এপিআই কি (Token/Key)" : "API Key/Token"}</Label>
                           <Input type="password" value={settings.smsApiKey} onChange={(e) => updateSettings({ smsApiKey: e.target.value })} className="mt-1" />

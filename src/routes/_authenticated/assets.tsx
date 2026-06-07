@@ -102,8 +102,8 @@ function AssetsPage() {
       <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["name", "category", "location"]} />
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2"><Label>{t("name")} *</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
           <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
           <div><Label>{t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></div>
           <div><Label>{t("purchase_date")}</Label><Input type="date" value={form.purchase_date} onChange={(e) => setForm({ ...form, purchase_date: e.target.value })} /></div>
@@ -119,12 +119,12 @@ function AssetsPage() {
           </div>
           <div><Label>{t("purchase_price")}</Label><Input type="number" step="0.01" value={form.purchase_price} onChange={(e) => setForm({ ...form, purchase_price: Number(e.target.value) })} /></div>
           <div><Label>{t("current_value")}</Label><Input type="number" step="0.01" value={form.current_value} onChange={(e) => setForm({ ...form, current_value: Number(e.target.value) })} /></div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <Label>{t("photo")}</Label>
             {form.photo_url && <img src={form.photo_url} alt="" className="w-24 h-24 rounded object-cover mb-2" />}
             <FileUpload folder="assets" accept="image/*" onUploaded={(i) => setForm({ ...form, photo_url: i.url })} />
           </div>
-          <div className="col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
