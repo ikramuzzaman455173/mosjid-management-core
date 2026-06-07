@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Hint } from "@/components/ui/hint";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis, PaginationFirst, PaginationLast } from "@/components/ui/pagination";
 import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
@@ -93,11 +94,15 @@ export function DataTable<T extends { id: string }>({
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10 text-muted-foreground">
-                  {t("loading")}
-                </TableCell>
-              </TableRow>
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={`skeleton-row-${i}`} className="hover:bg-transparent">
+                  {columns.map((c, j) => (
+                    <TableCell key={`skeleton-col-${j}`} className={c.className}>
+                      <Skeleton className="h-6 w-full max-w-[80%] rounded-md" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
             ) : filtered.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="text-center py-10">

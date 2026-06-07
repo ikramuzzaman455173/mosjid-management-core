@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
 import { Hint } from "@/components/ui/hint";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/gallery")({
   component: GalleryPage,
@@ -129,7 +130,13 @@ function GalleryPage() {
       />
 
       {isLoading ? (
-        <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Card key={`gallery-skel-${i}`} className="overflow-hidden border-none shadow-none">
+              <Skeleton className="aspect-square w-full rounded-xl" />
+            </Card>
+          ))}
+        </div>
       ) : images?.length === 0 ? (
         <div className="text-center p-12 bg-muted/20 rounded-xl border border-dashed border-border/50">
           <ImageIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-20" />

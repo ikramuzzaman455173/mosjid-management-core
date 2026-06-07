@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Hint } from "@/components/ui/hint";
 
@@ -46,7 +47,7 @@ function Dashboard() {
     }
   };
 
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: isLoadingStats } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
       const now = new Date();
@@ -71,7 +72,7 @@ function Dashboard() {
     },
   });
 
-  const { data: notices } = useQuery({
+  const { data: notices, isLoading: isLoadingNotices } = useQuery({
     queryKey: ["dashboard-notices"],
     queryFn: async () => {
       const { data } = await supabase.from("notices").select("*").eq("published", true).order("notice_date", { ascending: false }).limit(5);
@@ -79,7 +80,7 @@ function Dashboard() {
     },
   });
 
-  const { data: recentTxn } = useQuery({
+  const { data: recentTxn, isLoading: isLoadingTxn } = useQuery({
     queryKey: ["recent-txn"],
     queryFn: async () => {
       const { data } = await supabase.from("transactions").select("*").order("txn_date", { ascending: false }).limit(5);
@@ -87,7 +88,7 @@ function Dashboard() {
     },
   });
 
-  const { data: chartData } = useQuery({
+  const { data: chartData, isLoading: isLoadingChart } = useQuery({
     queryKey: ["dashboard-chart"],
     queryFn: async () => {
       const today = new Date();
@@ -189,20 +190,32 @@ function Dashboard() {
 
       {/* KPI Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-        {kpis.map((k) => (
-          <Card key={k.label} className="p-4 shadow-sm hover:border-primary/30 transition-colors flex items-center gap-4 group">
-            <div className={`w-10 h-10 rounded-md ${k.bg} flex items-center justify-center shrink-0`}>
-              <k.icon className={`w-5 h-5 ${k.color}`} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-muted-foreground font-medium truncate">{k.label}</p>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <h4 className="text-xl font-bold text-foreground truncate">{k.value}</h4>
-                {k.suffix && <span className="text-xs text-muted-foreground">{k.suffix}</span>}
+        {isLoadingStats ? (
+          Array.from({ length: 7 }).map((_, i) => (
+            <Card key={`kpi-skel-${i}`} className="p-4 shadow-sm flex items-center gap-4 group">
+              <Skeleton className="w-10 h-10 rounded-md shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-6 w-16" />
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
+        ) : (
+          kpis.map((k) => (
+            <Card key={k.label} className="p-4 shadow-sm hover:border-primary/30 transition-colors flex items-center gap-4 group">
+              <div className={`w-10 h-10 rounded-md ${k.bg} flex items-center justify-center shrink-0`}>
+                <k.icon className={`w-5 h-5 ${k.color}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-muted-foreground font-medium truncate">{k.label}</p>
+                <div className="flex items-baseline gap-1 mt-0.5">
+                  <h4 className="text-xl font-bold text-foreground truncate">{k.value}</h4>
+                  {k.suffix && <span className="text-xs text-muted-foreground">{k.suffix}</span>}
+                </div>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
 
       {/* Main grid */}
@@ -214,30 +227,34 @@ function Dashboard() {
             <h3 className="font-semibold text-lg">{t("monthly_income_expense")}</h3>
           </div>
           <div className="flex-1 min-h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--success, 142.1 76.2% 36.3%))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--success, 142.1 76.2% 36.3%))" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--destructive, 0 84.2% 60.2%))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--destructive, 0 84.2% 60.2%))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
-                <XAxis dataKey="week" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={10} />
-                <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ borderRadius: "12px", border: "1px solid hsl(var(--border))", boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }}
-                  itemStyle={{ fontWeight: 500 }}
-                />
-                <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-                <Area type="monotone" dataKey="income" stroke="hsl(var(--success, 142.1 76.2% 36.3%))" strokeWidth={3} fill="url(#colorIncome)" name={t("income_label")} />
-                <Area type="monotone" dataKey="expense" stroke="hsl(var(--destructive, 0 84.2% 60.2%))" strokeWidth={3} fill="url(#colorExpense)" name={t("expense_label")} />
-              </AreaChart>
-            </ResponsiveContainer>
+            {isLoadingChart ? (
+              <Skeleton className="w-full h-full rounded-xl" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--success, 142.1 76.2% 36.3%))" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(var(--success, 142.1 76.2% 36.3%))" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--destructive, 0 84.2% 60.2%))" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(var(--destructive, 0 84.2% 60.2%))" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis dataKey="week" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={10} />
+                  <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: "12px", border: "1px solid hsl(var(--border))", boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }}
+                    itemStyle={{ fontWeight: 500 }}
+                  />
+                  <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
+                  <Area type="monotone" dataKey="income" stroke="hsl(var(--success, 142.1 76.2% 36.3%))" strokeWidth={3} fill="url(#colorIncome)" name={t("income_label")} />
+                  <Area type="monotone" dataKey="expense" stroke="hsl(var(--destructive, 0 84.2% 60.2%))" strokeWidth={3} fill="url(#colorExpense)" name={t("expense_label")} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
@@ -254,7 +271,18 @@ function Dashboard() {
             </Link>
           </div>
           <div className="flex-1 space-y-4">
-            {recentTxn && recentTxn.length > 0 ? recentTxn.map((tx: any) => (
+            {isLoadingTxn ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={`txn-skel-${i}`} className="flex items-center gap-3 p-2">
+                  <Skeleton className="w-10 h-10 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/4" />
+                  </div>
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              ))
+            ) : recentTxn && recentTxn.length > 0 ? recentTxn.map((tx: any) => (
               <div key={tx.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${tx.kind === "credit" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>
                   {tx.kind === "credit" ? <ArrowDownRight className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
@@ -286,7 +314,15 @@ function Dashboard() {
           <h3 className="font-semibold text-lg">{t("notice_board")}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {notices && notices.length > 0 ? notices.map((n: any) => (
+          {isLoadingNotices ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={`notice-skel-${i}`} className="p-4 rounded-lg border border-border/60 bg-card space-y-3">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+                <Skeleton className="h-5 w-2/3" />
+              </div>
+            ))
+          ) : notices && notices.length > 0 ? notices.map((n: any) => (
             <div key={n.id} className="group p-4 rounded-lg border border-border/60 bg-card hover:border-primary/30 transition-colors">
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="secondary" className="text-[10px] uppercase font-medium">{n.notice_date}</Badge>
