@@ -358,10 +358,10 @@ function RolesPermissionsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0 overflow-y-auto lg:overflow-hidden lg:pb-0">
+      <div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0 overflow-y-auto lg:overflow-visible lg:pb-0">
         
         {/* Left Sidebar - Roles */}
-        <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4">
+        <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4 lg:sticky lg:top-20 lg:h-[calc(100vh-7rem)]">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{lang === "bn" ? "ভূমিকা সমূহ" : "All Roles"}</h2>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -415,8 +415,12 @@ function RolesPermissionsPage() {
             />
           </div>
 
-          <ScrollArea className="max-h-[250px] lg:max-h-none flex-1 -mx-2 px-2">
-            <div className="space-y-2 pb-4">
+          <div className="relative flex-1 max-h-[250px] lg:max-h-full lg:h-full min-h-0">
+            {/* Scroll Hints (Top & Bottom fades) */}
+            <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-muted/30 to-transparent z-10 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-muted/30 to-transparent z-10 pointer-events-none" />
+            
+            <div className="h-full overflow-y-auto scroll-smooth overscroll-contain px-1 pb-4 pt-2 space-y-2 rounded-xl custom-scrollbar">
               {filteredRoles.map(role => (
                 <button 
                   key={role.id}
@@ -443,7 +447,7 @@ function RolesPermissionsPage() {
                 </div>
               )}
             </div>
-          </ScrollArea>
+          </div>
         </div>
 
         {/* Right Content - Permissions Layout */}
