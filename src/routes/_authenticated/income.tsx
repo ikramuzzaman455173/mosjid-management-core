@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency, fmtDate } from "@/lib/i18n";
@@ -104,15 +105,15 @@ function IncomePage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (i) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Income & Expense" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({
             category: i.category, source: i.source ?? "", amount: Number(i.amount), income_date: i.income_date ?? "",
             account_id: i.account_id ?? "", notes: i.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Income & Expense" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},

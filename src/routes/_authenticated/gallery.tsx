@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/gallery")({
   component: GalleryPage,
@@ -154,14 +155,14 @@ function GalleryPage() {
                   <p className="text-white/70 text-xs truncate">{fmtDate(img.created_at, lang)}</p>
                 </div>
                 <PermissionGuard module="Gallery" action="Delete" fallback={<></>}>
-                  <Button 
+                  <Hint label={t("delete")}><Button 
                     size="icon" 
                     variant="destructive" 
                     className="absolute top-2 right-2 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => setDeleteId(img)}
                   >
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </Button></Hint>
                 </PermissionGuard>
                 {img.category && (
                   <Badge variant="secondary" className="absolute top-2 left-2 bg-background/80 backdrop-blur-sm shadow-sm pointer-events-none">

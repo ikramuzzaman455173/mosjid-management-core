@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
 import { toPng } from "html-to-image";
 import { sendSms } from "@/lib/sms";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/members")({
   component: MembersPage,
@@ -265,45 +266,49 @@ function MembersPage() {
     { key: "joined", header: t("date"), cell: (m) => fmtDate(m.joining_date, lang) },
     { key: "act", header: t("actions"), className: "text-right", cell: (m) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="outline" className="text-[#25D366] border-[#25D366] hover:bg-[#25D366]/10" onClick={() => {
-          if (!m.phone) return toast.error(lang === "bn" ? "ফোন নম্বর নেই" : "No phone number");
-          let waPhone = m.phone.replace(/[^0-9+]/g, '');
-          if (waPhone.length === 11 && waPhone.startsWith('01')) waPhone = '88' + waPhone;
-          window.open(`https://wa.me/${waPhone}`, '_blank');
-        }}>
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-        </Button>
-        <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
-          if (!m.phone) return toast.error(lang === "bn" ? "ফোন নম্বর নেই" : "No phone number");
-          setSmsMember(m);
-        }}>
-          <MessageSquare className="w-4 h-4" />
-        </Button>
-        <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
-          triggerPrint({
-            id: m.id,
-            memberCode: m.member_code ?? "",
-            name: m.full_name,
-            phone: m.phone ?? "",
-            type: m.membership_type ?? "General",
-            bloodGroup: m.blood_group ?? "",
-            address: m.address ?? "",
-            photoUrl: m.photo_url ?? "",
-            joinDate: fmtDate(m.joining_date, lang),
-            expiryDate: m.expiry_date ? fmtDate(m.expiry_date, lang) : "",
-            qrToken: m.qr_token ?? "",
-            status: m.status ?? "active"
-          });
-        }}>
-          <IdCard className="w-4 h-4" />
-        </Button>
+        <Hint label={lang === "bn" ? "হোয়াটসঅ্যাপ মেসেজ" : "WhatsApp Message"}>
+          <Button size="icon" variant="outline" className="text-[#25D366] border-[#25D366] hover:bg-[#25D366]/10" onClick={() => {
+            if (!m.phone) return toast.error(lang === "bn" ? "ফোন নম্বর নেই" : "No phone number");
+            let waPhone = m.phone.replace(/[^0-9+]/g, '');
+            if (waPhone.length === 11 && waPhone.startsWith('01')) waPhone = '88' + waPhone;
+            window.open(`https://wa.me/${waPhone}`, '_blank');
+          }}>
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          </Button>
+        </Hint>
+        <Hint label={lang === "bn" ? "এসএমএস পাঠান" : "Send SMS"}>
+          <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
+            if (!m.phone) return toast.error(lang === "bn" ? "ফোন নম্বর নেই" : "No phone number");
+            setSmsMember(m);
+          }}>
+            <MessageSquare className="w-4 h-4" />
+          </Button>
+        </Hint>
+        <Hint label={lang === "bn" ? "আইডি কার্ড প্রিন্ট" : "Print ID Card"}>
+          <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
+            triggerPrint({
+              id: m.id,
+              memberCode: m.member_code ?? "",
+              name: m.full_name,
+              phone: m.phone ?? "",
+              type: m.membership_type ?? "General",
+              bloodGroup: m.blood_group ?? "",
+              address: m.address ?? "",
+              photoUrl: m.photo_url ?? "",
+              joinDate: fmtDate(m.joining_date, lang),
+              expiryDate: m.expiry_date ? fmtDate(m.expiry_date, lang) : "",
+            });
+          }}>
+            <Printer className="w-4 h-4" />
+          </Button>
+        </Hint>
         <PermissionGuard module="Members" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => openEdit(m)}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Members" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},
@@ -432,9 +437,11 @@ function MembersPage() {
                       <Input value={fm.age} onChange={(e) => updateFamilyMember(idx, "age", e.target.value)} placeholder={lang === "bn" ? "বয়স" : "Age"} type="number" className="h-8 text-sm" />
                     </div>
                   </div>
-                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removeFamilyMember(idx)}>
-                    <X className="w-4 h-4" />
-                  </Button>
+                  <Hint label={lang === "bn" ? "সদস্য মুছুন" : "Remove Member"} side="top">
+                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removeFamilyMember(idx)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </Hint>
                 </div>
               ))}
               {form.family_info.length === 0 && (

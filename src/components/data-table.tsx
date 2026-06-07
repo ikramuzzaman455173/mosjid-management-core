@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Hint } from "@/components/ui/hint";
 import { useI18n } from "@/lib/i18n";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis, PaginationFirst, PaginationLast } from "@/components/ui/pagination";
 import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
@@ -160,16 +161,20 @@ export function DataTable<T extends { id: string }>({
           <Pagination className="mx-0 justify-end w-auto">
             <PaginationContent>
               <PaginationItem>
-                <PaginationFirst
-                  onClick={() => setPageIndex(0)}
-                  disabled={!hasData || pageIndex === 0}
-                />
+                <Hint label={lang === "bn" ? "প্রথম পাতা" : "First Page"} side="top">
+                  <PaginationFirst
+                    onClick={() => setPageIndex(0)}
+                    disabled={!hasData || pageIndex === 0}
+                  />
+                </Hint>
               </PaginationItem>
               <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-                  disabled={!hasData || pageIndex === 0}
-                />
+                <Hint label={lang === "bn" ? "পূর্ববর্তী পাতা" : "Previous Page"} side="top">
+                  <PaginationPrevious
+                    onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+                    disabled={!hasData || pageIndex === 0}
+                  />
+                </Hint>
               </PaginationItem>
               
               <div className="hidden md:flex flex-row items-center gap-1">
@@ -203,16 +208,20 @@ export function DataTable<T extends { id: string }>({
               </div>
 
               <PaginationItem>
-                <PaginationNext
-                  onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
-                  disabled={!hasData || pageIndex >= totalPages - 1}
-                />
+                <Hint label={lang === "bn" ? "পরবর্তী পাতা" : "Next Page"} side="top">
+                  <PaginationNext
+                    onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
+                    disabled={!hasData || pageIndex >= totalPages - 1}
+                  />
+                </Hint>
               </PaginationItem>
               <PaginationItem>
-                <PaginationLast
-                  onClick={() => setPageIndex(totalPages - 1)}
-                  disabled={!hasData || pageIndex >= totalPages - 1}
-                />
+                <Hint label={lang === "bn" ? "শেষ পাতা" : "Last Page"} side="top">
+                  <PaginationLast
+                    onClick={() => setPageIndex(totalPages - 1)}
+                    disabled={!hasData || pageIndex >= totalPages - 1}
+                  />
+                </Hint>
               </PaginationItem>
             </PaginationContent>
           </Pagination>

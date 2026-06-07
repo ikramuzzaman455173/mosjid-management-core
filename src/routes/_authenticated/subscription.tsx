@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency, toBnNum } from "@/lib/i18n";
@@ -198,6 +199,7 @@ function SubscriptionPage() {
                   <td className="p-3 text-right">
                     <div className="flex justify-end gap-1">
                       {paid > 0 && (
+                      <Hint label={lang === "bn" ? "প্রিন্ট রসিদ" : "Print Receipt"}>
                         <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
                           triggerPrint({
                             id: sub?.id ?? `SUB-${m.id}-${year}-${month}`,
@@ -211,6 +213,7 @@ function SubscriptionPage() {
                         }}>
                           <Printer className="w-4 h-4" />
                         </Button>
+                      </Hint>
                       )}
                       <PermissionGuard module="Monthly Chanda" action="Create" fallback={<></>}>
                         <Button size="sm" className="bg-primary h-9" onClick={() => openCollectDialog(m, amt)}>

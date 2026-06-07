@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/ramadan")({
   component: RamadanPage,
@@ -120,15 +121,15 @@ function RamadanPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Ramadan" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
             donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
             donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Ramadan" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},

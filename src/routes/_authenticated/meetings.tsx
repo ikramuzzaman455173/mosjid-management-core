@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { deleteFile } from "@/lib/storage";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/meetings")({ component: MeetingsPage });
 
@@ -86,12 +87,12 @@ function MeetingsPage() {
     { key: "status", header: t("status"), cell: (m) => statusBadge(m.status) },
     { key: "act", header: t("actions"), className: "text-right", cell: (m) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => setDetail(m)}><ExternalLink className="w-4 h-4 text-primary" /></Button>
+        <Hint label={t("view_details")}><Button size="icon" variant="ghost" onClick={() => setDetail(m)}><ExternalLink className="w-4 h-4 text-primary" /></Button></Hint>
         <PermissionGuard module="Meetings" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, meeting_type: m.meeting_type ?? "local", status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(m); setForm({ title: m.title, meeting_date: m.meeting_date.slice(0,16), location: m.location ?? "", kind: m.kind, meeting_type: m.meeting_type ?? "local", status: m.status, agenda: m.agenda ?? "", minutes: m.minutes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Meetings" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(m.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
         </PermissionGuard>
       </div>
     )},
@@ -253,7 +254,7 @@ function MeetingDetailDialog({ meeting, onClose }: { meeting: Meeting; onClose: 
                 <div key={d.id} className="flex items-center gap-2 p-2 border rounded-md text-sm">
                   <FileText className="w-4 h-4 text-primary" />
                   <a href={d.file_url} target="_blank" rel="noreferrer" className="flex-1 truncate hover:underline">{d.file_name}</a>
-                  <Button size="icon" variant="ghost" onClick={() => delDoc.mutate(d)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                  <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => delDoc.mutate(d)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
                 </div>
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
             </div>
@@ -271,9 +272,15 @@ function MeetingDetailDialog({ meeting, onClose }: { meeting: Meeting; onClose: 
                       <div className="font-medium">{m.full_name}</div>
                       {m.member_code && <div className="text-xs text-muted-foreground">{m.member_code}</div>}
                     </div>
-                    <Button size="sm" variant={st === "present" ? "default" : "outline"} className={st === "present" ? "bg-success hover:bg-success/90" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "present" })}><Check className="w-3 h-3" /></Button>
-                    <Button size="sm" variant={st === "late" ? "default" : "outline"} className={st === "late" ? "bg-gold hover:bg-gold/90 text-primary" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "late" })}><Clock className="w-3 h-3" /></Button>
-                    <Button size="sm" variant={st === "absent" ? "default" : "outline"} className={st === "absent" ? "bg-destructive hover:bg-destructive/90" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "absent" })}><X className="w-3 h-3" /></Button>
+                    <Hint label={lang === "bn" ? "উপস্থিত" : "Present"} side="top">
+                      <Button size="sm" variant={st === "present" ? "default" : "outline"} className={st === "present" ? "bg-success hover:bg-success/90" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "present" })}><Check className="w-3 h-3" /></Button>
+                    </Hint>
+                    <Hint label={lang === "bn" ? "বিলম্ব" : "Late"} side="top">
+                      <Button size="sm" variant={st === "late" ? "default" : "outline"} className={st === "late" ? "bg-gold hover:bg-gold/90 text-primary" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "late" })}><Clock className="w-3 h-3" /></Button>
+                    </Hint>
+                    <Hint label={lang === "bn" ? "অনুপস্থিত" : "Absent"} side="top">
+                      <Button size="sm" variant={st === "absent" ? "default" : "outline"} className={st === "absent" ? "bg-destructive hover:bg-destructive/90" : ""} onClick={() => setStatus.mutate({ member_id: m.id, status: "absent" })}><X className="w-3 h-3" /></Button>
+                    </Hint>
                   </div>
                 );
               }) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}

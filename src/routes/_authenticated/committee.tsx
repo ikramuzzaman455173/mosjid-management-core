@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtDate } from "@/lib/i18n";
@@ -70,12 +71,12 @@ function CommitteePage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (c) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="ghost" onClick={() => setDetail(c)}><ExternalLink className="w-4 h-4 text-primary" /></Button>
+        <Hint label={t("view_details")}><Button size="icon" variant="ghost" onClick={() => setDetail(c)}><ExternalLink className="w-4 h-4 text-primary" /></Button></Hint>
         <PermissionGuard module="Committee" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(c); setForm({ name: c.name, tenure_start: c.tenure_start, tenure_end: c.tenure_end ?? "", status: c.status, description: c.description ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(c); setForm({ name: c.name, tenure_start: c.tenure_start, tenure_end: c.tenure_end ?? "", status: c.status, description: c.description ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(c.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(c.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
         </PermissionGuard>
       </div>
     )},
@@ -198,7 +199,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
                     <div className="text-xs text-muted-foreground">{t(cm.position)}</div>
                   </div>
                   <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
-                    <Button size="icon" variant="ghost" onClick={() => delCM.mutate(cm.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                    <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => delCM.mutate(cm.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
                   </PermissionGuard>
                 </div>
               )) : <p className="text-sm text-muted-foreground text-center py-4">{t("no_data")}</p>}
@@ -221,7 +222,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
                       <Button size="sm" variant="outline" onClick={() => setVoteOn(r.id)}>{t("vote")}</Button>
                     </PermissionGuard>
                     <PermissionGuard module="Committee" action="Delete" fallback={<></>}>
-                      <Button size="icon" variant="ghost" onClick={() => delRes.mutate(r.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                      <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => delRes.mutate(r.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
                     </PermissionGuard>
                   </div>
                 </div>

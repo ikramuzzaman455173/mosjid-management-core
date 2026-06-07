@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtDate } from "@/lib/i18n";
@@ -98,15 +99,15 @@ function NoticesPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (n) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Notices" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(n); setForm({
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(n); setForm({
             title: n.title, content: n.content ?? "", kind: n.kind ?? "general",
             notice_date: n.notice_date ?? "", published: n.published ?? true,
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Notices" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(n.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(n.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},

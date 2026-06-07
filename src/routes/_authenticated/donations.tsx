@@ -19,6 +19,7 @@ import { Gift, Pencil, Trash2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
 import { PrintableReceipt, type ReceiptData } from "@/components/printable-receipt";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/donations")({
   component: DonationsPage,
@@ -124,29 +125,31 @@ function DonationsPage() {
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
       <div className="flex gap-1 justify-end">
-        <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
-          triggerPrint({
-            id: d.id,
-            type: "donation",
-            date: d.donation_date ?? new Date().toISOString().slice(0, 10),
-            amount: Number(d.amount),
-            name: d.donor_name,
-            phone: d.donor_phone ?? undefined,
-            details: d.notes ?? `Donation for ${d.kind}`,
-          });
-        }}>
-          <Printer className="w-4 h-4" />
-        </Button>
+        <Hint label={lang === "bn" ? "প্রিন্ট রসিদ" : "Print Receipt"}>
+          <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
+            triggerPrint({
+              id: d.id,
+              type: "donation",
+              date: d.donation_date ?? new Date().toISOString().slice(0, 10),
+              amount: Number(d.amount),
+              name: d.donor_name,
+              phone: d.donor_phone ?? undefined,
+              details: d.notes ?? `Donation for ${d.kind}`,
+            });
+          }}>
+            <Printer className="w-4 h-4" />
+          </Button>
+        </Hint>
         <PermissionGuard module="Donations & Zakat" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
             donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
             donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Donations & Zakat" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},

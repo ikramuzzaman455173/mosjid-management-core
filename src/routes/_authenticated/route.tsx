@@ -28,6 +28,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useRouterState } from "@tanstack/react-router";
 import { usePermissions } from "@/hooks/usePermissions";
+import { Hint } from "@/components/ui/hint";
 
 const routePermissions: Record<string, { module: string; action: string }> = {
   "/dashboard": { module: "Dashboard", action: "View" },
@@ -194,9 +195,11 @@ function Layout() {
             <Button size="sm" variant="ghost" onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
               {lang === "bn" ? "EN" : "বাং"}
             </Button>
-            <Button size="icon" variant="ghost">
-              <Bell className="w-4 h-4" />
-            </Button>
+            <Hint label={lang === "bn" ? "নোটিফিকেশন" : "Notifications"} side="bottom">
+              <Button size="icon" variant="ghost">
+                <Bell className="w-4 h-4" />
+              </Button>
+            </Hint>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="gap-2 px-2">

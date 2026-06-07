@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency, fmtDate, toBnNum } from "@/lib/i18n";
@@ -68,15 +69,15 @@ function InventoryPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (i) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Inventory" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" title={t("stock_in")} onClick={() => setStockOn({ item: i, kind: "in" })}><ArrowDownToLine className="w-4 h-4 text-success" /></Button>
-          <Button size="icon" variant="ghost" title={t("stock_out")} onClick={() => setStockOn({ item: i, kind: "out" })}><ArrowUpFromLine className="w-4 h-4 text-destructive" /></Button>
+          <Hint label={t("stock_in")}><Button size="icon" variant="ghost" title={t("stock_in")} onClick={() => setStockOn({ item: i, kind: "in" })}><ArrowDownToLine className="w-4 h-4 text-success" /></Button></Hint>
+          <Hint label={t("stock_out")}><Button size="icon" variant="ghost" title={t("stock_out")} onClick={() => setStockOn({ item: i, kind: "out" })}><ArrowUpFromLine className="w-4 h-4 text-destructive" /></Button></Hint>
         </PermissionGuard>
-        <Button size="icon" variant="ghost" title={t("transactions")} onClick={() => setHistoryOn(i)}><History className="w-4 h-4 text-primary" /></Button>
+        <Hint label={t("history")}><Button size="icon" variant="ghost" title={t("transactions")} onClick={() => setHistoryOn(i)}><History className="w-4 h-4 text-primary" /></Button></Hint>
         <PermissionGuard module="Inventory" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({ name: i.name, category: i.category, unit: i.unit, current_stock: Number(i.current_stock), min_stock: Number(i.min_stock), unit_price: Number(i.unit_price ?? 0), notes: i.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({ name: i.name, category: i.category, unit: i.unit, current_stock: Number(i.current_stock), min_stock: Number(i.min_stock), unit_price: Number(i.unit_price ?? 0), notes: i.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Inventory" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
         </PermissionGuard>
       </div>
     )},

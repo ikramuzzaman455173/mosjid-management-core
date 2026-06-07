@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Hint } from "@/components/ui/hint";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -245,9 +246,11 @@ function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">{t("recent_transactions")}</h3>
             <Link to="/reports">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
-                <ArrowRight className="w-4 h-4" />
-              </Button>
+              <Hint label={lang === "bn" ? "সব দেখুন" : "View All"} side="top">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Hint>
             </Link>
           </div>
           <div className="flex-1 space-y-4">

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency, fmtDate } from "@/lib/i18n";
@@ -80,10 +81,10 @@ function AssetsPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (a) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Assets" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, category: a.category, purchase_date: a.purchase_date ?? "", purchase_price: Number(a.purchase_price ?? 0), current_value: Number(a.current_value ?? 0), condition: a.condition, location: a.location ?? "", photo_url: a.photo_url ?? "", notes: a.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, category: a.category, purchase_date: a.purchase_date ?? "", purchase_price: Number(a.purchase_price ?? 0), current_value: Number(a.current_value ?? 0), condition: a.condition, location: a.location ?? "", photo_url: a.photo_url ?? "", notes: a.notes ?? "" }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Assets" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></Hint>
         </PermissionGuard>
       </div>
     )},

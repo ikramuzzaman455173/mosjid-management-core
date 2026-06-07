@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Hint } from "@/components/ui/hint";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, toBnNum } from "@/lib/i18n";
@@ -100,15 +101,15 @@ function EventsPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (e) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Events" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
             title: e.title, description: e.description ?? "", location: e.location ?? "",
             event_type: e.event_type ?? "general", event_date: e.event_date.slice(0, 16),
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Events" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Hint } from "@/components/ui/hint";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency } from "@/lib/i18n";
@@ -61,12 +62,12 @@ function MBPage() {
     { key: "act", header: t("actions"), className: "text-right", cell: (a) => (
       <div className="flex gap-1 justify-end">
         <PermissionGuard module="Bank & Mobile Banking" action="Edit" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, bank_name: a.bank_name ?? "", account_no: a.account_no ?? "", opening_balance: Number(a.opening_balance ?? 0) }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(a); setForm({ name: a.name, bank_name: a.bank_name ?? "", account_no: a.account_no ?? "", opening_balance: Number(a.opening_balance ?? 0) }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
         </PermissionGuard>
         <PermissionGuard module="Bank & Mobile Banking" action="Delete" fallback={<></>}>
-          <Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}>
+          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(a.id)}>
             <Trash2 className="w-4 h-4 text-destructive" />
-          </Button>
+          </Button></Hint>
         </PermissionGuard>
       </div>
     )},
