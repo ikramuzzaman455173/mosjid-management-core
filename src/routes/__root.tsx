@@ -42,6 +42,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "মাইজযোনা দক্ষিণ নতুন পাড়া বায়তুল মামুর জামে মসজিদ — আধুনিক ডিজিটাল মসজিদ ব্যবস্থাপনা সিস্টেম" },
     ],
     links: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=" + new Date().getTime() },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
