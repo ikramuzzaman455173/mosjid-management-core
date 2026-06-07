@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useI18n, fmtCurrency } from "@/lib/i18n";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart3, TrendingUp, TrendingDown, Wallet, Users, Printer } from "lucide-react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -41,7 +42,9 @@ function ReportsPage() {
       const now = new Date();
       for (let i = 5; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const k = d.toISOString().slice(0, 7);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const k = `${y}-${m}`;
         months[k] = { income: 0, expense: 0 };
       }
       (income.data ?? []).forEach((x: any) => {
@@ -57,6 +60,8 @@ function ReportsPage() {
       return { totalIncome, totalExpense, balance, memberCount: members.count ?? 0, chart };
     },
   });
+
+  const isLoading = !data;
 
   const cards = [
     { label: t("total_members"), value: String(data?.memberCount ?? 0), icon: Users, color: "text-primary", bg: "bg-primary/10" },
@@ -93,12 +98,16 @@ function ReportsPage() {
         {cards.map(c => (
           <Card key={c.label} className="p-4 shadow-card">
             <div className="flex items-start gap-3">
-              <div className={`w-11 h-11 rounded-lg ${c.bg} flex items-center justify-center`}>
+              <div className={`w-11 h-11 rounded-lg ${c.bg} flex items-center justify-center shrink-0`}>
                 <c.icon className={`w-5 h-5 ${c.color}`} />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="text-xs text-muted-foreground">{c.label}</div>
-                <div className={`text-lg font-bold ${c.color} mt-0.5 truncate`}>{c.value}</div>
+                {isLoading ? (
+                  <Skeleton className="h-6 w-20 mt-1" />
+                ) : (
+                  <div className={`text-lg font-bold ${c.color} mt-0.5 truncate`}>{c.value}</div>
+                )}
               </div>
             </div>
           </Card>
@@ -107,17 +116,21 @@ function ReportsPage() {
 
       <Card className="p-4 shadow-card">
         <h3 className="font-semibold text-primary mb-3">{lang === "bn" ? "গত ৬ মাসের আয়-ব্যয়" : "Last 6 months income vs expense"}</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data?.chart ?? []}>
-            <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 155)" />
-            <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Bar dataKey="income" fill="oklch(0.55 0.16 150)" name={t("income_label")} radius={[4, 4, 0, 0]} />
-            <Bar dataKey="expense" fill="oklch(0.62 0.20 27)" name={t("expense_label")} radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        {isLoading ? (
+          <Skeleton className="w-full h-[300px] rounded-lg" />
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data?.chart ?? []}>
+              <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 155)" />
+              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} />
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Bar dataKey="income" fill="oklch(0.55 0.16 150)" name={t("income_label")} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="expense" fill="oklch(0.62 0.20 27)" name={t("expense_label")} radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </Card>
       </div>
     </div>
