@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "@/lib/i18n";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis, PaginationFirst, PaginationLast } from "@/components/ui/pagination";
 import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useMemo, useEffect, type ReactNode } from "react";
 
@@ -64,8 +64,8 @@ export function DataTable<T extends { id: string }>({
   const hasData = filtered.length > 0;
 
   return (
-    <Card className="shadow-card overflow-hidden">
-      <div className="p-3 border-b flex items-center gap-2 flex-wrap">
+    <Card className="shadow-sm border rounded-xl overflow-hidden bg-card">
+      <div className="p-4 border-b flex items-center gap-4 flex-wrap bg-muted/20">
         {searchKeys && searchKeys.length > 0 && (
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -81,7 +81,7 @@ export function DataTable<T extends { id: string }>({
       </div>
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-muted/40">
+          <TableHeader className="bg-muted/50 border-b">
             <TableRow>
               {columns.map((c) => (
                 <TableHead key={c.key} className={c.className}>
@@ -106,7 +106,7 @@ export function DataTable<T extends { id: string }>({
               </TableRow>
             ) : (
               paginatedData.map((row) => (
-                <TableRow key={row.id} className="hover:bg-muted/30">
+                <TableRow key={row.id} className="hover:bg-muted/50 transition-colors">
                   {columns.map((c) => (
                     <TableCell key={c.key} className={c.className}>
                       {c.cell(row)}
@@ -160,13 +160,19 @@ export function DataTable<T extends { id: string }>({
           <Pagination className="mx-0 justify-end w-auto">
             <PaginationContent>
               <PaginationItem>
+                <PaginationFirst
+                  onClick={() => setPageIndex(0)}
+                  disabled={!hasData || pageIndex === 0}
+                />
+              </PaginationItem>
+              <PaginationItem>
                 <PaginationPrevious
                   onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-                  className={!hasData || pageIndex === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  disabled={!hasData || pageIndex === 0}
                 />
               </PaginationItem>
               
-              <div className="hidden sm:flex flex-row items-center gap-1">
+              <div className="hidden md:flex flex-row items-center gap-1">
                 {Array.from({ length: totalPages }).map((_, i) => {
                   if (i === 0 || i === totalPages - 1 || (i >= pageIndex - 1 && i <= pageIndex + 1)) {
                     return (
@@ -192,14 +198,20 @@ export function DataTable<T extends { id: string }>({
                 })}
               </div>
 
-              <div className="text-sm font-medium mx-2 sm:hidden flex items-center">
+              <div className="text-sm font-medium mx-2 md:hidden flex items-center">
                 {pageIndex + 1} / {Math.max(1, totalPages)}
               </div>
 
               <PaginationItem>
                 <PaginationNext
                   onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
-                  className={!hasData || pageIndex >= totalPages - 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  disabled={!hasData || pageIndex >= totalPages - 1}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLast
+                  onClick={() => setPageIndex(totalPages - 1)}
+                  disabled={!hasData || pageIndex >= totalPages - 1}
                 />
               </PaginationItem>
             </PaginationContent>
