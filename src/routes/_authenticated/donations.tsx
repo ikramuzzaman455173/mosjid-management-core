@@ -185,7 +185,7 @@ function DonationsPage() {
           <div>
             <Label>{t("category")}</Label>
             <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "ক্যাটাগরি নির্বাচন করুন" : "Select category"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="general">General</SelectItem>
                 <SelectItem value="construction">Construction</SelectItem>

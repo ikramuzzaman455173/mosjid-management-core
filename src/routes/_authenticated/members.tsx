@@ -377,7 +377,7 @@ function MembersPage() {
           <div>
             <Label>{t("type")}</Label>
             <Select value={form.membership_type} onValueChange={(v) => setForm({ ...form, membership_type: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "সদস্যপদ ধরন" : "Membership Type"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="general">General</SelectItem>
                 <SelectItem value="founder">Founder</SelectItem>
@@ -389,7 +389,7 @@ function MembersPage() {
           <div>
             <Label>{t("status")}</Label>
             <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "স্ট্যাটাস" : "Status"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
@@ -399,7 +399,7 @@ function MembersPage() {
           <div>
             <Label>{lang === "bn" ? "রক্তের গ্রুপ" : "Blood Group"}</Label>
             <Select value={form.blood_group} onValueChange={(v) => setForm({ ...form, blood_group: v })}>
-              <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "রক্তের গ্রুপ" : "Blood Group"} /></SelectTrigger>
               <SelectContent>
                 {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
                   <SelectItem key={bg} value={bg}>{bg}</SelectItem>

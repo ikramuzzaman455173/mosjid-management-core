@@ -57,14 +57,17 @@ export function DatePicker({
         <Button
           type="button"
           variant={"outline"}
+          disabled={disabled}
           className={cn(
-            "w-full justify-start text-left font-normal bg-background border-input",
-            !date && "text-muted-foreground",
+            "w-full justify-start text-left font-normal bg-background border-input cursor-pointer disabled:cursor-not-allowed",
+            !date && "text-muted-foreground/70",
             className
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? formattedDate : <span>{placeholder || t("date") || "Pick a date"}</span>}
+          <CalendarIcon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
+          <span className="truncate">
+            {date ? formattedDate : (placeholder || (lang === "bn" ? "তারিখ নির্বাচন করুন" : "Select date"))}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 z-[100]" align="start">

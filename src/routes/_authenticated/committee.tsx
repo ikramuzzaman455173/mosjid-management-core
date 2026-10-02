@@ -95,7 +95,7 @@ function CommitteePage() {
           <div><Label>{lang === "bn" ? "শেষ" : "End"}</Label><DatePicker  value={form.tenure_end} onChange={(v) => setForm({ ...form, tenure_end: v })} /></div>
           <div className="col-span-1 md:col-span-2"><Label>{t("status")}</Label>
             <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "স্ট্যাটাস নির্বাচন করুন" : "Select status"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">{t("active")}</SelectItem>
                 <SelectItem value="expired">{t("expired")}</SelectItem>
@@ -103,7 +103,7 @@ function CommitteePage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-1 md:col-span-2"><Label>{t("description")}</Label><Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("description")}</Label><Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={lang === "bn" ? "কমিটির বিস্তারিত বিবরণ..." : "Committee description..."} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
@@ -244,7 +244,7 @@ function CommitteeDetailDialog({ committee, onClose }: { committee: Committee; o
               </div>
               <div><Label>{t("position")}</Label>
                 <Select value={selPos} onValueChange={setSelPos}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={lang === "bn" ? "স্ট্যাটাস নির্বাচন করুন" : "Select status"} /></SelectTrigger>
                   <SelectContent>{POSITIONS.map((p) => <SelectItem key={p} value={p}>{t(p as any)}</SelectItem>)}</SelectContent>
                 </Select>
               </div>

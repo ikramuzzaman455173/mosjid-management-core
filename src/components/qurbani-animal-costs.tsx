@@ -102,7 +102,7 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
               <div>
                 <Label>{tbn("Animal Type", "পশুর ধরন")}</Label>
                 <select 
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 cursor-pointer"
                   value={form.type} 
                   onChange={(e) => setForm({ ...form, type: e.target.value })}
                 >
@@ -115,12 +115,12 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
 
               <div>
                 <Label>{tbn("Animal Price", "পশুর মূল্য")} (৳) *</Label>
-                <Input type="number" min="0" value={form.cost} onChange={e => setForm({...form, cost: e.target.value})} placeholder="0" className="mt-1" />
+                <Input type="number" min="0" value={form.cost} onChange={e => setForm({...form, cost: e.target.value})} placeholder="85000" className="mt-1" />
               </div>
 
               <div>
                 <Label>{tbn("Processing/Transport Cost", "অন্যান্য খরচ")} (৳)</Label>
-                <Input type="number" min="0" value={form.processing_cost} onChange={e => setForm({...form, processing_cost: e.target.value})} placeholder="0" className="mt-1" />
+                <Input type="number" min="0" value={form.processing_cost} onChange={e => setForm({...form, processing_cost: e.target.value})} placeholder="5000" className="mt-1" />
               </div>
               
               <div>

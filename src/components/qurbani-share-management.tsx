@@ -129,7 +129,7 @@ export function QurbaniShareManagement({ open, onOpenChange }: Props) {
                 <Card className="p-4 bg-primary/5 border-primary/20">
                   <Label className="text-primary font-semibold">{tbn("Select Animal", "পশু নির্বাচন করুন")}</Label>
                   <select 
-                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm mt-2"
+                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm mt-2 cursor-pointer"
                     value={selectedAnimalId} 
                     onChange={(e) => setSelectedAnimalId(e.target.value)}
                   >
@@ -156,7 +156,7 @@ export function QurbaniShareManagement({ open, onOpenChange }: Props) {
 
                   <div>
                     <Label>{tbn("Number of Shares", "ভাগের সংখ্যা")} *</Label>
-                    <Input type="number" min="1" max={availableShares} value={form.shares_taken} onChange={e => setForm({...form, shares_taken: Number(e.target.value)})} className="mt-1" disabled={availableShares <= 0} />
+                    <Input type="number" min="1" max={availableShares} value={form.shares_taken} onChange={e => setForm({...form, shares_taken: Number(e.target.value)})} placeholder="1" className="mt-1" disabled={availableShares <= 0} />
                     <p className="text-xs text-muted-foreground mt-1">
                       {tbn(`Available: ${availableShares}`, `বাকি আছে: ${availableShares}`)}
                     </p>

@@ -65,7 +65,7 @@ export function FitraCalculator({ open, onOpenChange, onApplyFitra }: Props) {
               <Label>{tbn("Fitra Category (Standard)", "ফিতরার ধরন (নিসাব)")}</Label>
               <Select value={category} onValueChange={(v) => handleCategoryChange(v as FitraCategory)}>
                 <SelectTrigger className="mt-1">
-                  <SelectValue />
+                  <SelectValue placeholder={tbn("Select category", "ক্যাটাগরি নির্বাচন করুন")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="wheat">{tbn("Wheat / Atta (গম/আটা)", "গম/আটা (Wheat)")}</SelectItem>
@@ -88,6 +88,7 @@ export function FitraCalculator({ open, onOpenChange, onApplyFitra }: Props) {
                   min="0" 
                   value={pricePerKg || ""} 
                   onChange={(e) => setPricePerKg(Number(e.target.value))}
+                  placeholder="120"
                   className="pl-8"
                 />
                 <span className="absolute left-3 top-2.5 text-muted-foreground">৳</span>
@@ -101,6 +102,7 @@ export function FitraCalculator({ open, onOpenChange, onApplyFitra }: Props) {
                 min="1" 
                 value={familyMembers || ""} 
                 onChange={(e) => setFamilyMembers(Number(e.target.value))}
+                placeholder="1"
                 className="mt-1"
               />
             </div>

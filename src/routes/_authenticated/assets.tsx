@@ -105,13 +105,13 @@ function AssetsPage() {
 
       <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-          <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-          <div><Label>{t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label required>{t("name")}</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={lang === "bn" ? "যেমন: মাইক সেট / জেনারেটর" : "e.g. Sound System / Generator"} /></div>
+          <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder={lang === "bn" ? "যেমন: ইলেকট্রনিক্স / আসবাবপত্র" : "e.g. Electronics / Furniture"} /></div>
+          <div><Label>{t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={lang === "bn" ? "যেমন: নিচতলা স্টোররুম" : "e.g. Ground Floor Store"} /></div>
           <div><Label>{t("purchase_date")}</Label><DatePicker  value={form.purchase_date} onChange={(v) => setForm({ ...form, purchase_date: v })} /></div>
           <div><Label>{t("condition")}</Label>
             <Select value={form.condition} onValueChange={(v) => setForm({ ...form, condition: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "অবস্থা নির্বাচন করুন" : "Select condition"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="good">Good</SelectItem>
                 <SelectItem value="fair">Fair</SelectItem>
@@ -119,14 +119,14 @@ function AssetsPage() {
               </SelectContent>
             </Select>
           </div>
-          <div><Label>{t("purchase_price")}</Label><Input type="number" step="0.01" value={form.purchase_price} onChange={(e) => setForm({ ...form, purchase_price: Number(e.target.value) })} /></div>
-          <div><Label>{t("current_value")}</Label><Input type="number" step="0.01" value={form.current_value} onChange={(e) => setForm({ ...form, current_value: Number(e.target.value) })} /></div>
+          <div><Label>{t("purchase_price")}</Label><Input type="number" step="0.01" value={form.purchase_price} onChange={(e) => setForm({ ...form, purchase_price: Number(e.target.value) })} placeholder="15000" /></div>
+          <div><Label>{t("current_value")}</Label><Input type="number" step="0.01" value={form.current_value} onChange={(e) => setForm({ ...form, current_value: Number(e.target.value) })} placeholder="12000" /></div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("photo")}</Label>
             {form.photo_url && <img src={form.photo_url} alt="" className="w-24 h-24 rounded object-cover mb-2" />}
             <FileUpload folder="assets" accept="image/*" onUploaded={(i) => setForm({ ...form, photo_url: i.url })} />
           </div>
-          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "সম্পদ সংক্রান্ত কোনো বিবরণ বা মন্তব্য..." : "Asset notes or remarks..."} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />

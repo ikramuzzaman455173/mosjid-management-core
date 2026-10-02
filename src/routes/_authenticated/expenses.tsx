@@ -136,7 +136,7 @@ function ExpensesPage() {
           <div>
             <Label required>{t("category")}</Label>
             <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "ক্যাটাগরি নির্বাচন করুন" : "Select category"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="utility">{lang === "bn" ? "ইউটিলিটি" : "Utility"}</SelectItem>
                 <SelectItem value="salary">{lang === "bn" ? "বেতন" : "Salary"}</SelectItem>

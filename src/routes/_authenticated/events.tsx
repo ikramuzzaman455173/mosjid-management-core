@@ -132,15 +132,15 @@ function EventsPage() {
           </div>
           <div>
             <Label>{t("type")}</Label>
-            <Input value={form.event_type} onChange={(e) => setForm({ ...form, event_type: e.target.value })} />
+            <Input value={form.event_type} onChange={(e) => setForm({ ...form, event_type: e.target.value })} placeholder={lang === "bn" ? "যেমন: ধর্মীয় মাহফিল" : "e.g. Religious Gathering"} />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{lang === "bn" ? "স্থান" : "Location"}</Label>
-            <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+            <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={lang === "bn" ? "যেমন: মসজিদ হলরুম" : "e.g. Mosque Main Hall"} />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("description")}</Label>
-            <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={lang === "bn" ? "ইভেন্টের বিস্তারিত তথ্য লিখুন..." : "Enter event details..."} />
           </div>
         </div>
       </CrudDialog>

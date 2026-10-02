@@ -222,7 +222,7 @@ function GalleryPage() {
             <div>
               <Label>{t("category")}</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={lang === "bn" ? "ক্যাটাগরি নির্বাচন করুন" : "Select category"} /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="general">General</SelectItem>
                   <SelectItem value="events">Events</SelectItem>

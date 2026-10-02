@@ -95,7 +95,7 @@ function InventoryPage() {
           <div><Label>{t("category")}</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder={lang === "bn" ? "যেমন: কার্পেট" : "e.g. Carpet"} /></div>
           <div><Label>{t("unit")}</Label>
             <Select value={form.unit} onValueChange={(v) => setForm({ ...form, unit: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "একক নির্বাচন করুন" : "Select unit"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="pcs">pcs</SelectItem>
                 <SelectItem value="kg">kg</SelectItem>
@@ -108,7 +108,7 @@ function InventoryPage() {
           {!editing && <div><Label>{t("current_stock")}</Label><Input type="number" value={form.current_stock} onChange={(e) => setForm({ ...form, current_stock: Number(e.target.value) })} placeholder="10" /></div>}
           <div><Label>{t("min_stock")}</Label><Input type="number" value={form.min_stock} onChange={(e) => setForm({ ...form, min_stock: Number(e.target.value) })} placeholder="5" /></div>
           <div className={editing ? "col-span-2" : ""}><Label>{lang === "bn" ? "একক মূল্য" : "Unit price"}</Label><Input type="number" step="0.01" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })} placeholder="1200" /></div>
-          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "মালামাল সংক্রান্ত কোনো মন্তব্য..." : "Item notes or remarks..."} /></div>
         </div>
       </CrudDialog>
       <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />

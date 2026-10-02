@@ -16,9 +16,10 @@ export interface TimePickerProps {
   onChange?: (time: string) => void;
   className?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
-export function TimePicker({ value, onChange, className, placeholder }: TimePickerProps) {
+export function TimePicker({ value, onChange, className, placeholder, disabled }: TimePickerProps) {
   const { lang, t } = useI18n();
 
   const [hour24Str, minuteStr] = (value || "").split(":");
@@ -66,9 +67,9 @@ export function TimePicker({ value, onChange, className, placeholder }: TimePick
   return (
     <div className={cn("flex items-center gap-1", className)}>
       <div className="relative flex items-center">
-        <Clock className="absolute left-2.5 h-4 w-4 text-muted-foreground z-10" />
-        <Select value={displayHour} onValueChange={handleHourChange}>
-          <SelectTrigger className="w-[75px] pl-8 border-r-0 rounded-r-none focus:ring-0 focus:ring-offset-0">
+        <Clock className="absolute left-2.5 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+        <Select value={displayHour} onValueChange={handleHourChange} disabled={disabled}>
+          <SelectTrigger className="w-[75px] pl-8 border-r-0 rounded-r-none focus:ring-0 focus:ring-offset-0 cursor-pointer">
             <SelectValue placeholder="HH" />
           </SelectTrigger>
           <SelectContent className="max-h-[200px]">
@@ -80,8 +81,8 @@ export function TimePicker({ value, onChange, className, placeholder }: TimePick
           </SelectContent>
         </Select>
       </div>
-      <Select value={minuteStr} onValueChange={handleMinuteChange}>
-        <SelectTrigger className="w-[60px] border-l-0 rounded-l-none rounded-r-none px-2 focus:ring-0 focus:ring-offset-0">
+      <Select value={minuteStr} onValueChange={handleMinuteChange} disabled={disabled}>
+        <SelectTrigger className="w-[60px] border-l-0 rounded-l-none rounded-r-none px-2 focus:ring-0 focus:ring-offset-0 cursor-pointer">
           <SelectValue placeholder="MM" />
         </SelectTrigger>
         <SelectContent className="max-h-[200px]">
@@ -92,8 +93,8 @@ export function TimePicker({ value, onChange, className, placeholder }: TimePick
           ))}
         </SelectContent>
       </Select>
-      <Select value={ampm} onValueChange={handleAmPmChange}>
-        <SelectTrigger className="w-[65px] rounded-l-none px-2">
+      <Select value={ampm} onValueChange={handleAmPmChange} disabled={disabled}>
+        <SelectTrigger className="w-[65px] rounded-l-none px-2 cursor-pointer">
           <SelectValue placeholder="AM/PM" />
         </SelectTrigger>
         <SelectContent>

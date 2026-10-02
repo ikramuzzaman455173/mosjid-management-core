@@ -144,11 +144,11 @@ function SettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>{lang === "bn" ? "শহর" : "City"}</Label>
-                        <Input value={settings.prayerCity} onChange={(e) => updateSettings({ prayerCity: e.target.value })} className="mt-1" />
+                        <Input value={settings.prayerCity} onChange={(e) => updateSettings({ prayerCity: e.target.value })} className="mt-1" placeholder={lang === "bn" ? "যেমন: Dhaka" : "e.g. Dhaka"} />
                       </div>
                       <div>
                         <Label>{lang === "bn" ? "দেশ" : "Country"}</Label>
-                        <Input value={settings.prayerCountry} onChange={(e) => updateSettings({ prayerCountry: e.target.value })} className="mt-1" />
+                        <Input value={settings.prayerCountry} onChange={(e) => updateSettings({ prayerCountry: e.target.value })} className="mt-1" placeholder={lang === "bn" ? "যেমন: Bangladesh" : "e.g. Bangladesh"} />
                       </div>
                     </div>
                   </div>
@@ -172,11 +172,11 @@ function SettingsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label>{lang === "bn" ? "এপিআই কি (Token/Key)" : "API Key/Token"}</Label>
-                          <Input type="password" value={settings.smsApiKey} onChange={(e) => updateSettings({ smsApiKey: e.target.value })} className="mt-1" />
+                          <Input type="password" value={settings.smsApiKey} onChange={(e) => updateSettings({ smsApiKey: e.target.value })} className="mt-1" placeholder="••••••••••••••••" />
                         </div>
                         <div>
                           <Label>{lang === "bn" ? "সেন্ডার আইডি (ঐচ্ছিক)" : "Sender ID (Optional)"}</Label>
-                          <Input value={settings.smsSenderId} onChange={(e) => updateSettings({ smsSenderId: e.target.value })} className="mt-1" />
+                          <Input value={settings.smsSenderId} onChange={(e) => updateSettings({ smsSenderId: e.target.value })} className="mt-1" placeholder={lang === "bn" ? "যেমন: MOSQUE" : "e.g. MOSQUE"} />
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground">

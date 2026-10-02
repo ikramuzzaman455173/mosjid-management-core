@@ -95,7 +95,7 @@ function ProfilePage() {
                 </div>
                 <div>
                   <Label>{lang === "bn" ? "ইমেইল অ্যাড্রেস" : "Email Address"}</Label>
-                  <Input value={form.email} onChange={e => setForm({...form, email: e.target.value})} type="email" className="mt-1" />
+                  <Input value={form.email} onChange={e => setForm({...form, email: e.target.value})} type="email" className="mt-1" placeholder="email@example.com" />
                 </div>
                 <Button onClick={() => updateProfile.mutate()} disabled={updateProfile.isPending}>
                   {updateProfile.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
@@ -119,7 +119,7 @@ function ProfilePage() {
                 <Label>{lang === "bn" ? "নতুন পাসওয়ার্ড" : "New Password"}</Label>
                 <div className="relative mt-1">
                   <Input value={passwordForm} onChange={e => setPasswordForm(e.target.value)} type={showPassword ? "text" : "password"} placeholder="••••••••" className="pr-10" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer">
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -128,7 +128,7 @@ function ProfilePage() {
                 <Label>{lang === "bn" ? "পাসওয়ার্ড নিশ্চিত করুন" : "Confirm Password"}</Label>
                 <div className="relative mt-1">
                   <Input value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} type={showConfirmPassword ? "text" : "password"} placeholder="••••••••" className="pr-10" />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer">
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>

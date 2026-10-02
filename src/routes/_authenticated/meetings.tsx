@@ -109,7 +109,7 @@ function MeetingsPage() {
           <div><Label required>{t("date")}</Label><Input type="datetime-local" required value={form.meeting_date} onChange={(e) => setForm({ ...form, meeting_date: e.target.value })} /></div>
           <div><Label>{lang === "bn" ? "মাধ্যম" : "Mode"}</Label>
             <Select value={form.meeting_type} onValueChange={(v) => setForm({ ...form, meeting_type: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "মাধ্যম নির্বাচন করুন" : "Select mode"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="local">{lang === "bn" ? "লোকাল" : "Local"}</SelectItem>
                 <SelectItem value="online">{lang === "bn" ? "অনলাইন" : "Online"}</SelectItem>
@@ -119,7 +119,7 @@ function MeetingsPage() {
           <div><Label>{form.meeting_type === 'online' ? (lang === 'bn' ? 'মিটিং লিঙ্ক' : 'Meeting Link') : t("location")}</Label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={form.meeting_type === 'online' ? "https://zoom.us/..." : (lang === "bn" ? "যেমন: মসজিদ প্রাঙ্গণ" : "e.g. Mosque Premises")} /></div>
           <div><Label>{t("type")}</Label>
             <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "ধরন নির্বাচন করুন" : "Select type"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="general">General</SelectItem>
                 <SelectItem value="emergency">Emergency</SelectItem>
@@ -130,7 +130,7 @@ function MeetingsPage() {
           </div>
           <div><Label>{t("status")}</Label>
             <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "স্ট্যাটাস নির্বাচন করুন" : "Select status"} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="scheduled">{t("scheduled")}</SelectItem>
                 <SelectItem value="completed">{t("completed")}</SelectItem>
@@ -138,7 +138,7 @@ function MeetingsPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-1 md:col-span-2"><Label>{t("agenda")}</Label><Textarea rows={3} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} /></div>
+          <div className="col-span-1 md:col-span-2"><Label>{t("agenda")}</Label><Textarea rows={3} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} placeholder={lang === "bn" ? "সভার আলোচ্য বিষয়সূচি..." : "Meeting agenda points..."} /></div>
           <div className="col-span-1 md:col-span-2"><Label>{t("notes")}</Label><Textarea rows={2} value={form.minutes} onChange={(e) => setForm({ ...form, minutes: e.target.value })} placeholder={lang === "bn" ? "সভার আলোচ্য বিষয় বা সিদ্ধান্ত..." : "Meeting agenda or decisions..."} /></div>
         </div>
       </CrudDialog>

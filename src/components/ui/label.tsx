@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 inline-block mb-1.5 cursor-pointer select-none",
 );
 
 const Label = React.forwardRef<
@@ -21,7 +21,7 @@ const Label = React.forwardRef<
     {...props}
   >
     {props.children}
-    {required && <span className="text-destructive ml-1">*</span>}
+    {required && <span className="text-destructive ml-1 font-semibold">*</span>}
   </LabelPrimitive.Root>
 ));
 Label.displayName = LabelPrimitive.Root.displayName;
