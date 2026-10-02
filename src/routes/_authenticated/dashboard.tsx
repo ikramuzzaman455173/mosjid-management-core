@@ -9,7 +9,7 @@ import {
   HandCoins, UserPlus, HandHeart, Receipt, BarChart3, Bell,
   ArrowUpRight, ArrowDownRight, ArrowRight, Calendar as CalendarIcon,
   Sunrise, Sun, SunMedium, Sunset, Moon, Clock, TrendingUp,
-  TrendingDown, PieChart as PieChartIcon, Sparkles, Tv, Layers
+  PieChart as PieChartIcon, Sparkles, Tv
 } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
@@ -349,7 +349,7 @@ function Dashboard() {
       label: t("total_members"),
       value: toBnNum(stats?.totalMembers ?? 0, lang),
       suffix: t("persons"),
-      subtitle: lang === "bn" ? `সক্রিয় সদস্য: ${toBnNum(stats?.activeMembers ?? 0, lang)} জন` : `Active: ${stats?.activeMembers ?? 0}`,
+      subtitle: lang === "bn" ? `সক্রিয়: ${toBnNum(stats?.activeMembers ?? 0, lang)} জন` : `Active: ${stats?.activeMembers ?? 0}`,
       icon: Users,
       color: "text-emerald-600 dark:text-emerald-400",
       bg: "bg-emerald-500/10",
@@ -465,74 +465,88 @@ function Dashboard() {
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px] mx-auto pb-10">
+    <div className="space-y-4 sm:space-y-6 max-w-[1600px] mx-auto pb-10">
 
-      {/* 1. Executive Mosque Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 p-6 border border-border/60 shadow-sm">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary/20 via-primary/10 to-amber-500/20 border border-primary/25 flex items-center justify-center text-primary shadow-sm">
-                <MosqueIcon className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                  <span>{lang === "bn" ? "আসসালামু আলাইকুম" : "Assalamu Alaikum"}</span>
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 hidden sm:inline-flex">
-                    {lang === "bn" ? "বায়তুল মামুর জামে মসজিদ" : "Baytul Mamur Mosque"}
-                  </span>
+      {/* 1. Executive Mosque Header Banner - Fully Responsive & Non-wrapping */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 p-4 sm:p-5 md:p-6 border border-border/60 shadow-sm">
+        {/* Top Tier: Greeting, Badge, Date & Executive Buttons */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border/50">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-primary/20 via-primary/10 to-amber-500/20 border border-primary/25 flex items-center justify-center text-primary shadow-xs shrink-0">
+              <MosqueIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground whitespace-nowrap">
+                  {lang === "bn" ? "আসসালামু আলাইকুম" : "Assalamu Alaikum"}
                 </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                  <CalendarIcon className="w-3.5 h-3.5 text-primary/70" />
-                  <span>{formattedDate}</span>
-                </p>
+                <span className="text-[11px] sm:text-xs font-medium px-2 sm:px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">
+                  {lang === "bn" ? "বায়তুল মামুর জামে মসজিদ" : "Baytul Mamur Mosque"}
+                </span>
               </div>
+              <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5 sm:mt-1">
+                <CalendarIcon className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+                <span className="truncate">{formattedDate}</span>
+              </p>
             </div>
           </div>
 
-          {/* Quick Action Shortcuts */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-            {quickActions.map((action) => (
-              <Link key={action.path} to={action.path as any}>
-                <Button variant="outline" size="sm" className="h-9 px-3 border-border/70 hover:border-primary/40 hover:bg-primary/5 shadow-sm text-xs font-medium transition-all group">
-                  <action.icon className={`w-3.5 h-3.5 mr-1.5 ${action.color} transition-transform group-hover:scale-110`} />
-                  {action.label}
-                </Button>
-              </Link>
-            ))}
-
+          {/* Top-Right Executive Buttons */}
+          <div className="flex items-center gap-2 shrink-0 self-start md:self-auto">
             <Link to="/reports">
-              <Button size="sm" className="h-9 px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm text-xs font-medium gap-1.5">
-                <BarChart3 className="w-3.5 h-3.5" />
+              <Button size="sm" className="h-9 px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs text-xs font-semibold gap-1.5 cursor-pointer">
+                <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>{t("reports")}</span>
               </Button>
             </Link>
+            <Link to="/tv-display">
+              <Button variant="outline" size="sm" className="h-9 px-3 border-border/70 hover:border-primary/40 text-xs font-medium gap-1.5 cursor-pointer">
+                <Tv className="w-3.5 h-3.5 text-primary" />
+                <span className="hidden sm:inline">{lang === "bn" ? "টিভি ডিসপ্লে" : "TV Mode"}</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom Tier: Quick Action Shortcuts Grid */}
+        <div className="pt-3.5 flex flex-col sm:flex-row sm:items-center gap-2.5">
+          <span className="text-xs font-medium text-muted-foreground shrink-0 hidden lg:inline-flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>{lang === "bn" ? "দ্রুত অ্যাকশন:" : "Quick Actions:"}</span>
+          </span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1">
+            {quickActions.map((action) => (
+              <Link key={action.path} to={action.path as any} className="w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full h-9 px-2.5 bg-background/60 hover:bg-background border-border/70 hover:border-primary/40 shadow-xs text-xs font-medium transition-all group justify-center sm:justify-start cursor-pointer"
+                >
+                  <action.icon className={`w-3.5 h-3.5 mr-1.5 ${action.color} transition-transform group-hover:scale-110 shrink-0`} />
+                  <span className="truncate">{action.label}</span>
+                </Button>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
 
       {/* 2. Today's Prayer Schedule Ribbon */}
-      <Card className="p-4 sm:p-5 border-border/60 bg-gradient-to-r from-card via-card to-muted/20 shadow-sm overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5 pb-2.5 border-b border-border/50">
+      <Card className="p-3.5 sm:p-5 border-border/60 bg-gradient-to-r from-card via-card to-muted/20 shadow-sm overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3 pb-2.5 border-b border-border/50">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground tracking-tight">
+            <Clock className="w-4 h-4 text-primary shrink-0" />
+            <h2 className="text-xs sm:text-sm font-bold text-foreground tracking-tight whitespace-nowrap">
               {lang === "bn" ? "আজকের নামাজের সময়সূচী" : "Today's Prayer Schedule"}
             </h2>
-            <Badge variant="outline" className="text-[10px] py-0 h-5 text-muted-foreground border-border/60">
+            <Badge variant="outline" className="text-[10px] py-0 h-5 text-muted-foreground border-border/60 whitespace-nowrap">
               {todayPrayer?.effective_date || today.toISOString().slice(0, 10)}
             </Badge>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link to="/tv-display">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1">
-                <Tv className="w-3.5 h-3.5" />
-                <span>{lang === "bn" ? "টিভি ডিসপ্লে" : "TV Mode"}</span>
-              </Button>
-            </Link>
+          <div className="flex items-center gap-2 self-end sm:self-auto">
             <Link to="/prayer-times">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1">
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1 px-2 cursor-pointer">
                 <span>{lang === "bn" ? "সময়সূচী পরিবর্তন" : "Manage"}</span>
                 <ArrowRight className="w-3 h-3" />
               </Button>
@@ -540,7 +554,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
           {PRAYER_SLOTS.map((slot) => {
             const isUpcoming = upcomingPrayerKey === slot.key;
             const slotTimes = getPrayerSlotTimes(todayPrayer, slot.key, slot.defaultAzan, slot.defaultIqamah);
@@ -551,9 +565,9 @@ function Dashboard() {
             return (
               <div
                 key={slot.key}
-                className={`relative p-3 rounded-xl border transition-all ${
+                className={`relative p-2.5 sm:p-3 rounded-xl border transition-all ${
                   isUpcoming
-                    ? "bg-primary/10 border-primary/40 shadow-sm ring-1 ring-primary/30"
+                    ? "bg-primary/10 border-primary/40 shadow-xs ring-1 ring-primary/30"
                     : "bg-muted/30 border-border/50 hover:border-border"
                 }`}
               >
@@ -564,19 +578,19 @@ function Dashboard() {
                   </span>
                 )}
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <SlotIcon className={`w-3.5 h-3.5 ${isUpcoming ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className={`text-xs font-bold ${isUpcoming ? "text-primary" : "text-foreground"}`}>
+                  <SlotIcon className={`w-3.5 h-3.5 shrink-0 ${isUpcoming ? "text-primary" : "text-muted-foreground"}`} />
+                  <span className={`text-xs font-bold truncate ${isUpcoming ? "text-primary" : "text-foreground"}`}>
                     {lang === "bn" ? slot.bn : slot.en}
                   </span>
                 </div>
                 <div className="space-y-0.5 text-xs">
-                  <div className="flex justify-between items-center text-muted-foreground text-[11px]">
+                  <div className="flex justify-between items-center text-muted-foreground text-[10px] sm:text-[11px]">
                     <span>{lang === "bn" ? "আজান:" : "Azan:"}</span>
-                    <span className="font-mono text-foreground font-medium">{azan}</span>
+                    <span className="font-mono text-foreground font-medium tabular-nums">{azan}</span>
                   </div>
-                  <div className="flex justify-between items-center text-muted-foreground text-[11px]">
+                  <div className="flex justify-between items-center text-muted-foreground text-[10px] sm:text-[11px]">
                     <span className="font-medium text-primary">{lang === "bn" ? "ইকামত:" : "Iqamah:"}</span>
-                    <span className="font-mono font-bold text-foreground">{iqamah}</span>
+                    <span className="font-mono font-bold text-foreground tabular-nums">{iqamah}</span>
                   </div>
                 </div>
               </div>
@@ -586,41 +600,41 @@ function Dashboard() {
       </Card>
 
       {/* 3. 8 Balanced KPI Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {isLoadingStats ? (
           Array.from({ length: 8 }).map((_, i) => (
-            <Card key={`kpi-skel-${i}`} className="p-4 shadow-sm space-y-3">
-              <div className="flex items-center gap-3">
-                <Skeleton className="w-10 h-10 rounded-xl" />
-                <div className="space-y-1.5 flex-1">
-                  <Skeleton className="h-3.5 w-24" />
-                  <Skeleton className="h-5 w-20" />
+            <Card key={`kpi-skel-${i}`} className="p-3 sm:p-4 shadow-xs space-y-2.5">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <Skeleton className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shrink-0" />
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <Skeleton className="h-3 w-16 sm:w-24" />
+                  <Skeleton className="h-5 w-14 sm:w-20" />
                 </div>
               </div>
-              <Skeleton className="h-3 w-3/4" />
+              <Skeleton className="h-2.5 w-3/4" />
             </Card>
           ))
         ) : (
           kpis.map((k) => (
             <Link key={k.label} to={k.link as any} className="block group">
-              <Card className={`p-4 shadow-sm hover:shadow-md transition-all h-full flex flex-col justify-between border ${k.border} ${k.isHighlight ? "bg-primary/5" : "bg-card"}`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1 min-w-0">
-                    <p className="text-xs font-medium text-muted-foreground truncate">{k.label}</p>
+              <Card className={`p-3 sm:p-4 shadow-xs hover:shadow-sm transition-all h-full flex flex-col justify-between border ${k.border} ${k.isHighlight ? "bg-primary/5" : "bg-card"}`}>
+                <div className="flex items-start justify-between gap-2 sm:gap-3">
+                  <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
+                    <p className="text-[11px] sm:text-xs font-medium text-muted-foreground truncate">{k.label}</p>
                     <div className="flex items-baseline gap-1">
-                      <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground truncate">
+                      <h3 className="text-base sm:text-lg xl:text-xl font-bold tracking-tight text-foreground truncate">
                         {k.value}
                       </h3>
-                      {k.suffix && <span className="text-[11px] text-muted-foreground font-normal">{k.suffix}</span>}
+                      {k.suffix && <span className="text-[10px] sm:text-[11px] text-muted-foreground font-normal shrink-0">{k.suffix}</span>}
                     </div>
                   </div>
-                  <div className={`w-10 h-10 rounded-xl ${k.bg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
-                    <k.icon className={`w-5 h-5 ${k.color}`} />
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl ${k.bg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
+                    <k.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${k.color}`} />
                   </div>
                 </div>
-                <div className="mt-2.5 pt-2 border-t border-border/40 flex items-center justify-between text-[11px] text-muted-foreground">
+                <div className="mt-2 pt-1.5 sm:mt-2.5 sm:pt-2 border-t border-border/40 flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground">
                   <span className="truncate">{k.subtitle}</span>
-                  <ArrowRight className="w-3 h-3 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+                  <ArrowRight className="w-3 h-3 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:text-primary shrink-0 ml-1" />
                 </div>
               </Card>
             </Link>
@@ -629,28 +643,28 @@ function Dashboard() {
       </div>
 
       {/* 4. Analytics & Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5">
         
         {/* Main Financial Trend Chart (2 Cols) */}
-        <Card className="p-5 shadow-sm border-border/60 xl:col-span-2 flex flex-col bg-card">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-3 border-b border-border/50">
-            <div>
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 xl:col-span-2 flex flex-col bg-card overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-border/50">
+            <div className="min-w-0">
               <h2 className="font-bold text-base sm:text-lg flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-primary" />
-                <span>{t("monthly_income_expense")}</span>
+                <BarChart3 className="w-5 h-5 text-primary shrink-0" />
+                <span className="truncate">{t("monthly_income_expense")}</span>
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
                 {lang === "bn" ? "আয়-ব্যয় ও মাসিক উদ্বৃত্ত বিশ্লেষণ" : "Income, expense & balance trends"}
               </p>
             </div>
 
             {/* Timeframe & Chart Type Switches */}
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
               <div className="inline-flex rounded-lg border border-border/60 bg-muted/40 p-0.5 text-xs">
                 <button
                   type="button"
                   onClick={() => setTimeframe("monthly")}
-                  className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
                     timeframe === "monthly" ? "bg-background text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -659,7 +673,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setTimeframe("weekly")}
-                  className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
                     timeframe === "weekly" ? "bg-background text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -671,7 +685,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setChartType("area")}
-                  className={`px-2 py-1 rounded-md transition-all ${
+                  className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
                     chartType === "area" ? "bg-background text-primary shadow-xs" : "text-muted-foreground hover:text-foreground"
                   }`}
                   title={lang === "bn" ? "ট্রেন্ড চার্ট" : "Area Chart"}
@@ -681,7 +695,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setChartType("bar")}
-                  className={`px-2 py-1 rounded-md transition-all ${
+                  className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
                     chartType === "bar" ? "bg-background text-primary shadow-xs" : "text-muted-foreground hover:text-foreground"
                   }`}
                   title={lang === "bn" ? "বার চার্ট" : "Bar Chart"}
@@ -693,33 +707,33 @@ function Dashboard() {
           </div>
 
           {/* Quick Metrics Header inside chart */}
-          <div className="grid grid-cols-3 gap-2 p-2.5 mb-4 rounded-xl bg-muted/30 border border-border/40 text-center text-xs">
-            <div>
-              <p className="text-[11px] text-muted-foreground">{lang === "bn" ? "মোট সংগৃহীত আয়" : "Total Income"}</p>
-              <p className="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+          <div className="grid grid-cols-3 gap-2 p-2 sm:p-2.5 mb-4 rounded-xl bg-muted/30 border border-border/40 text-center text-xs">
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট সংগৃহীত আয়" : "Total Income"}</p>
+              <p className="font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 mt-0.5 truncate">
                 {fmtCurrency(chartTotals.totalInc, lang)}
               </p>
             </div>
-            <div>
-              <p className="text-[11px] text-muted-foreground">{lang === "bn" ? "মোট পরিশোধিত ব্যয়" : "Total Expense"}</p>
-              <p className="font-bold text-rose-600 dark:text-rose-400 mt-0.5">
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট পরিশোধিত ব্যয়" : "Total Expense"}</p>
+              <p className="font-bold text-xs sm:text-sm text-rose-600 dark:text-rose-400 mt-0.5 truncate">
                 {fmtCurrency(chartTotals.totalExp, lang)}
               </p>
             </div>
-            <div>
-              <p className="text-[11px] text-muted-foreground">{lang === "bn" ? "নীট উদ্বৃত্ত / ব্যালেন্স" : "Net Balance"}</p>
-              <p className={`font-bold mt-0.5 ${chartTotals.net >= 0 ? "text-primary" : "text-destructive"}`}>
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "নীট উদ্বৃত্ত / ব্যালেন্স" : "Net Balance"}</p>
+              <p className={`font-bold text-xs sm:text-sm mt-0.5 truncate ${chartTotals.net >= 0 ? "text-primary" : "text-destructive"}`}>
                 {fmtCurrency(chartTotals.net, lang)}
               </p>
             </div>
           </div>
 
           {/* Recharts Canvas */}
-          <div className="flex-1 min-h-[300px] w-full">
+          <div className="flex-1 min-h-[260px] sm:min-h-[300px] w-full">
             {isLoadingChart ? (
-              <Skeleton className="w-full h-full min-h-[300px] rounded-xl" />
+              <Skeleton className="w-full h-full min-h-[260px] rounded-xl" />
             ) : activeSeries.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={290}>
                 {chartType === "area" ? (
                   <AreaChart data={activeSeries} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
                     <defs>
@@ -751,7 +765,7 @@ function Dashboard() {
                 )}
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex flex-col items-center justify-center text-muted-foreground text-xs">
+              <div className="h-[260px] flex flex-col items-center justify-center text-muted-foreground text-xs">
                 <BarChart3 className="w-8 h-8 mb-2 opacity-20" />
                 <span>{lang === "bn" ? "গ্রাফ প্রদর্শনের জন্য পর্যাপ্ত তথ্য নেই" : "No chart data available"}</span>
               </div>
@@ -760,28 +774,28 @@ function Dashboard() {
         </Card>
 
         {/* Funds & Accounts Distribution Breakdown (1 Col) */}
-        <Card className="p-5 shadow-sm border-border/60 flex flex-col justify-between bg-card">
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col justify-between bg-card overflow-hidden">
           <div>
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
               <h2 className="font-bold text-base flex items-center gap-2">
-                <PieChartIcon className="w-5 h-5 text-primary" />
-                <span>{lang === "bn" ? "তহবিল ও ব্যাংক বণ্টন" : "Funds Distribution"}</span>
+                <PieChartIcon className="w-5 h-5 text-primary shrink-0" />
+                <span className="truncate">{lang === "bn" ? "তহবিল ও ব্যাংক বণ্টন" : "Funds Distribution"}</span>
               </h2>
               <Link to="/bank">
-                <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary p-0">
+                <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary p-0 cursor-pointer">
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
 
             {/* Donut Chart */}
-            <div className="h-[180px] w-full relative flex items-center justify-center">
+            <div className="h-[170px] sm:h-[180px] w-full relative flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={fundDistribution}
-                    innerRadius={50}
-                    outerRadius={75}
+                    innerRadius={45}
+                    outerRadius={70}
                     paddingAngle={3}
                     dataKey="value"
                   >
@@ -799,7 +813,7 @@ function Dashboard() {
                 <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {lang === "bn" ? "মোট তহবিল" : "Total Funds"}
                 </span>
-                <span className="text-sm font-bold text-foreground">
+                <span className="text-xs sm:text-sm font-bold text-foreground truncate max-w-[120px] text-center">
                   {fmtCurrency(stats?.totalFunds ?? 0, lang)}
                 </span>
               </div>
@@ -807,33 +821,33 @@ function Dashboard() {
           </div>
 
           {/* Account Breakdown List */}
-          <div className="space-y-2.5 mt-4 pt-3 border-t border-border/50 text-xs">
+          <div className="space-y-2 mt-4 pt-3 border-t border-border/50 text-xs">
             <div className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span className="font-medium">{lang === "bn" ? "নগদ পেটি ক্যাশ" : "Cash in Hand"}</span>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
+                <span className="font-medium truncate">{lang === "bn" ? "নগদ পেটি ক্যাশ" : "Cash in Hand"}</span>
               </div>
-              <span className="font-bold font-mono text-foreground">
+              <span className="font-bold font-mono text-foreground shrink-0 pl-1">
                 {fmtCurrency(stats?.cashBal ?? 0, lang)}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                <span className="font-medium">{lang === "bn" ? "ব্যাংক অ্যাকাউন্টস" : "Bank Accounts"}</span>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
+                <span className="font-medium truncate">{lang === "bn" ? "ব্যাংক অ্যাকাউন্টস" : "Bank Accounts"}</span>
               </div>
-              <span className="font-bold font-mono text-foreground">
+              <span className="font-bold font-mono text-foreground shrink-0 pl-1">
                 {fmtCurrency(stats?.bankBal ?? 0, lang)}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-                <span className="font-medium">{lang === "bn" ? "মোবাইল ব্যাংকিং" : "Mobile Banking"}</span>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0" />
+                <span className="font-medium truncate">{lang === "bn" ? "মোবাইল ব্যাংকিং" : "Mobile Banking"}</span>
               </div>
-              <span className="font-bold font-mono text-foreground">
+              <span className="font-bold font-mono text-foreground shrink-0 pl-1">
                 {fmtCurrency(stats?.mobileBal ?? 0, lang)}
               </span>
             </div>
@@ -842,23 +856,23 @@ function Dashboard() {
       </div>
 
       {/* 5. Bottom Section: Recent Activity & Notice Board */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         
         {/* Recent Transactions List (2 Cols) */}
-        <Card className="p-5 shadow-sm border-border/60 lg:col-span-2 flex flex-col bg-card">
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 lg:col-span-2 flex flex-col bg-card overflow-hidden">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
-            <div>
+            <div className="min-w-0">
               <h2 className="font-bold text-base sm:text-lg flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-primary" />
-                <span>{t("recent_transactions")}</span>
+                <Receipt className="w-5 h-5 text-primary shrink-0" />
+                <span className="truncate">{t("recent_transactions")}</span>
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
                 {lang === "bn" ? "সর্বশেষ অনুদান, চাঁদা, আয় ও ব্যয় কার্যক্রম" : "Latest income, donation, subscription & expenses"}
               </p>
             </div>
             <Link to="/reports">
               <Hint label={lang === "bn" ? "সকল রিপোর্ট ও খতিয়ান" : "View All Reports"} side="top">
-                <Button variant="ghost" size="sm" className="h-8 text-xs text-muted-foreground hover:text-primary gap-1">
+                <Button variant="ghost" size="sm" className="h-8 text-xs text-muted-foreground hover:text-primary gap-1 cursor-pointer">
                   <span>{t("view_all")}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
@@ -866,27 +880,27 @@ function Dashboard() {
             </Link>
           </div>
 
-          <div className="flex-1 space-y-2.5">
+          <div className="flex-1 space-y-2">
             {isLoadingTxn ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <div key={`txn-skel-${i}`} className="flex items-center gap-3 p-2.5 rounded-xl border border-border/40">
                   <Skeleton className="w-9 h-9 rounded-full shrink-0" />
-                  <div className="flex-1 space-y-1.5">
+                  <div className="flex-1 space-y-1.5 min-w-0">
                     <Skeleton className="h-4 w-1/2" />
                     <Skeleton className="h-3 w-1/4" />
                   </div>
-                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-20 shrink-0" />
                 </div>
               ))
             ) : recentTxn && recentTxn.length > 0 ? (
               recentTxn.map((tx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between gap-3 p-2.5 sm:p-3 rounded-xl border border-border/50 bg-card hover:bg-muted/40 transition-all hover:border-primary/25"
+                  className="flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 rounded-xl border border-border/50 bg-card hover:bg-muted/40 transition-all hover:border-primary/25"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 ${
                         tx.kind === "credit"
                           ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
                           : "bg-rose-500/10 text-rose-600 border border-rose-500/20"
@@ -898,22 +912,22 @@ function Dashboard() {
                         <ArrowUpRight className="w-4 h-4" />
                       )}
                     </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         <p className="font-semibold text-xs sm:text-sm text-foreground truncate">
                           {tx.title}
                         </p>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${tx.badgeColor}`}>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium shrink-0 ${tx.badgeColor}`}>
                           {tx.badge}
                         </span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground truncate mt-0.5">
+                      <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate mt-0.5">
                         {tx.date} {tx.subtitle ? `• ${tx.subtitle}` : ""}
                       </p>
                     </div>
                   </div>
 
-                  <div className={`font-bold font-mono text-xs sm:text-sm whitespace-nowrap ${
+                  <div className={`font-bold font-mono text-xs sm:text-sm whitespace-nowrap shrink-0 pl-1 ${
                     tx.kind === "credit" ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
                   }`}>
                     {tx.kind === "credit" ? "+" : "-"}{fmtCurrency(tx.amount, lang)}
@@ -930,21 +944,21 @@ function Dashboard() {
         </Card>
 
         {/* Notice Board (1 Col) */}
-        <Card className="p-5 shadow-sm border-border/60 flex flex-col bg-card">
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col bg-card overflow-hidden">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
             <h2 className="font-bold text-base flex items-center gap-2">
-              <Bell className="w-5 h-5 text-amber-500" />
+              <Bell className="w-5 h-5 text-amber-500 shrink-0" />
               <span>{t("notice_board")}</span>
             </h2>
             <Link to="/notices">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1">
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1 cursor-pointer">
                 <span>{t("view_all")}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
           </div>
 
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 space-y-2.5">
             {isLoadingNotices ? (
               Array.from({ length: 3 }).map((_, i) => (
                 <div key={`notice-skel-${i}`} className="p-3 rounded-xl border border-border/40 space-y-2">
