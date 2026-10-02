@@ -26,6 +26,17 @@ jobs:
             exit 1
           fi
 
+          SUPABASE_URL="${SUPABASE_URL//$'\r'/}"
+          SUPABASE_URL="${SUPABASE_URL//$'\n'/}"
+          SUPABASE_URL="${SUPABASE_URL%\"}"
+          SUPABASE_URL="${SUPABASE_URL#\"}"
+          SUPABASE_URL="${SUPABASE_URL%/}"
+          SUPABASE_URL="${SUPABASE_URL%/rest/v1}"
+
+          if [[ "$SUPABASE_URL" != http://* && "$SUPABASE_URL" != https://* ]]; then
+            SUPABASE_URL="https://$SUPABASE_URL"
+          fi
+
           NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           echo "Sending keep-alive request to Supabase directly..."
           
