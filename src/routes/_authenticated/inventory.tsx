@@ -63,7 +63,7 @@ function InventoryPage() {
     { key: "cat", header: t("category"), cell: (i) => <Badge variant="outline">{i.category}</Badge> },
     { key: "stock", header: t("current_stock"), cell: (i) => {
       const low = Number(i.current_stock) <= Number(i.min_stock);
-      return <span className={low ? "text-destructive font-semibold" : "font-medium"}>{toBnNum(i.current_stock, lang)} {i.unit}{low && <Badge className="ml-2 bg-destructive/15 text-destructive">{t("low_stock")}</Badge>}</span>;
+      return <span className={low ? "text-destructive font-semibold" : "font-medium"}>{toBnNum(i.current_stock, lang)} {i.unit}{low && <Badge variant="outline" className="ml-2 border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none">{t("low_stock")}</Badge>}</span>;
     }},
     { key: "min", header: t("min_stock"), cell: (i) => `${toBnNum(i.min_stock, lang)} ${i.unit}` },
     { key: "price", header: t("amount"), cell: (i) => fmtCurrency(Number(i.unit_price ?? 0), lang) },
@@ -166,7 +166,7 @@ function HistoryDialog({ item, onClose }: { item: Item; onClose: () => void }) {
         <div className="space-y-1">
           {data?.length ? data.map((tx: any) => (
             <div key={tx.id} className="flex items-center gap-2 p-2 border rounded-md text-sm">
-              <Badge className={tx.kind === "in" ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}>{tx.kind === "in" ? t("stock_in") : t("stock_out")}</Badge>
+              <Badge variant="outline" className={tx.kind === "in" ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none" : "border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none"}>{tx.kind === "in" ? t("stock_in") : t("stock_out")}</Badge>
               <div className="flex-1">
                 <div className="font-medium">{toBnNum(tx.quantity, lang)} {item.unit}</div>
                 {tx.reason && <div className="text-xs text-muted-foreground">{tx.reason}</div>}

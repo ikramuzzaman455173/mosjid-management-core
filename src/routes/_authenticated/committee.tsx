@@ -68,7 +68,7 @@ function CommitteePage() {
     { key: "name", header: t("name"), cell: (c) => <div className="font-medium">{c.name}</div> },
     { key: "tenure", header: t("tenure"), cell: (c) => `${fmtDate(c.tenure_start, lang)} → ${fmtDate(c.tenure_end, lang)}` },
     { key: "status", header: t("status"), cell: (c) => (
-      <Badge className={c.status === "active" ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}>{t(c.status as any)}</Badge>
+      <Badge variant="outline" className={c.status === "active" ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none" : "border-muted-foreground/30 bg-muted text-muted-foreground font-medium shadow-none"}>{t(c.status as any)}</Badge>
     )},
     { key: "act", header: t("actions"), className: "text-right", cell: (c) => (
       <div className="flex gap-1 justify-end">

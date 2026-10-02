@@ -73,8 +73,10 @@ function AuditLogsPage() {
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const actionBadge = (a: string) => {
-    const map: Record<string, string> = { insert: "bg-success/15 text-success", update: "bg-primary/15 text-primary", delete: "bg-destructive/15 text-destructive" };
-    return <Badge className={map[a]}>{t(a as any)}</Badge>;
+    if (a === "insert") return <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none">{t("insert")}</Badge>;
+    if (a === "update") return <Badge variant="outline" className="border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium shadow-none">{t("update")}</Badge>;
+    if (a === "delete") return <Badge variant="outline" className="border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none">{t("delete")}</Badge>;
+    return <Badge variant="outline">{t(a as any) || a}</Badge>;
   };
 
   const exportRows = () => rows.map((r: any) => [fmtDate(r.created_at, "en"), r.action, r.entity, r.entity_id, r.actor_email ?? "—"]);

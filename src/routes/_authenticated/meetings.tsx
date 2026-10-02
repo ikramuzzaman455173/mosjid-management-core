@@ -70,8 +70,10 @@ function MeetingsPage() {
   });
 
   const statusBadge = (s: string) => {
-    const map: Record<string, string> = { scheduled: "bg-primary/15 text-primary", completed: "bg-success/15 text-success", cancelled: "bg-destructive/15 text-destructive" };
-    return <Badge className={map[s] ?? ""}>{t(s as any)}</Badge>;
+    if (s === "scheduled") return <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none">{t("scheduled")}</Badge>;
+    if (s === "completed") return <Badge variant="outline" className="border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium shadow-none">{t("completed")}</Badge>;
+    if (s === "cancelled") return <Badge variant="outline" className="border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none">{t("cancelled")}</Badge>;
+    return <Badge variant="outline">{t(s as any) || s}</Badge>;
   };
 
   const columns: Column<Meeting>[] = [

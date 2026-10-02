@@ -61,8 +61,10 @@ function AssetsPage() {
   });
 
   const condBadge = (c: string) => {
-    const map: Record<string, string> = { good: "bg-success/15 text-success", fair: "bg-gold/15 text-gold", poor: "bg-destructive/15 text-destructive" };
-    return <Badge className={map[c]}>{c}</Badge>;
+    if (c === "good") return <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none">Good</Badge>;
+    if (c === "fair") return <Badge variant="outline" className="border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-medium shadow-none">Fair</Badge>;
+    if (c === "poor") return <Badge variant="outline" className="border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none">Poor</Badge>;
+    return <Badge variant="outline">{c}</Badge>;
   };
 
   const columns: Column<Asset>[] = [
