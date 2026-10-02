@@ -36,6 +36,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "বায়তুল মামুর মসজিদ ম্যানেজমেন্ট সফটওয়্যার" },
       { name: "description", content: "মাইজযোনা দক্ষিণ নতুন পাড়া বায়তুল মামুর জামে মসজিদ — আধুনিক ডিজিটাল মসজিদ ব্যবস্থাপনা সিস্টেম" },
+      { name: "google", content: "notranslate" },
+      { name: "googlebot", content: "notranslate" },
     ],
     links: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=" + new Date().getTime() },
@@ -53,12 +55,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="bn" suppressHydrationWarning>
+    <html lang="bn" translate="no" className="notranslate" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <meta name="google" content="notranslate" />
         <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: "try{var theme=localStorage.getItem('app-theme');if(theme&&theme!=='default')document.documentElement.classList.add(theme);}catch(e){}" }} />
       </head>
-      <body suppressHydrationWarning>{children}<Scripts /></body>
+      <body className="notranslate" translate="no" suppressHydrationWarning>{children}<Scripts /></body>
     </html>
   );
 }
