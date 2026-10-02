@@ -11,13 +11,16 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock, Sparkles, ArrowRight, ShieldCheck, Copy, Check } from "lucide-react";
 import { MosqueIcon } from "@/components/ui/mosque-icon";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "লগইন | বায়তুল মামুর মসজিদ" }] }),
   component: AuthPage,
 });
+
+const DEMO_EMAIL = "mosqueadmin@info.com";
+const DEMO_PASSWORD = "MosqueAdmin@123";
 
 function AuthPage() {
   const { t, lang, setLang } = useI18n();
@@ -29,6 +32,7 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/welcome", replace: true });
@@ -58,6 +62,36 @@ function AuthPage() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleDemoLogin = async () => {
+    setBusy(true);
+    setEmail(DEMO_EMAIL);
+    setPassword(DEMO_PASSWORD);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      });
+      if (error) throw error;
+      toast.success(
+        lang === "bn"
+          ? "ডেমো অ্যাডমিন হিসেবে স্বাগতম!"
+          : "Welcome as Demo Admin!"
+      );
+    } catch (err: any) {
+      toast.error(err.message ?? (lang === "bn" ? "লগইন ব্যর্থ হয়েছে" : "Login failed"));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleCopyCreds = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(`Email: ${DEMO_EMAIL}\nPassword: ${DEMO_PASSWORD}`);
+    setCopied(true);
+    toast.success(lang === "bn" ? "ক্রেডেনশিয়াল কপি করা হয়েছে" : "Credentials copied");
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleGoogle = async () => {
@@ -176,20 +210,56 @@ function AuthPage() {
               </Button>
             </form>
 
-            {/* <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">{t("or")}</span>
-              </div>
-            </div>
+            {!isSignUp && (
+              <div className="mt-5 pt-4 border-t border-dashed border-border/80">
+                <div className="rounded-xl p-3.5 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-primary/10 border border-emerald-500/25 shadow-sm space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>{lang === "bn" ? "ডেমো ভিজিটর এক্সেস" : "Demo Visitor Access"}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCopyCreds}
+                      className="text-[11px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded hover:bg-background/80"
+                      title={lang === "bn" ? "ক্রেডেনশিয়াল কপি করুন" : "Copy credentials"}
+                    >
+                      {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                      <span>{copied ? (lang === "bn" ? "কপি হয়েছে" : "Copied") : (lang === "bn" ? "কপি" : "Copy")}</span>
+                    </button>
+                  </div>
 
-            <Button type="button" variant="outline" className="w-full" onClick={handleGoogle} disabled={busy}>
-              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-              {t("sign_in_with_google")}
-            </Button> */}
+                  <Button
+                    type="button"
+                    className="w-full h-10 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-medium shadow-sm flex items-center justify-center gap-2 group transition-all cursor-pointer"
+                    onClick={handleDemoLogin}
+                    disabled={busy}
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-300 fill-amber-300 transition-transform group-hover:scale-110" />
+                    <span>{lang === "bn" ? "১-ক্লিকে ডেমো লগইন করুন" : "1-Click Demo Login"}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+
+                  <div className="text-[11px] text-muted-foreground text-center flex items-center justify-center gap-1.5 flex-wrap">
+                    <span className="font-mono bg-background/80 px-1.5 py-0.5 rounded border border-border/50 text-[10px]">
+                      {DEMO_EMAIL}
+                    </span>
+                    <span>•</span>
+                    <span className="font-mono bg-background/80 px-1.5 py-0.5 rounded border border-border/50 text-[10px]">
+                      ••••••••••
+                    </span>
+                    <span className="text-[10px] text-muted-foreground/80">
+                      ({lang === "bn" ? "টেস্টের জন্য উন্মুক্ত" : "Ready to explore"})
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </Tabs>
         </Card>
       </div>
     </div>
   );
 }
+
+
