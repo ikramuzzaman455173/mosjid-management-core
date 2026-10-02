@@ -22,6 +22,8 @@ function SettingsPage() {
   const navigate = useNavigate();
   const { settings, updateSettings, isLoaded } = useAppSettings();
 
+  const [currentTheme, setCurrentTheme] = useState(() => (typeof window !== "undefined" ? localStorage.getItem('app-theme') : null) || 'default');
+
   const handleLogout = async () => {
     await signOut();
     toast.success(lang === "bn" ? "লগআউট সফল" : "Logged out");
@@ -60,7 +62,7 @@ function SettingsPage() {
                 { id: "theme-royal", name: "Royal", color: "bg-[#6d28d9]" },
                 { id: "theme-sunset", name: "Sunset", color: "bg-[#c2410c]" }
               ].map(th => {
-                const isSelected = (localStorage.getItem('app-theme') || 'default') === th.id;
+                const isSelected = currentTheme === th.id;
                 return (
                   <button 
                     key={th.id}
@@ -69,9 +71,8 @@ function SettingsPage() {
                       root.classList.remove('theme-ocean', 'theme-royal', 'theme-sunset');
                       if (th.id !== 'default') root.classList.add(th.id);
                       localStorage.setItem('app-theme', th.id);
+                      setCurrentTheme(th.id);
                       toast.success(lang === "bn" ? "থিম আপডেট হয়েছে" : "Theme updated");
-                      // Force a re-render to update the checkmark
-                      setForm(f => ({...f})); 
                     }}
                     className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${isSelected ? 'border-primary bg-primary/5 scale-[1.02] shadow-sm' : 'border-transparent hover:bg-muted'}`}
                   >

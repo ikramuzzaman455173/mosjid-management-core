@@ -18,6 +18,8 @@ export interface DatePickerProps {
   onChange?: (date: string) => void;
   placeholder?: string;
   className?: string;
+  required?: boolean;
+  disabled?: boolean;
 }
 
 export function DatePicker({
@@ -25,6 +27,8 @@ export function DatePicker({
   onChange,
   placeholder,
   className,
+  required,
+  disabled,
 }: DatePickerProps) {
   const { lang, t } = useI18n();
   const date = value ? parseISO(value) : undefined;

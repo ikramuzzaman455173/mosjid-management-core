@@ -618,6 +618,7 @@ export type Database = {
           created_by: string | null
           dob: string | null
           email: string | null
+          expiry_date: string | null
           father_name: string | null
           full_name: string
           id: string
@@ -631,6 +632,7 @@ export type Database = {
           occupation: string | null
           phone: string | null
           photo_url: string | null
+          qr_token: string | null
           status: Database["public"]["Enums"]["member_status"] | null
           updated_at: string | null
         }
@@ -641,6 +643,7 @@ export type Database = {
           created_by?: string | null
           dob?: string | null
           email?: string | null
+          expiry_date?: string | null
           father_name?: string | null
           full_name: string
           id?: string
@@ -656,6 +659,7 @@ export type Database = {
           occupation?: string | null
           phone?: string | null
           photo_url?: string | null
+          qr_token?: string | null
           status?: Database["public"]["Enums"]["member_status"] | null
           updated_at?: string | null
         }
@@ -666,6 +670,7 @@ export type Database = {
           created_by?: string | null
           dob?: string | null
           email?: string | null
+          expiry_date?: string | null
           father_name?: string | null
           full_name?: string
           id?: string
@@ -681,6 +686,7 @@ export type Database = {
           occupation?: string | null
           phone?: string | null
           photo_url?: string | null
+          qr_token?: string | null
           status?: Database["public"]["Enums"]["member_status"] | null
           updated_at?: string | null
         }

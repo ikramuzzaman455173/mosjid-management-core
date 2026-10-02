@@ -58,7 +58,7 @@ function VerifyMemberPage() {
     );
   }
 
-  const isActive = member.status === "active" || member.status === "সক্রিয়" || !member.status;
+  const isActive = member.status === "active" || (member.status as string) === "সক্রিয়" || !member.status;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
