@@ -16,13 +16,16 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { NotFound } from "@/components/errors/not-found";
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+import type { ErrorComponentProps } from "@tanstack/react-router";
+
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
+  const errorMessage = error instanceof Error ? error.message : String(error ?? "Unknown error");
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold">কিছু একটা সমস্যা হয়েছে</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{errorMessage}</p>
         <button onClick={reset} className="mt-6 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">আবার চেষ্টা করুন</button>
       </div>
     </div>
