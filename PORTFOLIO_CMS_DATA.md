@@ -10,7 +10,7 @@ Priority: 1
 Tags: React 19, TanStack Start, Supabase, Tailwind CSS, TypeScript
 Published Date: 2026-10-03
 
-Live URL: https://baytul-mamur.vercel.app
+Live URL: https://smart-mosjid-core.vercel.app
 Repo Frontend URL: https://github.com/ikramuzzaman455173/mosjid-management-core
 Repo Backend URL: 
 Docs URL: 

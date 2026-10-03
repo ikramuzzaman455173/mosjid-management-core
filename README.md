@@ -4,7 +4,7 @@
     <strong>A high-performance, full-stack enterprise digital management platform streamlining mosque operations, member registries, multi-fund financial accounting, and live smart TV prayer schedules.</strong>
   </p>
   <p>
-    <a href="https://baytul-mamur.vercel.app">
+    <a href="https://smart-mosjid-core.vercel.app">
       <img src="https://img.shields.io/badge/Live_Demo-Visit_Platform-00C7B7?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
     </a>
     <img src="https://img.shields.io/badge/Status-Production_Ready-brightgreen?style=for-the-badge" alt="Status" />
@@ -37,7 +37,7 @@ Engineered with **React 19**, **TanStack Start**, **Vite**, and **Supabase (Post
 
 ## 🌐 Live Demo & Credentials
 
-- **Live Application:** [https://baytul-mamur.vercel.app](https://baytul-mamur.vercel.app)
+- **Live Application:** [https://smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)
 - **1-Click Guest Admin Access:** Available directly on the login portal for client and HR evaluations.
   - **Email:** `mosqueadmin@info.com`
   - **Password:** `MosqueAdmin@123`
