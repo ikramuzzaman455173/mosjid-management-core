@@ -206,7 +206,7 @@ function Layout() {
                 {lang === "bn" ? "EN" : "বাং"}
               </Button>
 
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="gap-1.5 px-1 sm:px-2 h-8 sm:h-9">
                     <Avatar className="w-6 h-6 sm:w-7 sm:h-7">
