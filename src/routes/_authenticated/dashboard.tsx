@@ -432,9 +432,9 @@ function Dashboard() {
   // Quick action shortcut pills
   const quickActions = [
     { label: lang === "bn" ? "চাঁদা আদায়" : "Collect Sub", icon: HandCoins, color: "text-amber-600", path: "/subscription" },
-    { label: lang === "bn" ? "দান গ্রহণ" : "Add Donation", icon: Gift, color: "text-emerald-600", path: "/donations" },
+    { label: lang === "bn" ? "দান গ্রহণ" : "Donation", icon: Gift, color: "text-emerald-600", path: "/donations" },
     { label: lang === "bn" ? "নতুন সদস্য" : "New Member", icon: UserPlus, color: "text-blue-600", path: "/members" },
-    { label: lang === "bn" ? "ব্যয় এন্ট্রি" : "Record Expense", icon: Receipt, color: "text-rose-600", path: "/expenses" },
+    { label: lang === "bn" ? "ব্যয় এন্ট্রি" : "Expense", icon: Receipt, color: "text-rose-600", path: "/expenses" },
   ];
 
   const today = new Date();
@@ -445,15 +445,15 @@ function Dashboard() {
   const CustomChartTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md p-3 shadow-xl space-y-1.5 text-xs z-50">
-          <p className="font-semibold text-foreground border-b border-border/50 pb-1">{label}</p>
+        <div className="rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md p-2.5 sm:p-3 shadow-xl space-y-1.5 text-xs z-50 max-w-[220px]">
+          <p className="font-semibold text-foreground border-b border-border/50 pb-1 truncate">{label}</p>
           {payload.map((entry: any, index: number) => (
-            <div key={`tooltip-${index}`} className="flex items-center justify-between gap-4">
-              <span className="flex items-center gap-1.5 font-medium" style={{ color: entry.color }}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                {entry.name}:
+            <div key={`tooltip-${index}`} className="flex items-center justify-between gap-3 text-[11px] sm:text-xs">
+              <span className="flex items-center gap-1.5 font-medium truncate" style={{ color: entry.color }}>
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+                <span className="truncate">{entry.name}:</span>
               </span>
-              <span className="font-bold text-foreground font-mono">
+              <span className="font-bold text-foreground font-mono shrink-0">
                 {fmtCurrency(Number(entry.value || 0), lang)}
               </span>
             </div>
@@ -465,43 +465,43 @@ function Dashboard() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-[1600px] mx-auto pb-10">
+    <div className="space-y-3.5 sm:space-y-6 max-w-[1600px] mx-auto pb-10 min-w-0 overflow-x-hidden">
 
-      {/* 1. Executive Mosque Header Banner - Fully Responsive & Non-wrapping */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 p-4 sm:p-5 md:p-6 border border-border/60 shadow-sm">
+      {/* 1. Executive Mosque Header Banner - Fully Responsive */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 p-3 sm:p-5 md:p-6 border border-border/60 shadow-xs min-w-0">
         {/* Top Tier: Greeting, Badge, Date & Executive Buttons */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border/50">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-primary/20 via-primary/10 to-amber-500/20 border border-primary/25 flex items-center justify-center text-primary shadow-xs shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-border/50">
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-primary/20 via-primary/10 to-amber-500/20 border border-primary/25 flex items-center justify-center text-primary shadow-xs shrink-0 mt-0.5 sm:mt-0">
               <MosqueIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground whitespace-nowrap">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold tracking-tight text-foreground">
                   {lang === "bn" ? "আসসালামু আলাইকুম" : "Assalamu Alaikum"}
                 </h1>
-                <span className="text-[11px] sm:text-xs font-medium px-2 sm:px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">
+                <span className="text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shrink-0">
                   {lang === "bn" ? "বায়তুল মামুর জামে মসজিদ" : "Baytul Mamur Mosque"}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5 sm:mt-1">
-                <CalendarIcon className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+              <p className="text-[11px] sm:text-sm text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                <CalendarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary/70 shrink-0" />
                 <span className="truncate">{formattedDate}</span>
               </p>
             </div>
           </div>
 
           {/* Top-Right Executive Buttons */}
-          <div className="flex items-center gap-2 shrink-0 self-start md:self-auto">
-            <Link to="/reports">
-              <Button size="sm" className="h-9 px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs text-xs font-semibold gap-1.5 cursor-pointer">
-                <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 self-stretch sm:self-auto">
+            <Link to="/reports" className="flex-1 sm:flex-initial">
+              <Button size="sm" className="w-full sm:w-auto h-8 sm:h-9 px-3 sm:px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs text-xs font-semibold gap-1.5 cursor-pointer justify-center">
+                <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <span>{t("reports")}</span>
               </Button>
             </Link>
             <Link to="/tv-display">
-              <Button variant="outline" size="sm" className="h-9 px-3 border-border/70 hover:border-primary/40 text-xs font-medium gap-1.5 cursor-pointer">
-                <Tv className="w-3.5 h-3.5 text-primary" />
+              <Button variant="outline" size="sm" className="h-8 sm:h-9 px-2.5 sm:px-3 border-border/70 hover:border-primary/40 text-xs font-medium gap-1.5 cursor-pointer">
+                <Tv className="w-3.5 h-3.5 text-primary shrink-0" />
                 <span className="hidden sm:inline">{lang === "bn" ? "টিভি ডিসপ্লে" : "TV Mode"}</span>
               </Button>
             </Link>
@@ -509,18 +509,18 @@ function Dashboard() {
         </div>
 
         {/* Bottom Tier: Quick Action Shortcuts Grid */}
-        <div className="pt-3.5 flex flex-col sm:flex-row sm:items-center gap-2.5">
+        <div className="pt-2.5 sm:pt-3 flex flex-col sm:flex-row sm:items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground shrink-0 hidden lg:inline-flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span>{lang === "bn" ? "দ্রুত অ্যাকশন:" : "Quick Actions:"}</span>
           </span>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 flex-1 min-w-0">
             {quickActions.map((action) => (
-              <Link key={action.path} to={action.path as any} className="w-full">
+              <Link key={action.path} to={action.path as any} className="w-full min-w-0">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full h-9 px-2.5 bg-background/60 hover:bg-background border-border/70 hover:border-primary/40 shadow-xs text-xs font-medium transition-all group justify-center sm:justify-start cursor-pointer"
+                  className="w-full h-8 sm:h-9 px-2 sm:px-2.5 bg-background/70 hover:bg-background border-border/70 hover:border-primary/40 shadow-2xs text-[11px] sm:text-xs font-medium transition-all group justify-center sm:justify-start cursor-pointer min-w-0"
                 >
                   <action.icon className={`w-3.5 h-3.5 mr-1.5 ${action.color} transition-transform group-hover:scale-110 shrink-0`} />
                   <span className="truncate">{action.label}</span>
@@ -532,29 +532,27 @@ function Dashboard() {
       </div>
 
       {/* 2. Today's Prayer Schedule Ribbon */}
-      <Card className="p-3.5 sm:p-5 border-border/60 bg-gradient-to-r from-card via-card to-muted/20 shadow-sm overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3 pb-2.5 border-b border-border/50">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-primary shrink-0" />
-            <h2 className="text-xs sm:text-sm font-bold text-foreground tracking-tight whitespace-nowrap">
+      <Card className="p-3 sm:p-4 md:p-5 border-border/60 bg-gradient-to-r from-card via-card to-muted/20 shadow-xs overflow-hidden min-w-0">
+        <div className="flex items-center justify-between gap-2 mb-2.5 pb-2 border-b border-border/50">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
+            <h2 className="text-xs sm:text-sm font-bold text-foreground tracking-tight truncate">
               {lang === "bn" ? "আজকের নামাজের সময়সূচী" : "Today's Prayer Schedule"}
             </h2>
-            <Badge variant="outline" className="text-[10px] py-0 h-5 text-muted-foreground border-border/60 whitespace-nowrap">
+            <Badge variant="outline" className="text-[10px] py-0 h-5 text-muted-foreground border-border/60 shrink-0 hidden xs:inline-flex">
               {todayPrayer?.effective_date || today.toISOString().slice(0, 10)}
             </Badge>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            <Link to="/prayer-times">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1 px-2 cursor-pointer">
-                <span>{lang === "bn" ? "সময়সূচী পরিবর্তন" : "Manage"}</span>
-                <ArrowRight className="w-3 h-3" />
-              </Button>
-            </Link>
-          </div>
+          <Link to="/prayer-times" className="shrink-0">
+            <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-primary gap-1 px-1.5 sm:px-2 cursor-pointer">
+              <span>{lang === "bn" ? "সময়সূচী পরিবর্তন" : "Manage"}</span>
+              <ArrowRight className="w-3 h-3" />
+            </Button>
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 sm:gap-2.5 min-w-0">
           {PRAYER_SLOTS.map((slot) => {
             const isUpcoming = upcomingPrayerKey === slot.key;
             const slotTimes = getPrayerSlotTimes(todayPrayer, slot.key, slot.defaultAzan, slot.defaultIqamah);
@@ -565,7 +563,7 @@ function Dashboard() {
             return (
               <div
                 key={slot.key}
-                className={`relative p-2.5 sm:p-3 rounded-xl border transition-all ${
+                className={`relative p-2 sm:p-3 rounded-xl border transition-all min-w-0 ${
                   isUpcoming
                     ? "bg-primary/10 border-primary/40 shadow-xs ring-1 ring-primary/30"
                     : "bg-muted/30 border-border/50 hover:border-border"
@@ -577,20 +575,20 @@ function Dashboard() {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
                   </span>
                 )}
-                <div className="flex items-center gap-1.5 mb-1.5">
+                <div className="flex items-center gap-1.5 mb-1 sm:mb-1.5 min-w-0">
                   <SlotIcon className={`w-3.5 h-3.5 shrink-0 ${isUpcoming ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className={`text-xs font-bold truncate ${isUpcoming ? "text-primary" : "text-foreground"}`}>
+                  <span className={`text-[11px] sm:text-xs font-bold truncate ${isUpcoming ? "text-primary" : "text-foreground"}`}>
                     {lang === "bn" ? slot.bn : slot.en}
                   </span>
                 </div>
                 <div className="space-y-0.5 text-xs">
                   <div className="flex justify-between items-center text-muted-foreground text-[10px] sm:text-[11px]">
-                    <span>{lang === "bn" ? "আজান:" : "Azan:"}</span>
-                    <span className="font-mono text-foreground font-medium tabular-nums">{azan}</span>
+                    <span className="shrink-0">{lang === "bn" ? "আজান:" : "Azan:"}</span>
+                    <span className="font-mono text-foreground font-medium tabular-nums pl-1">{azan}</span>
                   </div>
                   <div className="flex justify-between items-center text-muted-foreground text-[10px] sm:text-[11px]">
-                    <span className="font-medium text-primary">{lang === "bn" ? "ইকামত:" : "Iqamah:"}</span>
-                    <span className="font-mono font-bold text-foreground tabular-nums">{iqamah}</span>
+                    <span className="font-medium text-primary shrink-0">{lang === "bn" ? "ইকামত:" : "Iqamah:"}</span>
+                    <span className="font-mono font-bold text-foreground tabular-nums pl-1">{iqamah}</span>
                   </div>
                 </div>
               </div>
@@ -600,39 +598,39 @@ function Dashboard() {
       </Card>
 
       {/* 3. 8 Balanced KPI Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 md:gap-4 min-w-0">
         {isLoadingStats ? (
           Array.from({ length: 8 }).map((_, i) => (
-            <Card key={`kpi-skel-${i}`} className="p-3 sm:p-4 shadow-xs space-y-2.5">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <Skeleton className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shrink-0" />
-                <div className="space-y-1.5 flex-1 min-w-0">
+            <Card key={`kpi-skel-${i}`} className="p-2.5 sm:p-4 shadow-xs space-y-2">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Skeleton className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl shrink-0" />
+                <div className="space-y-1 flex-1 min-w-0">
                   <Skeleton className="h-3 w-16 sm:w-24" />
-                  <Skeleton className="h-5 w-14 sm:w-20" />
+                  <Skeleton className="h-4 sm:h-5 w-14 sm:w-20" />
                 </div>
               </div>
-              <Skeleton className="h-2.5 w-3/4" />
+              <Skeleton className="h-2 w-3/4" />
             </Card>
           ))
         ) : (
           kpis.map((k) => (
-            <Link key={k.label} to={k.link as any} className="block group">
-              <Card className={`p-3 sm:p-4 shadow-xs hover:shadow-sm transition-all h-full flex flex-col justify-between border ${k.border} ${k.isHighlight ? "bg-primary/5" : "bg-card"}`}>
-                <div className="flex items-start justify-between gap-2 sm:gap-3">
+            <Link key={k.label} to={k.link as any} className="block group min-w-0">
+              <Card className={`p-2.5 sm:p-3.5 md:p-4 shadow-2xs hover:shadow-xs transition-all h-full flex flex-col justify-between border min-w-0 ${k.border} ${k.isHighlight ? "bg-primary/5" : "bg-card"}`}>
+                <div className="flex items-start justify-between gap-1.5 sm:gap-3">
                   <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1">
-                    <p className="text-[11px] sm:text-xs font-medium text-muted-foreground truncate">{k.label}</p>
-                    <div className="flex items-baseline gap-1">
-                      <h3 className="text-base sm:text-lg xl:text-xl font-bold tracking-tight text-foreground truncate">
+                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground truncate">{k.label}</p>
+                    <div className="flex items-baseline gap-1 min-w-0">
+                      <h3 className="text-sm sm:text-lg xl:text-xl font-bold tracking-tight text-foreground truncate">
                         {k.value}
                       </h3>
-                      {k.suffix && <span className="text-[10px] sm:text-[11px] text-muted-foreground font-normal shrink-0">{k.suffix}</span>}
+                      {k.suffix && <span className="text-[9px] sm:text-[11px] text-muted-foreground font-normal shrink-0">{k.suffix}</span>}
                     </div>
                   </div>
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl ${k.bg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
-                    <k.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${k.color}`} />
+                  <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl ${k.bg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
+                    <k.icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${k.color}`} />
                   </div>
                 </div>
-                <div className="mt-2 pt-1.5 sm:mt-2.5 sm:pt-2 border-t border-border/40 flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground">
+                <div className="mt-1.5 pt-1 sm:mt-2.5 sm:pt-2 border-t border-border/40 flex items-center justify-between text-[9px] sm:text-[11px] text-muted-foreground">
                   <span className="truncate">{k.subtitle}</span>
                   <ArrowRight className="w-3 h-3 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5 group-hover:text-primary shrink-0 ml-1" />
                 </div>
@@ -646,25 +644,25 @@ function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5">
         
         {/* Main Financial Trend Chart (2 Cols) */}
-        <Card className="p-4 sm:p-5 shadow-sm border-border/60 xl:col-span-2 flex flex-col bg-card overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-border/50">
+        <Card className="p-3.5 sm:p-5 shadow-sm border-border/60 xl:col-span-2 flex flex-col bg-card overflow-hidden min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-3 sm:mb-4 pb-2.5 sm:pb-3 border-b border-border/50">
             <div className="min-w-0">
-              <h2 className="font-bold text-base sm:text-lg flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-primary shrink-0" />
+              <h2 className="font-bold text-sm sm:text-base md:text-lg flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
                 <span className="truncate">{t("monthly_income_expense")}</span>
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">
                 {lang === "bn" ? "আয়-ব্যয় ও মাসিক উদ্বৃত্ত বিশ্লেষণ" : "Income, expense & balance trends"}
               </p>
             </div>
 
             {/* Timeframe & Chart Type Switches */}
-            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 sm:gap-2 w-full sm:w-auto">
               <div className="inline-flex rounded-lg border border-border/60 bg-muted/40 p-0.5 text-xs">
                 <button
                   type="button"
                   onClick={() => setTimeframe("monthly")}
-                  className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                  className={`px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     timeframe === "monthly" ? "bg-background text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -673,7 +671,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setTimeframe("weekly")}
-                  className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
+                  className={`px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                     timeframe === "weekly" ? "bg-background text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -685,7 +683,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setChartType("area")}
-                  className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
+                  className={`p-1 sm:px-2 sm:py-1 rounded-md transition-all cursor-pointer ${
                     chartType === "area" ? "bg-background text-primary shadow-xs" : "text-muted-foreground hover:text-foreground"
                   }`}
                   title={lang === "bn" ? "ট্রেন্ড চার্ট" : "Area Chart"}
@@ -695,7 +693,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setChartType("bar")}
-                  className={`px-2 py-1 rounded-md transition-all cursor-pointer ${
+                  className={`p-1 sm:px-2 sm:py-1 rounded-md transition-all cursor-pointer ${
                     chartType === "bar" ? "bg-background text-primary shadow-xs" : "text-muted-foreground hover:text-foreground"
                   }`}
                   title={lang === "bn" ? "বার চার্ট" : "Bar Chart"}
@@ -707,35 +705,35 @@ function Dashboard() {
           </div>
 
           {/* Quick Metrics Header inside chart */}
-          <div className="grid grid-cols-3 gap-2 p-2 sm:p-2.5 mb-4 rounded-xl bg-muted/30 border border-border/40 text-center text-xs">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-1.5 sm:p-2.5 mb-3 sm:mb-4 rounded-xl bg-muted/30 border border-border/40 text-center text-xs min-w-0">
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট সংগৃহীত আয়" : "Total Income"}</p>
-              <p className="font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 mt-0.5 truncate">
+              <p className="text-[9px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট সংগৃহীত আয়" : "Total Income"}</p>
+              <p className="font-bold text-[11px] sm:text-sm text-emerald-600 dark:text-emerald-400 mt-0.5 truncate">
                 {fmtCurrency(chartTotals.totalInc, lang)}
               </p>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট পরিশোধিত ব্যয়" : "Total Expense"}</p>
-              <p className="font-bold text-xs sm:text-sm text-rose-600 dark:text-rose-400 mt-0.5 truncate">
+              <p className="text-[9px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "মোট পরিশোধিত ব্যয়" : "Total Expense"}</p>
+              <p className="font-bold text-[11px] sm:text-sm text-rose-600 dark:text-rose-400 mt-0.5 truncate">
                 {fmtCurrency(chartTotals.totalExp, lang)}
               </p>
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "নীট উদ্বৃত্ত / ব্যালেন্স" : "Net Balance"}</p>
-              <p className={`font-bold text-xs sm:text-sm mt-0.5 truncate ${chartTotals.net >= 0 ? "text-primary" : "text-destructive"}`}>
+              <p className="text-[9px] sm:text-[11px] text-muted-foreground truncate">{lang === "bn" ? "নীট উদ্বৃত্ত / ব্যালেন্স" : "Net Balance"}</p>
+              <p className={`font-bold text-[11px] sm:text-sm mt-0.5 truncate ${chartTotals.net >= 0 ? "text-primary" : "text-destructive"}`}>
                 {fmtCurrency(chartTotals.net, lang)}
               </p>
             </div>
           </div>
 
           {/* Recharts Canvas */}
-          <div className="flex-1 min-h-[260px] sm:min-h-[300px] w-full">
+          <div className="flex-1 min-h-[240px] sm:min-h-[290px] w-full min-w-0 overflow-hidden">
             {isLoadingChart ? (
-              <Skeleton className="w-full h-full min-h-[260px] rounded-xl" />
+              <Skeleton className="w-full h-full min-h-[240px] rounded-xl" />
             ) : activeSeries.length > 0 ? (
-              <ResponsiveContainer width="100%" height={290}>
+              <ResponsiveContainer width="100%" height={260}>
                 {chartType === "area" ? (
-                  <AreaChart data={activeSeries} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                  <AreaChart data={activeSeries} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="chartIncomeGrad" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#10b981" stopOpacity={0.35} />
@@ -747,17 +745,17 @@ function Dashboard() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.6} />
-                    <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={8} />
-                    <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `৳${v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}`} />
+                    <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={8} />
+                    <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `৳${v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}`} />
                     <Tooltip content={<CustomChartTooltip />} />
                     <Area type="monotone" dataKey="income" stroke="#10b981" strokeWidth={2.5} fill="url(#chartIncomeGrad)" name={t("income_label")} />
                     <Area type="monotone" dataKey="expense" stroke="#f43f5e" strokeWidth={2.5} fill="url(#chartExpenseGrad)" name={t("expense_label")} />
                   </AreaChart>
                 ) : (
-                  <BarChart data={activeSeries} margin={{ top: 10, right: 10, left: -15, bottom: 0 }} barGap={6}>
+                  <BarChart data={activeSeries} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={4}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.6} />
-                    <XAxis dataKey="label" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={8} />
-                    <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `৳${v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}`} />
+                    <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} dy={8} />
+                    <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `৳${v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}`} />
                     <Tooltip content={<CustomChartTooltip />} />
                     <Bar dataKey="income" fill="#10b981" radius={[4, 4, 0, 0]} name={t("income_label")} />
                     <Bar dataKey="expense" fill="#f43f5e" radius={[4, 4, 0, 0]} name={t("expense_label")} />
@@ -765,7 +763,7 @@ function Dashboard() {
                 )}
               </ResponsiveContainer>
             ) : (
-              <div className="h-[260px] flex flex-col items-center justify-center text-muted-foreground text-xs">
+              <div className="h-[240px] flex flex-col items-center justify-center text-muted-foreground text-xs">
                 <BarChart3 className="w-8 h-8 mb-2 opacity-20" />
                 <span>{lang === "bn" ? "গ্রাফ প্রদর্শনের জন্য পর্যাপ্ত তথ্য নেই" : "No chart data available"}</span>
               </div>
@@ -774,7 +772,7 @@ function Dashboard() {
         </Card>
 
         {/* Funds & Accounts Distribution Breakdown (1 Col) */}
-        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col justify-between bg-card overflow-hidden">
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col justify-between bg-card overflow-hidden min-w-0">
           <div>
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
               <h2 className="font-bold text-base flex items-center gap-2">
@@ -859,20 +857,20 @@ function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         
         {/* Recent Transactions List (2 Cols) */}
-        <Card className="p-4 sm:p-5 shadow-sm border-border/60 lg:col-span-2 flex flex-col bg-card overflow-hidden">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
+        <Card className="p-3.5 sm:p-5 shadow-sm border-border/60 lg:col-span-2 flex flex-col bg-card overflow-hidden min-w-0">
+          <div className="flex items-center justify-between mb-3 sm:mb-4 pb-2.5 sm:pb-3 border-b border-border/50">
             <div className="min-w-0">
-              <h2 className="font-bold text-base sm:text-lg flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-primary shrink-0" />
+              <h2 className="font-bold text-sm sm:text-base md:text-lg flex items-center gap-2">
+                <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
                 <span className="truncate">{t("recent_transactions")}</span>
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">
                 {lang === "bn" ? "সর্বশেষ অনুদান, চাঁদা, আয় ও ব্যয় কার্যক্রম" : "Latest income, donation, subscription & expenses"}
               </p>
             </div>
-            <Link to="/reports">
+            <Link to="/reports" className="shrink-0">
               <Hint label={lang === "bn" ? "সকল রিপোর্ট ও খতিয়ান" : "View All Reports"} side="top">
-                <Button variant="ghost" size="sm" className="h-8 text-xs text-muted-foreground hover:text-primary gap-1 cursor-pointer">
+                <Button variant="ghost" size="sm" className="h-8 text-xs text-muted-foreground hover:text-primary gap-1 cursor-pointer px-2">
                   <span>{t("view_all")}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
@@ -880,44 +878,44 @@ function Dashboard() {
             </Link>
           </div>
 
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-2 min-w-0">
             {isLoadingTxn ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <div key={`txn-skel-${i}`} className="flex items-center gap-3 p-2.5 rounded-xl border border-border/40">
-                  <Skeleton className="w-9 h-9 rounded-full shrink-0" />
+                <div key={`txn-skel-${i}`} className="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/40 min-w-0">
+                  <Skeleton className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl shrink-0" />
                   <div className="flex-1 space-y-1.5 min-w-0">
-                    <Skeleton className="h-4 w-1/2" />
-                    <Skeleton className="h-3 w-1/4" />
+                    <Skeleton className="h-3.5 w-1/2" />
+                    <Skeleton className="h-2.5 w-1/4" />
                   </div>
-                  <Skeleton className="h-5 w-20 shrink-0" />
+                  <Skeleton className="h-4 sm:h-5 w-16 sm:w-20 shrink-0" />
                 </div>
               ))
             ) : recentTxn && recentTxn.length > 0 ? (
               recentTxn.map((tx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between gap-2.5 sm:gap-3 p-2.5 sm:p-3 rounded-xl border border-border/50 bg-card hover:bg-muted/40 transition-all hover:border-primary/25"
+                  className="flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/50 bg-card hover:bg-muted/40 transition-all hover:border-primary/25 min-w-0"
                 >
-                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                  <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
                     <div
-                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-7 h-7 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 ${
                         tx.kind === "credit"
                           ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
                           : "bg-rose-500/10 text-rose-600 border border-rose-500/20"
                       }`}
                     >
                       {tx.kind === "credit" ? (
-                        <ArrowDownRight className="w-4 h-4" />
+                        <ArrowDownRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       ) : (
-                        <ArrowUpRight className="w-4 h-4" />
+                        <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 sm:gap-2">
-                        <p className="font-semibold text-xs sm:text-sm text-foreground truncate">
+                      <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                        <p className="font-semibold text-xs sm:text-sm text-foreground truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
                           {tx.title}
                         </p>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium shrink-0 ${tx.badgeColor}`}>
+                        <span className={`text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md border font-medium shrink-0 ${tx.badgeColor}`}>
                           {tx.badge}
                         </span>
                       </div>
@@ -927,7 +925,7 @@ function Dashboard() {
                     </div>
                   </div>
 
-                  <div className={`font-bold font-mono text-xs sm:text-sm whitespace-nowrap shrink-0 pl-1 ${
+                  <div className={`font-bold font-mono text-xs sm:text-sm whitespace-nowrap shrink-0 pl-1.5 ${
                     tx.kind === "credit" ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
                   }`}>
                     {tx.kind === "credit" ? "+" : "-"}{fmtCurrency(tx.amount, lang)}
@@ -944,7 +942,7 @@ function Dashboard() {
         </Card>
 
         {/* Notice Board (1 Col) */}
-        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col bg-card overflow-hidden">
+        <Card className="p-4 sm:p-5 shadow-sm border-border/60 flex flex-col bg-card overflow-hidden min-w-0">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50">
             <h2 className="font-bold text-base flex items-center gap-2">
               <Bell className="w-5 h-5 text-amber-500 shrink-0" />

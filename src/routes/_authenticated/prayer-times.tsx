@@ -152,7 +152,7 @@ function PrayerPage() {
           })}
         </div>
         <PermissionGuard module="Prayer Schedule" action="Edit" fallback={<></>}>
-          <Button className="mt-4 bg-primary" onClick={() => save.mutate()} disabled={save.isPending}>
+          <Button className="mt-4 bg-primary w-full sm:w-auto" onClick={() => save.mutate()} disabled={save.isPending}>
             {save.isPending ? t("saving") : t("save")}
           </Button>
         </PermissionGuard>

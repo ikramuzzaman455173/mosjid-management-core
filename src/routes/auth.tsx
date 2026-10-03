@@ -122,8 +122,8 @@ function AuthPage() {
         </Button>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
-        <Card className="w-full max-w-md p-8 shadow-elevated">
+      <div className="flex-1 flex items-center justify-center p-3 sm:p-4 relative z-10">
+        <Card className="w-full max-w-md p-5 sm:p-8 shadow-elevated">
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
               style={{ background: "var(--gradient-gold)" }}>

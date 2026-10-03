@@ -72,13 +72,17 @@ function ReportsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <PageHeader icon={BarChart3} title={t("reports")} subtitle={lang === "bn" ? "সারসংক্ষেপ ও বিশ্লেষণ" : "Summary & analytics"} />
-        <Button onClick={() => handlePrint()} variant="outline" className="text-primary border-primary hover:bg-primary/10">
-          <Printer className="w-4 h-4 mr-2" />
-          {lang === "bn" ? "প্রিন্ট / PDF" : "Print / PDF"}
-        </Button>
-      </div>
+      <PageHeader
+        icon={BarChart3}
+        title={t("reports")}
+        subtitle={lang === "bn" ? "সারসংক্ষেপ ও বিশ্লেষণ" : "Summary & analytics"}
+        actions={
+          <Button onClick={() => handlePrint()} variant="outline" size="sm" className="bg-white/10 text-white border-white/30 hover:bg-white/20 h-8 sm:h-9 text-xs sm:text-sm">
+            <Printer className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5" />
+            {lang === "bn" ? "প্রিন্ট / PDF" : "Print / PDF"}
+          </Button>
+        }
+      />
 
       <div ref={printRef} className="space-y-6 print:p-8 print:bg-white">
         <div className="hidden print:block text-center border-b-2 border-primary pb-4 mb-6">
@@ -117,19 +121,21 @@ function ReportsPage() {
       <Card className="p-4 shadow-card">
         <h3 className="font-semibold text-primary mb-3">{lang === "bn" ? "গত ৬ মাসের আয়-ব্যয়" : "Last 6 months income vs expense"}</h3>
         {isLoading ? (
-          <Skeleton className="w-full h-[300px] rounded-lg" />
+          <Skeleton className="w-full h-[260px] sm:h-[300px] rounded-lg" />
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data?.chart ?? []}>
-              <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 155)" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip />
-              <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="income" fill="oklch(0.55 0.16 150)" name={t("income_label")} radius={[4, 4, 0, 0]} />
-              <Bar dataKey="expense" fill="oklch(0.62 0.20 27)" name={t("expense_label")} radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="w-full min-w-0 overflow-hidden h-[260px] sm:h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data?.chart ?? []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 155)" />
+                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="income" fill="oklch(0.55 0.16 150)" name={t("income_label")} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expense" fill="oklch(0.62 0.20 27)" name={t("expense_label")} radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         )}
       </Card>
       </div>

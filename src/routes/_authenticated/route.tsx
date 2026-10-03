@@ -174,77 +174,79 @@ function Layout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-muted/30">
+      <div className="min-h-screen flex w-full bg-muted/30 min-w-0 overflow-x-hidden">
         <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center gap-2 border-b bg-card px-3 sticky top-0 z-30">
-            <SidebarTrigger />
-            
-            <div className="flex-1 flex justify-center max-w-md ml-4">
-              <button
-                onClick={() => setOpenCommand(true)}
-                className="w-full flex items-center gap-2 px-3 py-1.5 bg-muted/50 hover:bg-muted border border-border/50 rounded-md text-sm text-muted-foreground transition-all duration-300 shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
-              >
-                <Search className="w-4 h-4 shrink-0" />
-                <span className="flex-1 text-left truncate">{lang === "bn" ? "যেকোনো কিছু খুঁজুন..." : "Search anything..."}</span>
-                <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded-[4px] border border-border/60 bg-background px-1.5 font-sans text-[10px] font-medium opacity-100">
-                  <span className="text-xs">⌘</span>K
-                </kbd>
-              </button>
+        <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+          <header className="h-14 flex items-center justify-between gap-1.5 sm:gap-2 border-b bg-card px-2.5 sm:px-4 sticky top-0 z-30 min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1">
+              <SidebarTrigger />
+              
+              <div className="flex-1 max-w-[180px] xs:max-w-xs sm:max-w-md">
+                <button
+                  onClick={() => setOpenCommand(true)}
+                  className="w-full flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 bg-muted/50 hover:bg-muted border border-border/50 rounded-md text-xs sm:text-sm text-muted-foreground transition-all duration-300 shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+                >
+                  <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="flex-1 text-left truncate">{lang === "bn" ? "খুঁজুন..." : "Search..."}</span>
+                  <kbd className="pointer-events-none hidden md:inline-flex h-5 select-none items-center gap-1 rounded-[4px] border border-border/60 bg-background px-1.5 font-sans text-[10px] font-medium opacity-100">
+                    <span className="text-xs">⌘</span>K
+                  </kbd>
+                </button>
+              </div>
             </div>
             
-            <div className="flex-1" />
-            
-            <Hint label={lang === "bn" ? "টিভি ডিসপ্লে ওপেন করুন" : "Open TV Display"}>
-              <Button size="icon" variant="ghost" onClick={() => window.open("/tv-display", "_blank")}>
-                <MonitorPlay className="w-5 h-5 text-primary" />
-              </Button>
-            </Hint>
-
-            <Button size="sm" variant="ghost" onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
-              {lang === "bn" ? "EN" : "বাং"}
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-2 px-2">
-                  <Avatar className="w-7 h-7">
-                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm hidden sm:inline">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || t("admin")}</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+              <Hint label={lang === "bn" ? "টিভি ডিসপ্লে ওপেন করুন" : "Open TV Display"}>
+                <Button size="icon" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => window.open("/tv-display", "_blank")}>
+                  <MonitorPlay className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="flex flex-col space-y-1.5 p-2">
-                  <p className="text-sm font-medium leading-none capitalize">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Admin"}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })} className="cursor-pointer">
-                  <UserIcon className="w-4 h-4 mr-2" />
-                  <span>{lang === "bn" ? "আমার প্রোফাইল" : "My Profile"}</span>
-                </DropdownMenuItem>
-                {hasPerm("/settings") && (
-                  <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
-                    <Settings className="w-4 h-4 mr-2" />
-                    <span>{lang === "bn" ? "সেটিংস" : "Settings"}</span>
+              </Hint>
+
+              <Button size="sm" variant="ghost" className="h-8 px-2 sm:h-9 sm:px-2.5 text-xs sm:text-sm font-semibold" onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
+                {lang === "bn" ? "EN" : "বাং"}
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="gap-1.5 px-1 sm:px-2 h-8 sm:h-9">
+                    <Avatar className="w-6 h-6 sm:w-7 sm:h-7">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold">{initials}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-xs sm:text-sm font-medium hidden md:inline truncate max-w-[120px]">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || t("admin")}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex flex-col space-y-1.5 p-2">
+                    <p className="text-sm font-medium leading-none capitalize">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Admin"}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate({ to: "/profile" })} className="cursor-pointer">
+                    <UserIcon className="w-4 h-4 mr-2" />
+                    <span>{lang === "bn" ? "আমার প্রোফাইল" : "My Profile"}</span>
                   </DropdownMenuItem>
-                )}
-                {hasPerm("/roles-permissions") && (
-                  <DropdownMenuItem onClick={() => navigate({ to: "/roles-permissions" })} className="cursor-pointer">
-                    <ShieldCheck className="w-4 h-4 mr-2" />
-                    <span>{lang === "bn" ? "রোলস ও পারমিশন" : "Roles & Permissions"}</span>
+                  {hasPerm("/settings") && (
+                    <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
+                      <Settings className="w-4 h-4 mr-2" />
+                      <span>{lang === "bn" ? "সেটিংস" : "Settings"}</span>
+                    </DropdownMenuItem>
+                  )}
+                  {hasPerm("/roles-permissions") && (
+                    <DropdownMenuItem onClick={() => navigate({ to: "/roles-permissions" })} className="cursor-pointer">
+                      <ShieldCheck className="w-4 h-4 mr-2" />
+                      <span>{lang === "bn" ? "রোলস ও পারমিশন" : "Roles & Permissions"}</span>
+                    </DropdownMenuItem>
+                  )}
+                  {(hasPerm("/settings") || hasPerm("/roles-permissions")) && <DropdownMenuSeparator />}
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    <span>{t("logout")}</span>
                   </DropdownMenuItem>
-                )}
-                {(hasPerm("/settings") || hasPerm("/roles-permissions")) && <DropdownMenuSeparator />}
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  <span>{t("logout")}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </header>
-          <main className="flex-1 p-4 md:p-6">
+          <main className="flex-1 p-2.5 sm:p-4 md:p-6 min-w-0 overflow-x-hidden">
             {requiredPermission ? (
               <PermissionGuard module={requiredPermission.module} action={requiredPermission.action} fallbackType="page">
                 <Outlet />
