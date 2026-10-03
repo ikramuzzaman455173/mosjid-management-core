@@ -177,7 +177,7 @@ function Layout() {
       <div className="min-h-screen flex w-full bg-muted/30 min-w-0">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-between gap-1.5 sm:gap-2 border-b bg-card/95 backdrop-blur-md supports-[backdrop-filter]:bg-card/85 px-2.5 sm:px-4 sticky top-0 z-40 min-w-0 shadow-2xs">
+          <header className="h-14 flex items-center justify-between gap-1.5 sm:gap-2 border-b border-border/70 bg-card/80 backdrop-blur-md supports-[backdrop-filter]:bg-card/70 px-2.5 sm:px-4 sticky top-0 z-40 min-w-0 shadow-xs transition-colors">
             <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1">
               <SidebarTrigger />
               

@@ -465,7 +465,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="space-y-3.5 sm:space-y-6 max-w-[1600px] mx-auto pb-10 min-w-0 overflow-x-hidden">
+    <div className="space-y-3.5 sm:space-y-6 max-w-[1600px] mx-auto pb-10 min-w-0">
 
       {/* 1. Executive Mosque Header Banner - Fully Responsive */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 p-3 sm:p-5 md:p-6 border border-border/60 shadow-xs min-w-0">
