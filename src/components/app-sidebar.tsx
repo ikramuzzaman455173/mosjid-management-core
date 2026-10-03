@@ -80,7 +80,7 @@ const groups: { label: string; items: Item[] }[] = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const { t, lang } = useI18n();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -88,6 +88,13 @@ export function AppSidebar() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { data: permData } = usePermissions();
   const isPermsLoading = !permData;
+
+  // Auto-close mobile drawer whenever location/pathname changes
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   // We are not capturing Cmd+K in the sidebar anymore, we will leave it for the global search.
   // The sidebar search is just a local filter now.
@@ -111,7 +118,13 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarHeader className={cn("border-b border-sidebar-border py-4 transition-all duration-200", collapsed ? "px-0 items-center" : "px-3")}>
-        <div className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}>
+        <Link
+          to="/dashboard"
+          onClick={() => {
+            if (isMobile) setOpenMobile(false);
+          }}
+          className={cn("flex items-center cursor-pointer transition-opacity hover:opacity-90", collapsed ? "justify-center" : "gap-2.5")}
+        >
           <div className={cn("rounded-md bg-gradient-gold flex items-center justify-center shrink-0 transition-all duration-200", collapsed ? "w-8 h-8" : "w-9 h-9")}>
             <MosqueIcon className={cn("text-primary", collapsed ? "w-4 h-4" : "w-5 h-5")} />
           </div>
@@ -121,7 +134,7 @@ export function AppSidebar() {
               <div className="text-xs text-sidebar-foreground/70 truncate">ম্যানেজমেন্ট</div>
             </div>
           )}
-        </div>
+        </Link>
         {!collapsed && (
           <div className="relative mt-5 mb-2 group px-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-sidebar-foreground/50 group-focus-within:text-sidebar-foreground transition-colors duration-300" />
@@ -175,7 +188,15 @@ export function AppSidebar() {
                     <PermissionGuard key={item.url} module={item.module} action="View">
                       <SidebarMenuItem>
                         <SidebarMenuButton asChild isActive={active} tooltip={t(item.key)} className={cn(collapsed && "justify-center")}>
-                          <Link to={item.url} className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}>
+                          <Link
+                            to={item.url}
+                            onClick={() => {
+                              if (isMobile) {
+                                setOpenMobile(false);
+                              }
+                            }}
+                            className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}
+                          >
                             <item.icon className={cn("shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
                             {!collapsed && <span className="truncate text-sm">{t(item.key)}</span>}
                           </Link>
