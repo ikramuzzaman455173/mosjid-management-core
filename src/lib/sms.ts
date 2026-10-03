@@ -55,9 +55,7 @@ export async function sendSms(to: string, message: string): Promise<boolean> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const result = await response.text();
-    console.log("SMS API Response:", result);
-    
+    await response.text();
     // Most APIs return JSON or a success string. We'll just assume success if HTTP 200
     return true;
 

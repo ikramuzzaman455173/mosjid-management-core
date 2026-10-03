@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
-import { Menu, Calendar, Clock, LayoutGrid } from "lucide-react";
+import { Menu, Calendar, Clock, LayoutGrid, Tv, ArrowRight } from "lucide-react";
 import { MosqueIcon } from "@/components/ui/mosque-icon";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -109,16 +109,39 @@ function WelcomePage() {
                   : "Please use the left sidebar menu or the top search bar to access your assigned modules."}
               </p>
               
-              {isMobile && (
-                <Button 
-                  onClick={toggleSidebar} 
-                  variant="outline"
-                  className="mt-3 sm:mt-4 rounded-full px-5 sm:px-6 bg-background border-border/50 text-muted-foreground hover:text-foreground h-8 sm:h-9 text-xs sm:text-sm w-full sm:w-auto"
-                >
-                  <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
-                  {lang === "bn" ? "মেনু খুলুন" : "Open Menu"}
-                </Button>
-              )}
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <Link to="/dashboard">
+                  <Button
+                    className="rounded-xl px-5 py-2.5 h-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-semibold shadow-md shadow-amber-500/10 text-sm gap-2 transition-all hover:scale-[1.02]"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                    <span>{lang === "bn" ? "ড্যাশবোর্ডে প্রবেশ করুন" : "Go to Dashboard"}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+
+                <Link to="/tv-display">
+                  <Button
+                    variant="outline"
+                    className="rounded-xl px-4 py-2.5 h-auto border-border/70 hover:bg-accent text-xs sm:text-sm font-medium gap-2"
+                  >
+                    <Tv className="w-4 h-4 text-emerald-500" />
+                    <span>{lang === "bn" ? "টিভি ডিসপ্লে দেখুন" : "TV Display View"}</span>
+                  </Button>
+                </Link>
+
+                {isMobile && (
+                  <Button 
+                    onClick={toggleSidebar} 
+                    variant="outline"
+                    className="rounded-xl px-4 py-2.5 h-auto bg-background border-border/50 text-muted-foreground hover:text-foreground text-xs sm:text-sm gap-2"
+                  >
+                    <Menu className="w-3.5 h-3.5" />
+                    <span>{lang === "bn" ? "মেনু খুলুন" : "Open Menu"}</span>
+                  </Button>
+                )}
+              </div>
             </div>
             
           </div>
