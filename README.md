@@ -1,27 +1,31 @@
 <div align="center">
   <h1>🕌 Baytul Mamur Mosque Management System</h1>
   <p>
-    <strong>A high-performance, full-stack enterprise digital management platform streamlining mosque operations, member registries, multi-fund financial accounting, and live smart TV prayer schedules.</strong>
+    <strong>A high-performance, full-stack enterprise digital operations platform and live Smart TV prayer display built for Maijzhena Baytul Mamur Jame Mosque in collaboration with Shopnojal IT.</strong>
   </p>
   <p>
     <a href="https://smart-mosjid-core.vercel.app">
       <img src="https://img.shields.io/badge/Live_Demo-Visit_Platform-00C7B7?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
     </a>
+    <a href="https://shopnojalit.com/">
+      <img src="https://img.shields.io/badge/Agency-Shopnojal_IT-0A66C2?style=for-the-badge" alt="Shopnojal IT" />
+    </a>
+    <img src="https://img.shields.io/badge/Engagement-Part--Time_Client_Delivery-orange?style=for-the-badge" alt="Engagement" />
     <img src="https://img.shields.io/badge/Status-Production_Ready-brightgreen?style=for-the-badge" alt="Status" />
     <img src="https://img.shields.io/badge/Framework-React_19_+_TanStack_Start-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="Framework" />
     <img src="https://img.shields.io/badge/Database-Supabase_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Database" />
     <img src="https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
-    <img src="https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge" alt="License" />
   </p>
   <p>
     <a href="#-overview">Overview</a> •
+    <a href="#-agency-context--engagement-model">Agency Context</a> •
+    <a href="#-team-dynamics--delivery-excellence">Teamwork & Delivery</a> •
     <a href="#-live-demo--credentials">Live Demo</a> •
     <a href="#-key-features">Key Features</a> •
     <a href="#️-tech-stack">Tech Stack</a> •
     <a href="#-system-architecture">Architecture</a> •
     <a href="#-getting-started">Getting Started</a> •
-    <a href="#-author">Author</a> •
-    <a href="#-license--copyright">License</a>
+    <a href="#-author">Author</a>
   </p>
 </div>
 
@@ -29,19 +33,55 @@
 
 ## 📖 Overview
 
-The **Baytul Mamur Mosque Management System** is an end-to-end digital governance platform built specifically for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque**. Traditional mosque administration relies heavily on physical registers, fragmented cash notebooks, manual prayer timetable clocks, and offline paper receipts. This system eliminates administrative friction by unifying financial management, member contributions, governance meetings, asset inventories, and digital congregation displays into one centralized, real-time ecosystem.
+The **Baytul Mamur Mosque Management System** is an end-to-end digital governance and real-time operations platform engineered for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque**. Traditional mosque administration relies heavily on physical registers, fragmented cash notebooks, manual prayer timetable clocks, and offline paper slips. This system eliminates administrative friction by unifying multi-fund bookkeeping, regular donor subscriptions, governance meetings, asset inventories, and digital congregation displays into one centralized, real-time ecosystem.
 
-Engineered with **React 19**, **TanStack Start**, **Vite**, and **Supabase (PostgreSQL)**, the application delivers instant page loads via server-side rendering (SSR), resilient Row Level Security (RLS), and zero-configuration bilingual localization (Bengali & English). It features both a responsive back-office operations suite and a zero-clutter, standalone **Smart TV Display Mode** designed to project daily prayer timetables, countdowns, and rotating Hadiths onto widescreen monitors inside the mosque prayer hall.
+Engineered with **React 19**, **TanStack Start**, **Vite**, and **Supabase (PostgreSQL)**, the application delivers instant page loads via server-side rendering (SSR), resilient PostgreSQL Row Level Security (RLS), and zero-configuration bilingual localization (Bengali & English). It features both a responsive back-office operations suite and a standalone **Smart TV Display Mode** designed to project daily prayer timetables, dynamic countdowns, and rotating Hadiths onto widescreen monitors inside the mosque prayer hall.
+
+---
+
+## 🏢 Agency Context & Engagement Model
+
+This platform was built under the software engineering agency **[Shopnojal IT — Smart ERP, POS & Business Automation](https://shopnojalit.com/)** for an active non-profit client.
+
+- **Role & Contribution:** **Core Full-Stack Engineer** (Contract / Part-Time Engagement)
+- **Concurrent Execution:** Developed and shipped alongside ongoing **full-time software engineering employment**, demonstrating exceptional focus, disciplined time management, and commitment to delivery.
+- **Client & Domain:** **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque** (Religious & Community Governance)
+- **Milestone & Sprint Velocity:** Completed within a strict **5-week delivery schedule**—from architecture and database modeling to final production handover with 100% on-time milestone delivery.
+
+---
+
+## 🔒 Confidentiality & Sanitized Portfolio Showcase
+
+> [!NOTE]
+> **Client Privacy & NDA Compliance:** To respect non-disclosure agreements with **Shopnojal IT** and safeguard client proprietary data, the organization's private production repository and database remain confidential.
+>
+> This repository is an **authorized, sanitized public showcase and staging sandbox**. It reflects the exact full-stack codebase, architectural patterns, and UI engineering while utilizing isolated demo credentials and test data so technical recruiters, engineering leaders, and clients can safely evaluate code quality and live features.
+
+---
+
+## 🤝 Team Dynamics & Delivery Excellence
+
+Delivering a mission-critical client system under an agency banner while sustaining full-time professional commitments requires high accountability and team synergy:
+
+### 1. Collaborative Teamwork within Shopnojal IT
+- **Agile Sprint Alignment:** Collaborated closely with Shopnojal IT project management and cross-functional peers to break down client business requirements into precise technical epics.
+- **Git Hygiene & Asynchronous Communication:** Adhered to structured Git branching, clean commit standards, and asynchronous PR reviews to ensure seamless technical alignment.
+- **End-User Empathy:** Partnered directly with mosque committee representatives to translate non-technical workflows into accessible, user-friendly software interfaces.
+
+### 2. Time-Management Discipline & Reliability
+- **Dual-Responsibility Ownership:** Maintained high energy and rigorous discipline, methodically balancing evening and weekend sprint cycles without compromising full-time workplace responsibilities.
+- **Strict Deadline Adherence:** Zero timeline slippage; delivered all key modules (financial ledgers, TV display, biometrics, PDF generation) right on target.
+- **Clean Architecture for Maintenance:** Developed the codebase with 100% strict TypeScript and modular Shadcn/Radix components to guarantee long-term maintainability for the agency team.
 
 ---
 
 ## 🌐 Live Demo & Credentials
 
-- **Live Application:** [https://smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)
-- **1-Click Guest Admin Access:** Available directly on the login portal for client and HR evaluations.
+- **Live Staging Application:** [https://smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)
+- **1-Click Guest Admin Access:** Built right into the login screen for rapid evaluation.
   - **Email:** `mosqueadmin@info.com`
   - **Password:** `MosqueAdmin@123`
-  - *Note:* The guest demo account has full view, creation, and editing capabilities across all modules with destructive deletion safeguards enabled.
+  - *Note:* The guest admin role provides full creation and editing capabilities across all modules with safety safeguards preventing accidental data destruction.
 
 ---
 
@@ -204,24 +244,25 @@ Follow these instructions to configure and run the project in your local develop
 
 ---
 
-## 🏢 Client Project & Maintenance Notice
+## 🏢 Client Project & Agency Collaboration Notice
 
-> **Commercial / Client Project:** This codebase was custom-engineered as a dedicated enterprise solution for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque**.
+> **Commercial / Client Project:** This codebase was custom-engineered as a dedicated enterprise solution for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque** under the banner of **[Shopnojal IT](https://shopnojalit.com/)**.
 >
-> Open external pull requests are currently closed. For technical inquiries, maintenance requests, bug reports, or feature enhancements, please contact the maintainer or the mosque executive management committee directly.
+> Open external pull requests are currently closed. For technical inquiries, maintenance requests, bug reports, or feature enhancements, please contact the lead engineer or Shopnojal IT management directly.
 
 ---
 
 ## 👨‍💻 Author
 
-- **Lead Engineer:** Ikramuzzaman
+- **Lead Full-Stack Engineer:** Ikramuzzaman
 - **GitHub:** [@ikramuzzaman455173](https://github.com/ikramuzzaman455173)
 - **Email:** [jakaria455173@gmail.com](mailto:jakaria455173@gmail.com)
+- **Agency Partner:** [Shopnojal IT — Smart ERP, POS & Business Automation](https://shopnojalit.com/)
 
 ---
 
 ## 📄 License & Copyright
 
-**Copyright © 2026 Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque. All rights reserved.**
+**Copyright © 2026 Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque & Shopnojal IT. All rights reserved.**
 
-This software and associated documentation files are proprietary and confidential. Unauthorized copying, distribution, modification, public display, or commercial reuse of this software via any medium is strictly prohibited without explicit written permission from the mosque management authority.
+This software and associated documentation files are proprietary and confidential. Unauthorized copying, distribution, modification, public display, or commercial reuse of this software via any medium is strictly prohibited without explicit written permission from the client and agency authority.
