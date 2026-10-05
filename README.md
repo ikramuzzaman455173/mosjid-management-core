@@ -1,268 +1,166 @@
 <div align="center">
   <h1>🕌 Baytul Mamur Mosque Management System</h1>
   <p>
-    <strong>A high-performance, full-stack enterprise digital operations platform and live Smart TV prayer display built for Maijzhena Baytul Mamur Jame Mosque in collaboration with Shopnojal IT.</strong>
+    <strong>A full-stack mosque operations platform, automated multi-fund financial ledger, and 24/7 Smart TV prayer display engineered under Shopnojal IT.</strong>
   </p>
   <p>
     <a href="https://smart-mosjid-core.vercel.app">
-      <img src="https://img.shields.io/badge/Live_Demo-Visit_Platform-00C7B7?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+      <img src="https://img.shields.io/badge/Live_Demo-Visit_Platform-00C7B7?style=for-the-badge&logo=vercel" alt="Live Demo" />
     </a>
     <a href="https://shopnojalit.com/">
-      <img src="https://img.shields.io/badge/Agency-Shopnojal_IT-0A66C2?style=for-the-badge" alt="Shopnojal IT" />
+      <img src="https://img.shields.io/badge/Agency_Partner-Shopnojal_IT-0A66C2?style=for-the-badge" alt="Shopnojal IT" />
     </a>
-    <img src="https://img.shields.io/badge/Engagement-Part--Time_Client_Delivery-orange?style=for-the-badge" alt="Engagement" />
-    <img src="https://img.shields.io/badge/Status-Production_Ready-brightgreen?style=for-the-badge" alt="Status" />
-    <img src="https://img.shields.io/badge/Framework-React_19_+_TanStack_Start-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="Framework" />
-    <img src="https://img.shields.io/badge/Database-Supabase_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Database" />
-    <img src="https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge" alt="Status" />
+    <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="License" />
+    <img src="https://img.shields.io/badge/Framework-React_19_+_TanStack_Start-61DAFB?style=for-the-badge&logo=react" alt="React 19 & TanStack Start" />
+    <img src="https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwindcss" alt="Tailwind CSS v4" />
+    <img src="https://img.shields.io/badge/Backend-Supabase_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase PostgreSQL" />
   </p>
   <p>
-    <a href="#-overview">Overview</a> •
-    <a href="#-agency-context--engagement-model">Agency Context</a> •
-    <a href="#-team-dynamics--delivery-excellence">Teamwork & Delivery</a> •
-    <a href="#-live-demo--credentials">Live Demo</a> •
-    <a href="#-key-features">Key Features</a> •
-    <a href="#️-tech-stack">Tech Stack</a> •
-    <a href="#-system-architecture">Architecture</a> •
+    <a href="#-quick-snapshot-the-30-second-overview">Quick Snapshot</a> •
+    <a href="#-core-problem--measurable-impact-3-key-wins">Core Impact</a> •
+    <a href="#-key-screens--live-interactive-testing">Screens & Demo</a> •
+    <a href="#️-tech-stack--architecture">Tech Stack</a> •
     <a href="#-getting-started">Getting Started</a> •
-    <a href="#-author">Author</a>
+    <a href="#-author--delivery-credits">Author</a>
   </p>
 </div>
 
 ---
 
-## 📖 Overview
-
-The **Baytul Mamur Mosque Management System** is an end-to-end digital governance and real-time operations platform engineered for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque**. Traditional mosque administration relies heavily on physical registers, fragmented cash notebooks, manual prayer timetable clocks, and offline paper slips. This system eliminates administrative friction by unifying multi-fund bookkeeping, regular donor subscriptions, governance meetings, asset inventories, and digital congregation displays into one centralized, real-time ecosystem.
-
-Engineered with **React 19**, **TanStack Start**, **Vite**, and **Supabase (PostgreSQL)**, the application delivers instant page loads via server-side rendering (SSR), resilient PostgreSQL Row Level Security (RLS), and zero-configuration bilingual localization (Bengali & English). It features both a responsive back-office operations suite and a standalone **Smart TV Display Mode** designed to project daily prayer timetables, dynamic countdowns, and rotating Hadiths onto widescreen monitors inside the mosque prayer hall.
-
----
-
-## 🏢 Agency Context & Engagement Model
-
-This platform was built under the software engineering agency **[Shopnojal IT — Smart ERP, POS & Business Automation](https://shopnojalit.com/)** for an active non-profit client.
-
-- **Role & Contribution:** **Core Full-Stack Engineer** (Contract / Part-Time Engagement)
-- **Concurrent Execution:** Developed and shipped alongside ongoing **full-time software engineering employment**, demonstrating exceptional focus, disciplined time management, and commitment to delivery.
-- **Client & Domain:** **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque** (Religious & Community Governance)
-- **Milestone & Sprint Velocity:** Completed within a strict **5-week delivery schedule**—from architecture and database modeling to final production handover with 100% on-time milestone delivery.
-
----
-
-## 🔒 Confidentiality & Sanitized Portfolio Showcase
-
 > [!NOTE]
-> **Client Privacy & NDA Compliance:** To respect non-disclosure agreements with **Shopnojal IT** and safeguard client proprietary data, the organization's private production repository and database remain confidential.
->
-> This repository is an **authorized, sanitized public showcase and staging sandbox**. It reflects the exact full-stack codebase, architectural patterns, and UI engineering while utilizing isolated demo credentials and test data so technical recruiters, engineering leaders, and clients can safely evaluate code quality and live features.
+> 💡 **Product Showcase & Architecture Demo:**
+> Developed under **Shopnojal IT** as a dedicated Mosque Management ERP product. Modeled after real-world operational workflows of community mosques (specifically inspired by Maijzhena Baytul Mamur Jame Mosque), this public repository and live deployment serve as a complete, working showcase demonstrating modern full-stack architecture, real-time TV displays, and automated accounting systems.
+
+## ⚡ Quick Snapshot (The 30-Second Overview)
+
+| Attribute | Details |
+| :--- | :--- |
+| **Product / Domain** | **Mosque Operations & Accounts ERP** (Modeled for Maijzhena Baytul Mamur Jame Mosque) |
+| **Agency Partner** | **[Shopnojal IT](https://shopnojalit.com/)** (Smart ERP, POS & Business Automation) |
+| **Role & Execution** | **Lead Full-Stack Developer** (Delivered in a 5-week part-time sprint alongside full-time role) |
+| **Core Architecture** | **React 19** + **TanStack Start (SSR)** + **Supabase (PostgreSQL with RLS)** + **Tailwind CSS v4** |
+| **Live Interactive Test** | **[smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)** (Guest Login: `mosqueadmin@info.com` / `MosqueAdmin@123`) |
 
 ---
 
-## 🤝 Team Dynamics & Delivery Excellence
+## 🎯 Core Problem & Measurable Impact (3 Key Wins)
 
-Delivering a mission-critical client system under an agency banner while sustaining full-time professional commitments requires high accountability and team synergy:
-
-### 1. Collaborative Teamwork within Shopnojal IT
-- **Agile Sprint Alignment:** Collaborated closely with Shopnojal IT project management and cross-functional peers to break down client business requirements into precise technical epics.
-- **Git Hygiene & Asynchronous Communication:** Adhered to structured Git branching, clean commit standards, and asynchronous PR reviews to ensure seamless technical alignment.
-- **End-User Empathy:** Partnered directly with mosque committee representatives to translate non-technical workflows into accessible, user-friendly software interfaces.
-
-### 2. Time-Management Discipline & Reliability
-- **Dual-Responsibility Ownership:** Maintained high energy and rigorous discipline, methodically balancing evening and weekend sprint cycles without compromising full-time workplace responsibilities.
-- **Strict Deadline Adherence:** Zero timeline slippage; delivered all key modules (financial ledgers, TV display, biometrics, PDF generation) right on target.
-- **Clean Architecture for Maintenance:** Developed the codebase with 100% strict TypeScript and modular Shadcn/Radix components to guarantee long-term maintainability for the agency team.
+- ⚡ **Manual Accounts ➔ Automated Income & Expense Tracking:** Replaced handwritten paper notebooks, unverified cash boxes, and manual receipts with unified multi-channel ledgers (Cash, Bank, bKash/Nagad) and instant browser-rendered PDF vouchers ➔ 🚀 **Instant balance aggregation with zero manual arithmetic errors and zero cloud server PDF costs**.
+- 📺 **Manual Wall Clocks ➔ 24/7 Smart TV Prayer Display:** Eliminated manual handheld remote adjustments and outdated physical timetable boards with an automated 55"+ Smart TV prayer display featuring dynamic next-prayer countdowns and rotating Hadiths ➔ 📈 **Continuous 24/7 synchronization with zero manual clock calibration and automated midnight rollover**.
+- 🛡️ **Paper Member Records ➔ Member Directory with QR ID Cards:** Upgraded physical register books into a central member directory with printable ID badges and smartphone QR verification (`/verify/:qrToken`) ➔ ⚡ **Instant online member verification and protected data access using secure Supabase PostgreSQL roles**.
 
 ---
 
-## 🌐 Live Demo & Credentials
+## 🖼️ Key Screens & Live Interactive Testing
 
-- **Live Staging Application:** [https://smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)
-- **1-Click Guest Admin Access:** Built right into the login screen for rapid evaluation.
-  - **Email:** `mosqueadmin@info.com`
-  - **Password:** `MosqueAdmin@123`
-  - *Note:* The guest admin role provides full creation and editing capabilities across all modules with safety safeguards preventing accidental data destruction.
+### 1. 📊 Accounts & Financial Analytics Dashboard
+<!-- [IMAGE_PLACEHOLDER: Executive Financial Analytics Dashboard Screen] -->
+- **What it does:** Displays total cash in hand, bank balance, monthly collection charts, and today's prayer schedule.
+*⚡ [Click to Test Live Dashboard](https://smart-mosjid-core.vercel.app/dashboard) — Guest Login: 1-Click Guest Admin (`mosqueadmin@info.com` / `MosqueAdmin@123`)*
 
----
+### 2. 📺 Standalone 55"+ Smart TV Prayer Hall Screen
+<!-- [IMAGE_PLACEHOLDER: Standalone 55"+ Smart TV Prayer Hall Screen] -->
+- **What it does:** Full-screen layout made for prayer hall TVs showing large clock, next prayer countdown, and authentic Hadiths.
+*⚡ [Click to Test Smart TV Display Live](https://smart-mosjid-core.vercel.app/tv-display) — Public live display with dynamic prayer countdown & Hadith rotation*
 
-## ✨ Key Features
+### 3. 👥 Member Census Directory & QR ID Cards
+<!-- [IMAGE_PLACEHOLDER: Member Census Directory & Biometric QR ID Cards] -->
+- **What it does:** Add and edit mosque members, track monthly subscriptions, and print ID cards with verifiable QR codes.
+*⚡ [Click to Test Member Directory Live](https://smart-mosjid-core.vercel.app/members) — Featuring 1-click printable ID badges and QR validation gateway*
 
-- 📊 **Real-Time Financial Aggregation & Analytics:** Consolidates multi-source revenues (`monthly subscriptions`, `general donations`, `cash collections`, `bank transfers`, and `mobile banking`) against expenditures. Visualized via dynamic Area and Bar charts with timeframe filtering and interactive fund distribution donuts powered by Recharts.
-- 📺 **Standalone Smart TV Display Screen:** Dedicated widescreen display (`/tv-display`) engineered for prayer hall LED/Smart TVs. Features real-time high-contrast digital clocks, next-prayer dynamic countdowns, automated prayer time tables, rotating Hadith carousels, and emergency announcement tickers.
-- 👥 **Member & Committee Directory with QR Verification:** Comprehensive digital census of general and executive committee members. Automatically generates printable biometric identity cards with unique encrypted QR tokens (`/verify/:qrToken`) for instant membership validation.
-- 🧾 **Automated Receipts & PDF Generation:** Built-in PDF rendering engine producing professional, printable donation slips, membership fee vouchers, and monthly financial balance sheets with single-click browser printing.
-- 🌙 **Dedicated Islamic Operational Modules:**
-  - **Prayer Schedule Manager:** Easily adjust Azan and Jama'at timings across all five daily prayers and Friday Jummah.
-  - **Ramadan Calendar:** Digital Sehri and Iftar timetables with automated daily countdown notifications.
-  - **Zakat & Fitra Calculator:** Dynamic asset evaluation calculator adhering to standard Islamic Nisab thresholds.
-  - **Qurbani Share Management:** Tracks animal procurement costs, shareholder distributions, meat allocations, and financial reconciliations.
-- 🔐 **Fine-Grained RBAC & Supabase Row Level Security:** Multi-tier authorization structure separating Super Administrators, Committee Executives, Accountants, and General Viewers with database-level security policies.
-- 🌐 **Instant Bilingual Localization:** Full seamless toggle between native Bengali (বাংলা) and English across every modal, form, data table, and analytics chart.
+### 4. 🧾 Financial Ledgers & 1-Click Printable PDF Receipts
+<!-- [IMAGE_PLACEHOLDER: Financial Ledgers & 1-Click Printable PDF Receipts] -->
+- **What it does:** Record donations and fees by cash, bank, or mobile banking, and print instant PDF vouchers.
+*⚡ [Click to Test Financial Ledgers Live](https://smart-mosjid-core.vercel.app/income) — Multi-channel revenue tracking and instant client-side printable PDF vouchers*
 
----
-
-## 🛠️ Tech Stack
-
-### Frontend & Application Architecture
-- **Core Library:** [React (v19)](https://react.dev/)
-- **Full-Stack Framework & SSR:** [TanStack Start](https://tanstack.com/start) powered by [Nitro](https://nitro.build/) (Vercel Preset)
-- **Client Bundler:** [Vite (v7)](https://vitejs.dev/)
-- **Routing:** [TanStack Router](https://tanstack.com/router) — 100% Type-safe, file-based routing
-- **State & Data Fetching:** [TanStack Query (v5)](https://tanstack.com/query) with optimized server-cache invalidation
-
-### Styling & Design System
-- **CSS Framework:** [Tailwind CSS (v4)](https://tailwindcss.com/)
-- **Primitives & UI Kit:** [Radix UI](https://www.radix-ui.com/) accessible primitives & [shadcn/ui](https://ui.shadcn.com/)
-- **Visual Iconography:** [Lucide React](https://lucide.dev/)
-- **Data Visualization:** [Recharts](https://recharts.org/) (Responsive Area, Bar, and Pie components)
-- **Typography:** Google Fonts (`Hind Siliguri`, `Noto Sans Bengali`, and `Inter`)
-
-### Backend, Database & Infrastructure
-- **Database & Auth:** [Supabase](https://supabase.com/) (Managed PostgreSQL 15, Auth engine, and File Storage buckets)
-- **Security Layer:** PostgreSQL Row Level Security (RLS) policies & Dynamic RBAC schemas
-- **PDF & Canvas Processing:** `jspdf`, `jspdf-autotable`, `html2canvas`, and `react-to-print`
-- **QR Generation:** `qrcode.react` with token-based cryptographic lookup
+### 5. 🌙 Islamic Operations Suite (Ramadan, Zakat & Qurbani)
+<!-- [IMAGE_PLACEHOLDER: Islamic Operations Suite (Ramadan, Zakat & Qurbani)] -->
+- **What it does:** 30-day Sehri/Iftar calendar, Nisab Zakat calculator, and Eid Qurbani livestock share distributor.
+*⚡ [Click to Test Islamic Operations Suite Live](https://smart-mosjid-core.vercel.app/ramadan) — Sehri/Iftar calendar, Nisab Zakat calculator, and Qurbani share distributor*
 
 ---
 
-## 📁 System Architecture & Directory Structure
+## 🛠️ Tech Stack & Architecture
+
+- **Frontend Framework:** React 19, TanStack Start (SSR), Vite 7
+- **Routing & State Management:** TanStack Router (100% type-safe file-based routing), TanStack Query v5
+- **Styling & UI Components:** Tailwind CSS v4, Radix UI Primitives, shadcn/ui, Lucide React
+- **Backend & Database:** Supabase (Managed PostgreSQL 15, Auth Engine, File Storage buckets)
+- **Security & Authorization:** PostgreSQL Row-Level Security (RLS) policies, Dynamic role privileges
+- **Reporting & Data Visualization:** Recharts, jsPDF, jsPDF-AutoTable, react-to-print, qrcode.react
+- **Hosting & Infrastructure:** Vercel (Edge / Serverless SSR deployment via Nitro engine)
+
+### 📁 Directory Structure (Tailored to Detected Stack)
 
 ```text
 baytul-mamur-core-mosque/
-├── .vercel/                      # Nitro SSR production output & serverless functions
-├── public/                       # Static assets and browser favicons
-├── supabase/
-│   ├── config.toml               # Supabase local environment configuration
-│   └── migrations/               # PostgreSQL DDL, RBAC roles, and RLS security policies
 ├── src/
-│   ├── components/
-│   │   ├── auth/                 # Authentication wrappers and role guards
-│   │   ├── ui/                   # Reusable UI component library (shadcn/ui + Radix)
-│   │   ├── app-sidebar.tsx       # Collapsible navigation drawer with permission filters
-│   │   ├── data-table.tsx        # Generalized search, filter, and paginated table
-│   │   ├── fitra-calculator.tsx  # Dynamic Ramadan Fitra calculator
-│   │   ├── printable-id-card.tsx # Member physical badge template with QR code
-│   │   ├── printable-receipt.tsx # Standardized transaction slip printer
-│   │   ├── qurbani-share-management.tsx # Eid-ul-Adha share distribution engine
-│   │   └── zakat-calculator.tsx  # Nisab-compliant Zakat calculator
-│   ├── hooks/
-│   │   ├── use-mobile.tsx        # Adaptive viewport breakpoint listener
-│   │   └── usePermissions.tsx    # Live RBAC role & module permission hook
-│   ├── integrations/
-│   │   └── supabase/             # Supabase client instantiation, session hook, and DB types
-│   ├── lib/
-│   │   ├── auth-context.tsx      # Global session & authentication state provider
-│   │   ├── i18n.tsx              # Bilingual translation dictionaries and language context
-│   │   ├── sms.ts                # Integrated SMS notification dispatcher
-│   │   └── utils.ts              # Class merging (clsx/tailwind-merge) and formatting helpers
-│   ├── routes/
-│   │   ├── _authenticated/       # Protected dashboard operational routes
+│   ├── components/       # Reusable UI primitives (shadcn/Radix), printable ID cards, calculators
+│   │   ├── auth/         # Authentication guards and role-based wrappers
+│   │   ├── ui/           # Radix UI primitives and core design system
+│   │   ├── printable-id-card.tsx # Member ID badge template with QR code
+│   │   ├── printable-receipt.tsx # 1-click transaction slip voucher generator
+│   │   ├── zakat-calculator.tsx  # Nisab-compliant Zakat calculator
+│   │   └── qurbani-share-management.tsx # Eid-ul-Adha share distribution engine
+│   ├── hooks/            # Custom hooks (permissions, responsive breakpoints)
+│   ├── integrations/     # Supabase client instantiation, session hook, and DB types
+│   ├── lib/              # Auth context, i18n localization (Bengali/English), utilities
+│   ├── routes/           # TanStack Router file-based route tree
+│   │   ├── _authenticated/ # Protected admin routes (dashboard, income, expenses, members, etc.)
 │   │   │   ├── dashboard.tsx     # High-level executive KPI metrics & charts
 │   │   │   ├── members.tsx       # Member directory, registrations, and ID printing
 │   │   │   ├── income.tsx        # Multi-category revenue ledger
 │   │   │   ├── expenses.tsx      # Mosque utility and operational expense journal
-│   │   │   ├── donations.tsx     # One-off general donations tracking
-│   │   │   ├── subscription.tsx  # Recurring monthly membership collection
-│   │   │   ├── bank.tsx          # Bank accounts and reconciliation
-│   │   │   ├── cash.tsx          # Physical petty cash tracking
-│   │   │   ├── mobile-banking.tsx# bKash / Nagad / Rocket merchant transaction logs
 │   │   │   ├── prayer-times.tsx  # Timetable configuration
 │   │   │   ├── ramadan.tsx       # Fasting calendar management
-│   │   │   ├── qurbani.tsx       # Eid Qurbani livestock & share allocation
-│   │   │   ├── roles-permissions.tsx # Dynamic role privileges matrix
-│   │   │   └── welcome.tsx       # Post-login greeting and launchpad
-│   │   ├── __root.tsx            # Global HTML document shell, fonts, and query context
-│   │   ├── auth.tsx              # Split-screen secure login and guest sign-in
-│   │   ├── tv-display.tsx        # Standalone TV display view with auto-rotating ticker
-│   │   └── verify.$qrToken.tsx   # Public member verification gateway
-│   ├── styles.css                # Tailwind CSS v4 design tokens and theme rules
-│   ├── router.tsx                # TanStack Router configuration
-│   └── server.ts                 # Nitro server entrypoint
-├── .env.example                  # Environment configuration template
-├── package.json                  # Dependencies and execution scripts
-├── tsconfig.json                 # Strict TypeScript configuration
-└── vite.config.ts                # Vite plugins and module aliases
+│   │   │   └── qurbani.tsx       # Eid Qurbani livestock & share allocation
+│   │   ├── __root.tsx    # Global HTML document shell, fonts, and query context
+│   │   ├── auth.tsx      # Split-screen auth and 1-click guest login
+│   │   ├── tv-display.tsx# Standalone 55"+ Smart TV prayer display
+│   │   └── verify.$qrToken.tsx # Public member QR token verification gateway
+│   ├── router.tsx        # TanStack Router configuration
+│   ├── server.ts         # Nitro server entrypoint
+│   └── styles.css        # Tailwind CSS v4 design tokens and theme rules
+├── supabase/
+│   ├── config.toml       # Supabase local environment configuration
+│   └── migrations/       # PostgreSQL DDL schemas, RBAC roles, and RLS policies
+├── public/               # Static assets and browser favicons
+├── .env.example          # Environment variables template
+├── package.json          # Dependencies and npm execution scripts
+├── tsconfig.json         # Strict TypeScript compiler options
+└── vite.config.ts        # Vite plugins and module aliases
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these instructions to configure and run the project in your local development environment.
+Follow these steps to run the showcase locally on your machine:
 
-### 📋 Prerequisites
-- **Node.js:** `v20.x` or higher installed
-- **Package Manager:** `npm` (v10+)
-- **Git**
-- **Supabase Account:** Access to a Supabase project instance
+```bash
+# 1. Clone the repository
+git clone https://github.com/ikramuzzaman455173/mosjid-management-core.git
+cd mosjid-management-core
 
-### ⚙️ Installation & Setup
+# 2. Install dependencies
+npm install
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/ikramuzzaman455173/mosjid-management-core.git
-   cd mosjid-management-core
-   ```
+# 3. Configure Environment Variables
+cp .env.example .env.local
 
-2. **Install project dependencies:**
-   ```bash
-   npm install
-   ```
+# 4. Start Development Server
+npm run dev
+```
 
-3. **Configure Environment Variables:**
-   Copy the provided `.env.example` file to create your local `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   Open `.env` and fill in your Supabase connection parameters:
-   ```env
-   # Supabase Credentials
-   SUPABASE_URL="https://your-project.supabase.co"
-   SUPABASE_PUBLISHABLE_KEY="your-supabase-publishable-key"
-
-   VITE_SUPABASE_URL="https://your-project.supabase.co"
-   VITE_SUPABASE_PUBLISHABLE_KEY="your-supabase-publishable-key"
-   VITE_SUPABASE_PROJECT_ID="your-project-id"
-
-   # Optional Cron Keep-Alive Secret
-   CRON_SECRET="your_optional_cron_secret"
-   ```
-
-4. **Apply Database Migrations:**
-   Execute the migration scripts located in `supabase/migrations/` inside your Supabase SQL editor to create the schema, tables, RBAC roles, and Row Level Security policies.
-
-5. **Start the Development Server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your web browser.
-
-6. **Validate Production Build:**
-   ```bash
-   npm run build
-   ```
+Open [http://localhost:3000](http://localhost:3000) in your web browser to view the application.
 
 ---
 
-## 🏢 Client Project & Agency Collaboration Notice
+## 👨‍💻 Author & Delivery Credits
 
-> **Commercial / Client Project:** This codebase was custom-engineered as a dedicated enterprise solution for **Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque** under the banner of **[Shopnojal IT](https://shopnojalit.com/)**.
->
-> Open external pull requests are currently closed. For technical inquiries, maintenance requests, bug reports, or feature enhancements, please contact the lead engineer or Shopnojal IT management directly.
-
----
-
-## 👨‍💻 Author
-
-- **Lead Full-Stack Engineer:** Ikramuzzaman
+- **Lead Full-Stack Developer:** Md. Ikramuzzaman
+- **Agency Partner:** [Shopnojal IT](https://shopnojalit.com/) (Smart ERP, POS & Business Automation)
+- **Portfolio:** [https://ikramuzzaman.vercel.app](https://ikramuzzaman.vercel.app)
 - **GitHub:** [@ikramuzzaman455173](https://github.com/ikramuzzaman455173)
 - **Email:** [jakaria455173@gmail.com](mailto:jakaria455173@gmail.com)
-- **Agency Partner:** [Shopnojal IT — Smart ERP, POS & Business Automation](https://shopnojalit.com/)
-
----
-
-## 📄 License & Copyright
-
-**Copyright © 2026 Maijzhena Dakshin Notun Para Baytul Mamur Jame Mosque & Shopnojal IT. All rights reserved.**
-
-This software and associated documentation files are proprietary and confidential. Unauthorized copying, distribution, modification, public display, or commercial reuse of this software via any medium is strictly prohibited without explicit written permission from the client and agency authority.
