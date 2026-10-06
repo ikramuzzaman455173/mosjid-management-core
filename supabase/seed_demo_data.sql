@@ -104,7 +104,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
   VALUES
     (
       'a0000001-0000-0000-0000-000000000001', 'MB-101', 'আলহাজ্ব মোঃ রফিকুল ইসলাম',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&fit=crop&crop=face',
+      '/images/members/member-01.jpg',
       'মরহুম হাজী আব্দুল করিম', 'মোসাম্মৎ রহিমা খাতুন', '19682691234567891', '1968-05-14',
       '01711234567', 'rafiqul.islam@example.com', 'বাড়ি # ১২, রোড # ৪, সেক্টর # ৭, উত্তরা, ঢাকা',
       'বিশিষ্ট ব্যবসায়ী ও সমাজসেবক', 'A+', 'founding', 1000.00, '2020-01-01', 'active',
@@ -112,7 +112,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000002', 'MB-102', 'ইঞ্জিনিয়ার মোঃ কামরুল হাসান',
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&fit=crop&crop=face',
+      '/images/members/member-02.jpg',
       'মোঃ সামসুল হক', 'খাদিজা বেগম', '19752699876543210', '1975-08-20',
       '01819345678', 'kamrul.hasan@example.com', 'বাড়ি # ৪৫/এ, রোড # ২, উত্তরা, ঢাকা',
       'চিফ স্ট্রাকচারাল ইঞ্জিনিয়ার', 'B+', 'permanent', 1500.00, '2021-03-15', 'active',
@@ -120,7 +120,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000003', 'MB-103', 'হাজী মোঃ নূরুল আমিন',
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&fit=crop&crop=face',
+      '/images/members/member-03.jpg',
       'মরহুম আমিনুল ইসলাম', 'ফাতেমা বেগম', '19702695544332211', '1970-11-10',
       '01912456789', 'nurul.amin@example.com', 'প্লট # ১৮, সেক্টর # ১১, উত্তরা, ঢাকা',
       'আমদানি ও রপ্তানি ব্যবসায়ী', 'O+', 'permanent', 2000.00, '2020-06-01', 'active',
@@ -128,7 +128,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000004', 'MB-104', 'ডাঃ এ কে এম মিজানুর রহমান',
-      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=300&fit=crop&crop=face',
+      '/images/members/member-04.jpg',
       'মরহুম ফজলুর রহমান', 'রোকেয়া বেগম', '19802697788990011', '1980-03-25',
       '01715567890', 'dr.mizan@example.com', 'বাড়ি # ৭, রোড # ৯, সেক্টর # ৩, উত্তরা, ঢাকা',
       'সহযোগী অধ্যাপক ও সিনিয়র চিকিৎসক', 'AB+', 'permanent', 1000.00, '2022-01-10', 'active',
@@ -136,7 +136,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000005', 'MB-105', 'মাওলানা মুফতি আব্দুল হান্নান',
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&fit=crop&crop=face',
+      '/images/members/member-05.jpg',
       'মাওলানা আব্দুর রশিদ', 'আমেনা খাতুন', '19822693322114455', '1982-07-15',
       '01611678901', 'imam.hannan@example.com', 'মসজিদ কোয়ার্টার, ২য় তলা, বায়তুল মামুর',
       'প্রধান ইমাম ও খতিব', 'O+', 'honorary', 0.00, '2020-01-01', 'active',
@@ -144,7 +144,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000006', 'MB-106', 'হাফেজ ক্বারী জুবায়ের আহমেদ',
-      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&fit=crop&crop=face',
+      '/images/members/member-06.jpg',
       'মোঃ আইয়ুব আলী', 'জাহানারা বেগম', '19902691122334455', '1990-09-05',
       '01511789012', 'zubair.ahmed@example.com', 'মসজিদ কোয়ার্টার, বায়তুল মামুর',
       'প্রধান মুয়াজ্জিন ও সহকারী শিক্ষক', 'A+', 'honorary', 0.00, '2021-06-01', 'active',
@@ -152,7 +152,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000007', 'MB-107', 'মোঃ তারিকুল ইসলাম',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&fit=crop&crop=face',
+      '/images/members/member-07.jpg',
       'মোঃ মোশাররফ হোসেন', 'হাসিনা বেগম', '19882699988776655', '1988-12-12',
       '01718890123', 'tariqul@example.com', 'বাড়ি # ২১, রোড # ১, সেক্টর # ৭, উত্তরা',
       'সিনিয়র প্রিন্সিপাল অফিসার (ব্যাংক)', 'B+', 'general', 500.00, '2022-04-01', 'active',
@@ -160,7 +160,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000008', 'MB-108', 'আলহাজ্ব সুলতান মাহমুদ',
-      'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=300&fit=crop&crop=face',
+      '/images/members/member-08.jpg',
       'মরহুম জহিরুল ইসলাম', 'সখিনা বেগম', '19552690011223344', '1955-02-18',
       '01811901234', 'sultan.mahmud@example.com', 'বাড়ি # ৪, সেক্টর # ৪, উত্তরা, ঢাকা',
       'অবসরপ্রাপ্ত উপসচিব ও উপদেষ্টা', 'O+', 'founding', 1000.00, '2020-01-01', 'active',
@@ -168,7 +168,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000009', 'MB-109', 'মোঃ জহিরুল হক',
-      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=300&fit=crop&crop=face',
+      '/images/members/member-09.jpg',
       'মোঃ নজরুল ইসলাম', 'শামসুন্নাহার', '19852694455667788', '1985-06-30',
       '01911012345', 'zahirul.haque@example.com', 'দোকান # ৩, মসজিদ মার্কেট, উত্তরা',
       'ফার্মেসী স্বত্বাধিকারী', 'A+', 'general', 500.00, '2023-01-15', 'active',
@@ -176,7 +176,7 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
     ),
     (
       'a0000001-0000-0000-0000-000000000010', 'MB-110', 'খন্দকার রেজাউল করিম',
-      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=300&fit=crop&crop=face',
+      '/images/members/member-10.jpg',
       'খন্দকার লুৎফর রহমান', 'রাবেয়া খাতুন', '19832692233445566', '1983-10-05',
       '01712123456', 'rezaul.karim@example.com', 'বাড়ি # ৭২, সেক্টর # ৭, উত্তরা',
       'কলেজ শিক্ষক ও সাহিত্যিক', 'O-', 'general', 500.00, '2023-02-20', 'active',
@@ -752,28 +752,28 @@ DROP TRIGGER IF EXISTS apply_stock_txn_trg ON public.stock_transactions;
       'd0000004-0000-0000-0000-000000000001',
       'মসজিদের দৃষ্টিনন্দন কেন্দ্রীয় মেহরাব ও গম্বুজ',
       'বায়তুল মামুর জামে মসজিদের ভেতরের দৃষ্টিনন্দন স্থাপত্য ও ক্যালিগ্রাফি শিল্প।',
-      'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+      '/images/gallery/gallery-01.jpg',
       'স্থাপত্য', 'image'
     ),
     (
       'd0000004-0000-0000-0000-000000000002',
       'পবিত্র জুমার নামাজে মুসল্লিয়ানদের উপস্থিতি',
       'শুক্রবারের জুমার জামাতে নিচতলা ও দোতলা পূর্ণ হয়ে মুসল্লিদের একাগ্র সালাত আদায়।',
-      'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1200&q=80',
+      '/images/gallery/gallery-02.jpg',
       'নামাজ ও ইবাদত', 'image'
     ),
     (
       'd0000004-0000-0000-0000-000000000003',
       'মসজিদের সুউচ্চ মিনার ও রাতের আলোকসজ্জা',
       'রাতের বেলায় বায়তুল মামুর মসজিদের বহিরাঙ্গন ও সুউচ্চ মিনারের আলোকোজ্জ্বল দৃশ্য।',
-      'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1200&q=80',
+      '/images/gallery/gallery-03.jpg',
       'আলোকসজ্জা', 'image'
     ),
     (
       'd0000004-0000-0000-0000-000000000004',
       'রমজানের গণ-ইফতার আয়োজন ও দোয়া',
       'পবিত্র মাহে রমজানে প্রতিদিন এলাকার রোজাদার মুসল্লি ও পথচারীদের উন্মুক্ত ইফতার মাহফিল।',
-      'https://images.unsplash.com/photo-1590076215667-874d47f9a2f6?auto=format&fit=crop&w=1200&q=80',
+      '/images/gallery/gallery-04.jpg',
       'রমজান কার্যক্রম', 'image'
     )
   ON CONFLICT (id) DO UPDATE SET
