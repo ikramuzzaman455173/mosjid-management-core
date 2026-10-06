@@ -9,17 +9,48 @@ import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileClock, Search, FileDown, FileText, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import {
+  FileClock,
+  Search,
+  FileDown,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  Inbox,
+} from "lucide-react";
 import { exportCsv, exportPdf } from "@/lib/export";
 
 export const Route = createFileRoute("/_authenticated/audit-logs")({ component: AuditLogsPage });
 
 const PAGE_SIZE = 25;
-const ENTITIES = ["members", "donations", "income", "expenses", "subscriptions", "meetings", "committees", "assets", "inventory_items"];
+const ENTITIES = [
+  "members",
+  "donations",
+  "income",
+  "expenses",
+  "subscriptions",
+  "meetings",
+  "committees",
+  "assets",
+  "inventory_items",
+];
 
 function AuditLogsPage() {
   const { t, lang } = useI18n();
@@ -34,28 +65,52 @@ function AuditLogsPage() {
   const { data: roleMap } = useQuery({
     queryKey: ["user_roles_map"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("user_roles" as any).select("user_id, roles(name)");
+      const { data, error } = await supabase
+        .from("user_roles" as any)
+        .select("user_id, roles(name)");
       if (error) console.error("Error fetching roles map:", error);
       const m: Record<string, string[]> = {};
-      data?.forEach((r: any) => { 
+      data?.forEach((r: any) => {
         const roleName = r.roles?.name?.toLowerCase().replace(/ /g, "_");
         if (roleName) {
-          (m[r.user_id] ??= []).push(roleName); 
+          (m[r.user_id] ??= []).push(roleName);
         }
       });
       return m;
     },
   });
 
-  const userIdsForRole = role === "all" ? null : Object.entries(roleMap ?? {}).filter(([, rs]) => rs.includes(role)).map(([id]) => id);
+  const userIdsForRole =
+    role === "all"
+      ? null
+      : Object.entries(roleMap ?? {})
+          .filter(([, rs]) => rs.includes(role))
+          .map(([id]) => id);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["audit_logs", search, action, entity, role, from, to, page, userIdsForRole?.join(",")],
+    queryKey: [
+      "audit_logs",
+      search,
+      action,
+      entity,
+      role,
+      from,
+      to,
+      page,
+      userIdsForRole?.join(","),
+    ],
     queryFn: async () => {
-      let q = supabase.from("audit_logs").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+      let q = supabase
+        .from("audit_logs")
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
       if (action !== "all") q = q.eq("action", action as any);
       if (entity !== "all") q = q.eq("entity", entity);
-      if (search.trim()) q = q.or(`actor_email.ilike.%${search}%,entity_id.ilike.%${search}%,entity.ilike.%${search}%`);
+      if (search.trim())
+        q = q.or(
+          `actor_email.ilike.%${search}%,entity_id.ilike.%${search}%,entity.ilike.%${search}%`,
+        );
       if (from) q = q.gte("created_at", from);
       if (to) q = q.lte("created_at", to + "T23:59:59");
       if (userIdsForRole) {
@@ -73,27 +128,73 @@ function AuditLogsPage() {
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const actionBadge = (a: string) => {
-    if (a === "insert") return <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none">{t("insert")}</Badge>;
-    if (a === "update") return <Badge variant="outline" className="border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium shadow-none">{t("update")}</Badge>;
-    if (a === "delete") return <Badge variant="outline" className="border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none">{t("delete")}</Badge>;
+    if (a === "insert")
+      return (
+        <Badge
+          variant="outline"
+          className="border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium shadow-none"
+        >
+          {t("insert")}
+        </Badge>
+      );
+    if (a === "update")
+      return (
+        <Badge
+          variant="outline"
+          className="border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300 font-medium shadow-none"
+        >
+          {t("update")}
+        </Badge>
+      );
+    if (a === "delete")
+      return (
+        <Badge
+          variant="outline"
+          className="border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300 font-medium shadow-none"
+        >
+          {t("delete")}
+        </Badge>
+      );
     return <Badge variant="outline">{t(a as any) || a}</Badge>;
   };
 
-  const exportRows = () => rows.map((r: any) => [fmtDate(r.created_at, "en"), r.action, r.entity, r.entity_id, r.actor_email ?? "—"]);
+  const exportRows = () =>
+    rows.map((r: any) => [
+      fmtDate(r.created_at, "en"),
+      r.action,
+      r.entity,
+      r.entity_id,
+      r.actor_email ?? "—",
+    ]);
   const cols = [t("date"), t("action"), t("entity"), "ID", t("actor")];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={FileClock} title={t("audit_logs")} subtitle={`${total} ${lang === "bn" ? "টি লগ" : "logs"}`} actions={
-        <>
-          <Button size="sm" className="bg-white text-primary hover:bg-white/90 shadow-sm border-0 font-medium" onClick={() => exportCsv("audit-logs", cols, exportRows())}>
-            <FileDown className="w-4 h-4 mr-1" />{t("export_csv")}
-          </Button>
-          <Button size="sm" className="bg-white text-primary hover:bg-white/90 shadow-sm border-0 font-medium" onClick={() => exportPdf(t("audit_logs"), cols, exportRows(), "audit-logs")}>
-            <FileText className="w-4 h-4 mr-1" />{t("export_pdf")}
-          </Button>
-        </>
-      } />
+      <PageHeader
+        icon={FileClock}
+        title={t("audit_logs")}
+        subtitle={`${total} ${lang === "bn" ? "টি লগ" : "logs"}`}
+        actions={
+          <>
+            <Button
+              size="sm"
+              className="bg-white text-primary hover:bg-white/90 shadow-sm border-0 font-medium"
+              onClick={() => exportCsv("audit-logs", cols, exportRows())}
+            >
+              <FileDown className="w-4 h-4 mr-1" />
+              {t("export_csv")}
+            </Button>
+            <Button
+              size="sm"
+              className="bg-white text-primary hover:bg-white/90 shadow-sm border-0 font-medium"
+              onClick={() => exportPdf(t("audit_logs"), cols, exportRows(), "audit-logs")}
+            >
+              <FileText className="w-4 h-4 mr-1" />
+              {t("export_pdf")}
+            </Button>
+          </>
+        }
+      />
 
       <Card className="p-4 shadow-card">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -101,13 +202,29 @@ function AuditLogsPage() {
             <Label className="text-xs">{t("search")}</Label>
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} placeholder={lang === "bn" ? "ইমেইল / টেবিল / ID" : "email / table / ID"} className="pl-8 h-9" />
+              <Input
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(0);
+                }}
+                placeholder={lang === "bn" ? "ইমেইল / টেবিল / ID" : "email / table / ID"}
+                className="pl-8 h-9"
+              />
             </div>
           </div>
           <div>
             <Label className="text-xs">{t("action")}</Label>
-            <Select value={action} onValueChange={(v) => { setAction(v); setPage(0); }}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+            <Select
+              value={action}
+              onValueChange={(v) => {
+                setAction(v);
+                setPage(0);
+              }}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("all")}</SelectItem>
                 <SelectItem value="insert">{t("insert")}</SelectItem>
@@ -118,18 +235,38 @@ function AuditLogsPage() {
           </div>
           <div>
             <Label className="text-xs">{t("entity")}</Label>
-            <Select value={entity} onValueChange={(v) => { setEntity(v); setPage(0); }}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+            <Select
+              value={entity}
+              onValueChange={(v) => {
+                setEntity(v);
+                setPage(0);
+              }}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("all")}</SelectItem>
-                {ENTITIES.map((e) => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+                {ENTITIES.map((e) => (
+                  <SelectItem key={e} value={e}>
+                    {e}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label className="text-xs">{t("role")}</Label>
-            <Select value={role} onValueChange={(v) => { setRole(v); setPage(0); }}>
-              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+            <Select
+              value={role}
+              onValueChange={(v) => {
+                setRole(v);
+                setPage(0);
+              }}
+            >
+              <SelectTrigger className="h-9">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("all")}</SelectItem>
                 <SelectItem value="super_admin">Super Admin</SelectItem>
@@ -142,11 +279,25 @@ function AuditLogsPage() {
           </div>
           <div>
             <Label className="text-xs">{t("from_date")}</Label>
-            <DatePicker  value={from} onChange={(v) => { setFrom(v); setPage(0); }} className="h-9" />
+            <DatePicker
+              value={from}
+              onChange={(v) => {
+                setFrom(v);
+                setPage(0);
+              }}
+              className="h-9"
+            />
           </div>
           <div>
             <Label className="text-xs">{t("to_date")}</Label>
-            <DatePicker  value={to} onChange={(v) => { setTo(v); setPage(0); }} className="h-9" />
+            <DatePicker
+              value={to}
+              onChange={(v) => {
+                setTo(v);
+                setPage(0);
+              }}
+              className="h-9"
+            />
           </div>
         </div>
       </Card>
@@ -167,32 +318,71 @@ function AuditLogsPage() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={`skel-${i}`}>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                    </TableCell>
                   </TableRow>
                 ))
               ) : rows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-10"><Inbox className="w-10 h-10 mx-auto text-muted-foreground/50 mb-2" /><p className="text-sm text-muted-foreground">{t("no_data")}</p></TableCell></TableRow>
-              ) : rows.map((r: any) => (
-                <TableRow key={r.id} className="hover:bg-muted/30">
-                  <TableCell className="text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleString()}</TableCell>
-                  <TableCell>{actionBadge(r.action)}</TableCell>
-                  <TableCell><Badge variant="outline">{r.entity}</Badge></TableCell>
-                  <TableCell className="font-mono text-xs">{r.entity_id?.slice(0, 8)}…</TableCell>
-                  <TableCell className="text-sm">{r.actor_email ?? "—"}</TableCell>
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-10">
+                    <Inbox className="w-10 h-10 mx-auto text-muted-foreground/50 mb-2" />
+                    <p className="text-sm text-muted-foreground">{t("no_data")}</p>
+                  </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                rows.map((r: any) => (
+                  <TableRow key={r.id} className="hover:bg-muted/30">
+                    <TableCell className="text-xs whitespace-nowrap">
+                      {new Date(r.created_at).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{actionBadge(r.action)}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{r.entity}</Badge>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">{r.entity_id?.slice(0, 8)}…</TableCell>
+                    <TableCell className="text-sm">{r.actor_email ?? "—"}</TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
         <div className="p-3 border-t flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">{t("page")} {page + 1} / {pages}</span>
+          <span className="text-muted-foreground">
+            {t("page")} {page + 1} / {pages}
+          </span>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={page === 0} onClick={() => setPage(page - 1)}><ChevronLeft className="w-4 h-4" />{t("prev")}</Button>
-            <Button size="sm" variant="outline" disabled={page + 1 >= pages} onClick={() => setPage(page + 1)}>{t("next")}<ChevronRight className="w-4 h-4" /></Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page === 0}
+              onClick={() => setPage(page - 1)}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              {t("prev")}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page + 1 >= pages}
+              onClick={() => setPage(page + 1)}
+            >
+              {t("next")}
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </Card>

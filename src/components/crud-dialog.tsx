@@ -13,14 +13,24 @@ interface CrudDialogProps {
   submitLabel?: string;
 }
 
-export function CrudDialog({ open, onOpenChange, title, children, onSubmit, saving, submitLabel }: CrudDialogProps) {
+export function CrudDialog({
+  open,
+  onOpenChange,
+  title,
+  children,
+  onSubmit,
+  saving,
+  submitLabel,
+}: CrudDialogProps) {
   const { t } = useI18n();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg p-0 overflow-hidden flex flex-col max-h-[calc(100dvh-2.5rem)] rounded-2xl">
         {/* Fixed Header with Title & Space for Close Button */}
         <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-border/50 shrink-0 pr-12 sm:pr-14 bg-background">
-          <DialogTitle className="text-primary text-base sm:text-lg font-semibold tracking-tight">{title}</DialogTitle>
+          <DialogTitle className="text-primary text-base sm:text-lg font-semibold tracking-tight">
+            {title}
+          </DialogTitle>
         </div>
 
         {/* Scrollable Form Body */}
@@ -38,10 +48,21 @@ export function CrudDialog({ open, onOpenChange, title, children, onSubmit, savi
 
           {/* Fixed Footer */}
           <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-t border-border/50 bg-muted/20 shrink-0 flex items-center justify-end gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} className="h-8 sm:h-9 text-xs sm:text-sm">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onOpenChange(false)}
+              className="h-8 sm:h-9 text-xs sm:text-sm"
+            >
               {t("cancel")}
             </Button>
-            <Button type="submit" size="sm" disabled={saving} className="bg-primary h-8 sm:h-9 text-xs sm:text-sm">
+            <Button
+              type="submit"
+              size="sm"
+              disabled={saving}
+              className="bg-primary h-8 sm:h-9 text-xs sm:text-sm"
+            >
               {saving ? t("saving") : (submitLabel ?? t("save"))}
             </Button>
           </div>

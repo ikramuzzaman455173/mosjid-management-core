@@ -6,11 +6,7 @@ import { bn } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useI18n } from "@/lib/i18n";
 
 export interface DatePickerProps {
@@ -61,22 +57,19 @@ export function DatePicker({
           className={cn(
             "w-full justify-start text-left font-normal bg-background border-input cursor-pointer disabled:cursor-not-allowed",
             !date && "text-muted-foreground/70",
-            className
+            className,
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
           <span className="truncate">
-            {date ? formattedDate : (placeholder || (lang === "bn" ? "তারিখ নির্বাচন করুন" : "Select date"))}
+            {date
+              ? formattedDate
+              : placeholder || (lang === "bn" ? "তারিখ নির্বাচন করুন" : "Select date")}
           </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 z-[100]" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          initialFocus
-        />
+        <Calendar mode="single" selected={date} onSelect={handleSelect} initialFocus />
       </PopoverContent>
     </Popover>
   );

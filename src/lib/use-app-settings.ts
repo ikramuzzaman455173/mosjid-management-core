@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type FitraPrices = {
   wheat: number;
@@ -43,14 +43,19 @@ export function useAppSettings() {
   useEffect(() => {
     async function loadSettings() {
       try {
-        const { data, error } = await supabase.from('app_settings').select('*').limit(1).maybeSingle();
-        
+        const { data, error } = await supabase
+          .from("app_settings")
+          .select("*")
+          .limit(1)
+          .maybeSingle();
+
         if (data) {
           const dbData = data as any;
           setDbId(dbData.id);
           setSettings({
             defaultNisab: Number(dbData.default_nisab) || defaultSettings.defaultNisab,
-            fitraPrices: (dbData.fitra_prices as unknown as FitraPrices) || defaultSettings.fitraPrices,
+            fitraPrices:
+              (dbData.fitra_prices as unknown as FitraPrices) || defaultSettings.fitraPrices,
             prayerCity: dbData.prayer_city || defaultSettings.prayerCity,
             prayerCountry: dbData.prayer_country || defaultSettings.prayerCountry,
             smsApiUrl: dbData.sms_api_url || defaultSettings.smsApiUrl,
@@ -71,7 +76,7 @@ export function useAppSettings() {
     const updated = { ...settings, ...newSettings };
     // Optimistic update
     setSettings(updated);
-    
+
     // Convert to DB format
     const dbUpdate = {
       default_nisab: updated.defaultNisab,
@@ -81,18 +86,18 @@ export function useAppSettings() {
       sms_api_url: updated.smsApiUrl,
       sms_api_key: updated.smsApiKey,
       sms_sender_id: updated.smsSenderId,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     } as any;
 
     if (dbId) {
-      await supabase.from('app_settings').update(dbUpdate).eq('id', dbId);
+      await supabase.from("app_settings").update(dbUpdate).eq("id", dbId);
     } else {
-      const { data } = await supabase.from('app_settings').insert([dbUpdate]).select('id').single();
+      const { data } = await supabase.from("app_settings").insert([dbUpdate]).select("id").single();
       if (data) setDbId(data.id);
     }
 
     // Dispatch custom event for cross-component sync
-    window.dispatchEvent(new CustomEvent('app-settings-updated', { detail: updated }));
+    window.dispatchEvent(new CustomEvent("app-settings-updated", { detail: updated }));
   };
 
   useEffect(() => {
@@ -102,8 +107,8 @@ export function useAppSettings() {
         setSettings(customEvent.detail);
       }
     };
-    window.addEventListener('app-settings-updated', handleUpdate);
-    return () => window.removeEventListener('app-settings-updated', handleUpdate);
+    window.addEventListener("app-settings-updated", handleUpdate);
+    return () => window.removeEventListener("app-settings-updated", handleUpdate);
   }, []);
 
   return { settings, updateSettings, isLoaded };

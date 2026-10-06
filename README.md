@@ -34,12 +34,12 @@
 
 ## ⚡ Quick Snapshot (The 30-Second Overview)
 
-| Attribute | Details |
-| :--- | :--- |
-| **Product / Domain** | **Mosque Operations & Accounts ERP** (Modeled for Maijzhena Baytul Mamur Jame Mosque) |
-| **Agency Partner** | **[Shopnojal IT](https://shopnojalit.com/)** (Smart ERP, POS & Business Automation) |
-| **Role & Execution** | **Lead Full-Stack Developer** (Delivered in a 5-week part-time sprint alongside full-time role) |
-| **Core Architecture** | **React 19** + **TanStack Start (SSR)** + **Supabase (PostgreSQL with RLS)** + **Tailwind CSS v4** |
+| Attribute                 | Details                                                                                                                            |
+| :------------------------ | :--------------------------------------------------------------------------------------------------------------------------------- |
+| **Product / Domain**      | **Mosque Operations & Accounts ERP** (Modeled for Maijzhena Baytul Mamur Jame Mosque)                                              |
+| **Agency Partner**        | **[Shopnojal IT](https://shopnojalit.com/)** (Smart ERP, POS & Business Automation)                                                |
+| **Role & Execution**      | **Lead Full-Stack Developer** (Delivered in a 5-week part-time sprint alongside full-time role)                                    |
+| **Core Architecture**     | **React 19** + **TanStack Start (SSR)** + **Supabase (PostgreSQL with RLS)** + **Tailwind CSS v4**                                 |
 | **Live Interactive Test** | **[smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)** (Guest Login: `mosqueadmin@info.com` / `MosqueAdmin@123`) |
 
 ---
@@ -55,29 +55,39 @@
 ## 🖼️ Key Screens & Live Interactive Testing
 
 ### 1. 📊 Accounts & Financial Analytics Dashboard
+
 <!-- [IMAGE_PLACEHOLDER: Executive Financial Analytics Dashboard Screen] -->
+
 - **What it does:** Displays total cash in hand, bank balance, monthly collection charts, and today's prayer schedule.
-*⚡ [Click to Test Live Dashboard](https://smart-mosjid-core.vercel.app/dashboard) — Guest Login: 1-Click Guest Admin (`mosqueadmin@info.com` / `MosqueAdmin@123`)*
+  _⚡ [Click to Test Live Dashboard](https://smart-mosjid-core.vercel.app/dashboard) — Guest Login: 1-Click Guest Admin (`mosqueadmin@info.com` / `MosqueAdmin@123`)_
 
 ### 2. 📺 Standalone 55"+ Smart TV Prayer Hall Screen
+
 <!-- [IMAGE_PLACEHOLDER: Standalone 55"+ Smart TV Prayer Hall Screen] -->
+
 - **What it does:** Full-screen layout made for prayer hall TVs showing large clock, next prayer countdown, and authentic Hadiths.
-*⚡ [Click to Test Smart TV Display Live](https://smart-mosjid-core.vercel.app/tv-display) — Public live display with dynamic prayer countdown & Hadith rotation*
+  _⚡ [Click to Test Smart TV Display Live](https://smart-mosjid-core.vercel.app/tv-display) — Public live display with dynamic prayer countdown & Hadith rotation_
 
 ### 3. 👥 Member Census Directory & QR ID Cards
+
 <!-- [IMAGE_PLACEHOLDER: Member Census Directory & Biometric QR ID Cards] -->
+
 - **What it does:** Add and edit mosque members, track monthly subscriptions, and print ID cards with verifiable QR codes.
-*⚡ [Click to Test Member Directory Live](https://smart-mosjid-core.vercel.app/members) — Featuring 1-click printable ID badges and QR validation gateway*
+  _⚡ [Click to Test Member Directory Live](https://smart-mosjid-core.vercel.app/members) — Featuring 1-click printable ID badges and QR validation gateway_
 
 ### 4. 🧾 Financial Ledgers & 1-Click Printable PDF Receipts
+
 <!-- [IMAGE_PLACEHOLDER: Financial Ledgers & 1-Click Printable PDF Receipts] -->
+
 - **What it does:** Record donations and fees by cash, bank, or mobile banking, and print instant PDF vouchers.
-*⚡ [Click to Test Financial Ledgers Live](https://smart-mosjid-core.vercel.app/income) — Multi-channel revenue tracking and instant client-side printable PDF vouchers*
+  _⚡ [Click to Test Financial Ledgers Live](https://smart-mosjid-core.vercel.app/income) — Multi-channel revenue tracking and instant client-side printable PDF vouchers_
 
 ### 5. 🌙 Islamic Operations Suite (Ramadan, Zakat & Qurbani)
+
 <!-- [IMAGE_PLACEHOLDER: Islamic Operations Suite (Ramadan, Zakat & Qurbani)] -->
+
 - **What it does:** 30-day Sehri/Iftar calendar, Nisab Zakat calculator, and Eid Qurbani livestock share distributor.
-*⚡ [Click to Test Islamic Operations Suite Live](https://smart-mosjid-core.vercel.app/ramadan) — Sehri/Iftar calendar, Nisab Zakat calculator, and Qurbani share distributor*
+  _⚡ [Click to Test Islamic Operations Suite Live](https://smart-mosjid-core.vercel.app/ramadan) — Sehri/Iftar calendar, Nisab Zakat calculator, and Qurbani share distributor_
 
 ---
 

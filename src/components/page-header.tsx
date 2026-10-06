@@ -12,7 +12,14 @@ interface PageHeaderProps {
   actions?: ReactNode;
 }
 
-export function PageHeader({ icon: Icon, title, subtitle, actionLabel, onAction, actions }: PageHeaderProps) {
+export function PageHeader({
+  icon: Icon,
+  title,
+  subtitle,
+  actionLabel,
+  onAction,
+  actions,
+}: PageHeaderProps) {
   return (
     <Card
       className="p-3 sm:p-4 border-0 text-white shadow-elevated rounded-xl min-w-0"
@@ -33,7 +40,11 @@ export function PageHeader({ icon: Icon, title, subtitle, actionLabel, onAction,
         <div className="flex items-center gap-2 flex-wrap shrink-0">
           {actions}
           {onAction && actionLabel && (
-            <Button size="sm" onClick={onAction} className="bg-white text-primary hover:bg-white/90 shadow-sm font-semibold h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3">
+            <Button
+              size="sm"
+              onClick={onAction}
+              className="bg-white text-primary hover:bg-white/90 shadow-sm font-semibold h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+            >
               <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
               {actionLabel}
             </Button>

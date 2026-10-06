@@ -14,7 +14,13 @@ import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Moon, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -70,7 +76,11 @@ function RamadanPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["ramadan-donations"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("donations").select("*").in("kind", ["fitra", "ramadan"]).order("donation_date", { ascending: false });
+      const { data, error } = await supabase
+        .from("donations")
+        .select("*")
+        .in("kind", ["fitra", "ramadan"])
+        .order("donation_date", { ascending: false });
       if (error) throw error;
       return data as Donation[];
     },
@@ -100,7 +110,10 @@ function RamadanPage() {
       const { error } = await supabase.from("donations").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success(t("deleted")); qc.invalidateQueries({ queryKey: ["ramadan-donations"] }); },
+    onSuccess: () => {
+      toast.success(t("deleted"));
+      qc.invalidateQueries({ queryKey: ["ramadan-donations"] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -108,32 +121,77 @@ function RamadanPage() {
 
   const columns: Column<Donation>[] = [
     { key: "date", header: t("date"), cell: (d) => fmtDate(d.donation_date, lang) },
-    { key: "donor", header: lang === "bn" ? "দাতা" : "Donor", cell: (d) => (
-      <div>
-        <div className="font-medium">{d.donor_name}</div>
-        <div className="text-xs text-muted-foreground">{d.donor_phone ?? "—"}</div>
-      </div>
-    )},
-    { key: "kind", header: t("category"), cell: (d) => <Badge variant="outline" className="capitalize">{d.kind}</Badge> },
-    { key: "receipt", header: lang === "bn" ? "রসিদ নং" : "Receipt", cell: (d) => d.receipt_no ?? "—" },
-    { key: "amt", header: t("amount"), className: "text-right", cell: (d) => (
-      <span className="font-semibold text-success">{fmtCurrency(Number(d.amount), lang)}</span>
-    )},
-    { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
-      <div className="flex gap-1 justify-end">
-        <PermissionGuard module="Ramadan" action="Edit" fallback={<></>}>
-          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
-            donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
-            donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
-        </PermissionGuard>
-        <PermissionGuard module="Ramadan" action="Delete" fallback={<></>}>
-          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
-            <Trash2 className="w-4 h-4 text-destructive" />
-          </Button></Hint>
-        </PermissionGuard>
-      </div>
-    )},
+    {
+      key: "donor",
+      header: lang === "bn" ? "দাতা" : "Donor",
+      cell: (d) => (
+        <div>
+          <div className="font-medium">{d.donor_name}</div>
+          <div className="text-xs text-muted-foreground">{d.donor_phone ?? "—"}</div>
+        </div>
+      ),
+    },
+    {
+      key: "kind",
+      header: t("category"),
+      cell: (d) => (
+        <Badge variant="outline" className="capitalize">
+          {d.kind}
+        </Badge>
+      ),
+    },
+    {
+      key: "receipt",
+      header: lang === "bn" ? "রসিদ নং" : "Receipt",
+      cell: (d) => d.receipt_no ?? "—",
+    },
+    {
+      key: "amt",
+      header: t("amount"),
+      className: "text-right",
+      cell: (d) => (
+        <span className="font-semibold text-success">{fmtCurrency(Number(d.amount), lang)}</span>
+      ),
+    },
+    {
+      key: "act",
+      header: t("actions"),
+      className: "text-right",
+      cell: (d) => (
+        <div className="flex gap-1 justify-end">
+          <PermissionGuard module="Ramadan" action="Edit" fallback={<></>}>
+            <Hint label={t("edit")}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  setEditing(d);
+                  setForm({
+                    donor_name: d.donor_name,
+                    donor_phone: d.donor_phone ?? "",
+                    amount: Number(d.amount),
+                    kind: d.kind,
+                    donation_date: d.donation_date ?? "",
+                    receipt_no: d.receipt_no ?? "",
+                    notes: d.notes ?? "",
+                  });
+                  setOpen(true);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+          <PermissionGuard module="Ramadan" action="Delete" fallback={<></>}>
+            <Hint label={t("delete")}>
+              <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -143,46 +201,102 @@ function RamadanPage() {
         title={lang === "bn" ? "রমজান ও ফিতরা" : "Ramadan & Fitra"}
         subtitle={`${t("total")} ${lang === "bn" ? "সংগ্রহ" : "Collection"}: ${fmtCurrency(total, lang)}`}
         actionLabel={canCreate ? (lang === "bn" ? "নতুন এন্ট্রি" : "New Entry") : undefined}
-        onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined}
+        onAction={
+          canCreate
+            ? () => {
+                setEditing(null);
+                setForm(empty);
+                setOpen(true);
+              }
+            : undefined
+        }
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Card className="p-4 bg-primary/5 border-primary/20">
-          <h3 className="font-semibold text-primary mb-1">{lang === "bn" ? "ফিতরা ক্যালকুলেটর" : "Fitra Calculator"}</h3>
-          <p className="text-xs text-muted-foreground mb-3">{lang === "bn" ? "পরিবারের সদস্য অনুযায়ী ফিতরা হিসাব করুন।" : "Calculate Fitra by family members."}</p>
+          <h3 className="font-semibold text-primary mb-1">
+            {lang === "bn" ? "ফিতরা ক্যালকুলেটর" : "Fitra Calculator"}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">
+            {lang === "bn"
+              ? "পরিবারের সদস্য অনুযায়ী ফিতরা হিসাব করুন।"
+              : "Calculate Fitra by family members."}
+          </p>
           <Button variant="outline" size="sm" className="w-full" onClick={() => setCalcOpen(true)}>
             {lang === "bn" ? "হিসাব করুন" : "Calculate Now"}
           </Button>
         </Card>
         <Card className="p-4 bg-gold/5 border-gold/20">
-          <h3 className="font-semibold text-gold mb-1">{lang === "bn" ? "ইফতার ও সেহরি" : "Iftar & Sehri"}</h3>
-          <p className="text-xs text-muted-foreground mb-3">{lang === "bn" ? "আজকের ইফতার ও সেহরির সময়সূচি দেখুন।" : "View today's Iftar and Sehri timing."}</p>
-          <Button variant="outline" size="sm" className="w-full" onClick={() => setScheduleOpen(true)}>
+          <h3 className="font-semibold text-gold mb-1">
+            {lang === "bn" ? "ইফতার ও সেহরি" : "Iftar & Sehri"}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">
+            {lang === "bn"
+              ? "আজকের ইফতার ও সেহরির সময়সূচি দেখুন।"
+              : "View today's Iftar and Sehri timing."}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={() => setScheduleOpen(true)}
+          >
             {lang === "bn" ? "সময়সূচি দেখুন" : "View Schedule"}
           </Button>
         </Card>
       </div>
 
-      <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["donor_name", "donor_phone", "receipt_no"]} />
+      <DataTable
+        data={data}
+        columns={columns}
+        loading={isLoading}
+        searchKeys={["donor_name", "donor_phone", "receipt_no"]}
+      />
 
-      <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : (lang === "bn" ? "নতুন এন্ট্রি" : "New Entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
+      <CrudDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={editing ? t("edit") : lang === "bn" ? "নতুন এন্ট্রি" : "New Entry"}
+        onSubmit={() => save.mutate()}
+        saving={save.isPending}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1 md:col-span-2">
             <Label required>{lang === "bn" ? "দাতার নাম" : "Donor name"}</Label>
-            <Input required value={form.donor_name} onChange={(e) => setForm({ ...form, donor_name: e.target.value })} placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"} />
+            <Input
+              required
+              value={form.donor_name}
+              onChange={(e) => setForm({ ...form, donor_name: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"}
+            />
           </div>
           <div>
             <Label>{t("phone")}</Label>
-            <Input value={form.donor_phone} onChange={(e) => setForm({ ...form, donor_phone: e.target.value })} placeholder="01XXXXXXXXX" />
+            <Input
+              value={form.donor_phone}
+              onChange={(e) => setForm({ ...form, donor_phone: e.target.value })}
+              placeholder="01XXXXXXXXX"
+            />
           </div>
           <div>
             <Label required>{t("amount")} (৳)</Label>
-            <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="5000" />
+            <Input
+              required
+              type="number"
+              min="0"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
+              placeholder="5000"
+            />
           </div>
           <div>
             <Label>{t("category")}</Label>
             <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}>
-              <SelectTrigger><SelectValue placeholder={lang === "bn" ? "ক্যাটাগরি নির্বাচন করুন" : "Select category"} /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={lang === "bn" ? "ক্যাটাগরি নির্বাচন করুন" : "Select category"}
+                />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="fitra">Fitra (ফিতরা)</SelectItem>
                 <SelectItem value="ramadan">Ramadan (রমজান বিশেষ)</SelectItem>
@@ -191,19 +305,37 @@ function RamadanPage() {
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <DatePicker  value={form.donation_date} onChange={(v) => setForm({ ...form, donation_date: v })} />
+            <DatePicker
+              value={form.donation_date}
+              onChange={(v) => setForm({ ...form, donation_date: v })}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{lang === "bn" ? "রসিদ নং" : "Receipt No"}</Label>
-            <Input value={form.receipt_no} onChange={(e) => setForm({ ...form, receipt_no: e.target.value })} placeholder={lang === "bn" ? "রসিদ নং (ঐচ্ছিক)" : "Receipt No (optional)"} />
+            <Input
+              value={form.receipt_no}
+              onChange={(e) => setForm({ ...form, receipt_no: e.target.value })}
+              placeholder={lang === "bn" ? "রসিদ নং (ঐচ্ছিক)" : "Receipt No (optional)"}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
-            <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
+            <Textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder={
+                lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."
+              }
+            />
           </div>
         </div>
       </CrudDialog>
-      <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
+      <DeleteDialog
+        id={deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={(id) => del.mutate(id)}
+      />
 
       <FitraCalculator open={calcOpen} onOpenChange={setCalcOpen} onApplyFitra={handleApplyFitra} />
       <IftarSehriSchedule open={scheduleOpen} onOpenChange={setScheduleOpen} />

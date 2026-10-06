@@ -1,5 +1,11 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MoreHorizontal,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
@@ -46,16 +52,8 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }: Pagina
 );
 PaginationLink.displayName = "PaginationLink";
 
-const PaginationFirst = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to first page"
-    size="icon"
-    className={className}
-    {...props}
-  >
+const PaginationFirst = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to first page" size="icon" className={className} {...props}>
     <ChevronsLeft className="h-4 w-4" />
   </PaginationLink>
 );
@@ -65,42 +63,21 @@ const PaginationPrevious = ({
   className,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to previous page"
-    size="icon"
-    className={className}
-    {...props}
-  >
+  <PaginationLink aria-label="Go to previous page" size="icon" className={className} {...props}>
     <ChevronLeft className="h-4 w-4" />
   </PaginationLink>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
 
-const PaginationNext = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to next page"
-    size="icon"
-    className={className}
-    {...props}
-  >
+const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to next page" size="icon" className={className} {...props}>
     <ChevronRight className="h-4 w-4" />
   </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
 
-const PaginationLast = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to last page"
-    size="icon"
-    className={className}
-    {...props}
-  >
+const PaginationLast = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+  <PaginationLink aria-label="Go to last page" size="icon" className={className} {...props}>
     <ChevronsRight className="h-4 w-4" />
   </PaginationLink>
 );

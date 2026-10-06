@@ -6,11 +6,36 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
-import { Bell, LogOut, Search,
-  LayoutDashboard, Users, HandCoins, Gift, TrendingUp, TrendingDown,
-  Wallet, Landmark, Smartphone, Package, Boxes, CalendarDays, UsersRound,
-  Megaphone, Moon, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
-  BarChart3, Settings, ShieldCheck, FileText, User as UserIcon, MonitorPlay
+import {
+  Bell,
+  LogOut,
+  Search,
+  LayoutDashboard,
+  Users,
+  HandCoins,
+  Gift,
+  TrendingUp,
+  TrendingDown,
+  Wallet,
+  Landmark,
+  Smartphone,
+  Package,
+  Boxes,
+  CalendarDays,
+  UsersRound,
+  Megaphone,
+  Moon,
+  CalendarHeart,
+  HandHeart,
+  Beef,
+  Sparkles,
+  Image as ImageIcon,
+  BarChart3,
+  Settings,
+  ShieldCheck,
+  FileText,
+  User as UserIcon,
+  MonitorPlay,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -22,8 +47,12 @@ import {
 } from "@/components/ui/command";
 import { useState, useEffect } from "react";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
-  DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
@@ -144,14 +173,16 @@ function Layout() {
     return permData?.permissions?.has(requiredPerm) ?? false;
   };
 
-  const filteredGroups = groups.map(grp => ({
-    ...grp,
-    items: grp.items.filter(item => hasPerm(item.url))
-  })).filter(grp => grp.items.length > 0);
+  const filteredGroups = groups
+    .map((grp) => ({
+      ...grp,
+      items: grp.items.filter((item) => hasPerm(item.url)),
+    }))
+    .filter((grp) => grp.items.length > 0);
 
   // Find required permissions based on pathname matching a known route prefix
-  const requiredPermission = Object.entries(routePermissions).find(([path]) => 
-    pathname === path || pathname.startsWith(path + "/")
+  const requiredPermission = Object.entries(routePermissions).find(
+    ([path]) => pathname === path || pathname.startsWith(path + "/"),
   )?.[1];
 
   useEffect(() => {
@@ -180,29 +211,41 @@ function Layout() {
           <header className="h-14 flex items-center justify-between gap-1.5 sm:gap-2 border-b border-border/70 bg-card/80 backdrop-blur-md supports-[backdrop-filter]:bg-card/70 px-2.5 sm:px-4 sticky top-0 z-40 min-w-0 shadow-xs transition-colors">
             <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1">
               <SidebarTrigger />
-              
+
               <div className="flex-1 max-w-[180px] xs:max-w-xs sm:max-w-md">
                 <button
                   onClick={() => setOpenCommand(true)}
                   className="w-full flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 bg-muted/50 hover:bg-muted border border-border/50 rounded-md text-xs sm:text-sm text-muted-foreground transition-all duration-300 shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                 >
                   <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="flex-1 text-left truncate">{lang === "bn" ? "খুঁজুন..." : "Search..."}</span>
+                  <span className="flex-1 text-left truncate">
+                    {lang === "bn" ? "খুঁজুন..." : "Search..."}
+                  </span>
                   <kbd className="pointer-events-none hidden md:inline-flex h-5 select-none items-center gap-1 rounded-[4px] border border-border/60 bg-background px-1.5 font-sans text-[10px] font-medium opacity-100">
                     <span className="text-xs">⌘</span>K
                   </kbd>
                 </button>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <Hint label={lang === "bn" ? "টিভি ডিসপ্লে ওপেন করুন" : "Open TV Display"}>
-                <Button size="icon" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => window.open("/tv-display", "_blank")}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 sm:h-9 sm:w-9"
+                  onClick={() => window.open("/tv-display", "_blank")}
+                >
                   <MonitorPlay className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </Button>
               </Hint>
 
-              <Button size="sm" variant="ghost" className="h-8 px-2 sm:h-9 sm:px-2.5 text-xs sm:text-sm font-semibold" onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2 sm:h-9 sm:px-2.5 text-xs sm:text-sm font-semibold"
+                onClick={() => setLang(lang === "bn" ? "en" : "bn")}
+              >
                 {lang === "bn" ? "EN" : "বাং"}
               </Button>
 
@@ -210,35 +253,55 @@ function Layout() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="gap-1.5 px-1 sm:px-2 h-8 sm:h-9">
                     <Avatar className="w-6 h-6 sm:w-7 sm:h-7">
-                      <AvatarFallback className="bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold">{initials}</AvatarFallback>
+                      <AvatarFallback className="bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold">
+                        {initials}
+                      </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs sm:text-sm font-medium hidden md:inline truncate max-w-[120px]">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || t("admin")}</span>
+                    <span className="text-xs sm:text-sm font-medium hidden md:inline truncate max-w-[120px]">
+                      {user?.user_metadata?.full_name || user?.email?.split("@")[0] || t("admin")}
+                    </span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="flex flex-col space-y-1.5 p-2">
-                    <p className="text-sm font-medium leading-none capitalize">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Admin"}</p>
+                    <p className="text-sm font-medium leading-none capitalize">
+                      {user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Admin"}
+                    </p>
                     <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate({ to: "/profile" })} className="cursor-pointer">
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/profile" })}
+                    className="cursor-pointer"
+                  >
                     <UserIcon className="w-4 h-4 mr-2" />
                     <span>{lang === "bn" ? "আমার প্রোফাইল" : "My Profile"}</span>
                   </DropdownMenuItem>
                   {hasPerm("/settings") && (
-                    <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
+                    <DropdownMenuItem
+                      onClick={() => navigate({ to: "/settings" })}
+                      className="cursor-pointer"
+                    >
                       <Settings className="w-4 h-4 mr-2" />
                       <span>{lang === "bn" ? "সেটিংস" : "Settings"}</span>
                     </DropdownMenuItem>
                   )}
                   {hasPerm("/roles-permissions") && (
-                    <DropdownMenuItem onClick={() => navigate({ to: "/roles-permissions" })} className="cursor-pointer">
+                    <DropdownMenuItem
+                      onClick={() => navigate({ to: "/roles-permissions" })}
+                      className="cursor-pointer"
+                    >
                       <ShieldCheck className="w-4 h-4 mr-2" />
                       <span>{lang === "bn" ? "রোলস ও পারমিশন" : "Roles & Permissions"}</span>
                     </DropdownMenuItem>
                   )}
-                  {(hasPerm("/settings") || hasPerm("/roles-permissions")) && <DropdownMenuSeparator />}
-                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
+                  {(hasPerm("/settings") || hasPerm("/roles-permissions")) && (
+                    <DropdownMenuSeparator />
+                  )}
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+                  >
                     <LogOut className="w-4 h-4 mr-2" />
                     <span>{t("logout")}</span>
                   </DropdownMenuItem>
@@ -248,7 +311,11 @@ function Layout() {
           </header>
           <main className="flex-1 p-2.5 sm:p-4 md:p-6 min-w-0">
             {requiredPermission ? (
-              <PermissionGuard module={requiredPermission.module} action={requiredPermission.action} fallbackType="page">
+              <PermissionGuard
+                module={requiredPermission.module}
+                action={requiredPermission.action}
+                fallbackType="page"
+              >
                 <Outlet />
               </PermissionGuard>
             ) : (
@@ -261,7 +328,9 @@ function Layout() {
       <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
         <CommandInput placeholder={lang === "bn" ? "মেনু খুঁজুন..." : "Search menu..."} />
         <CommandList>
-          <CommandEmpty>{lang === "bn" ? "কোনো ফলাফল পাওয়া যায়নি" : "No results found"}</CommandEmpty>
+          <CommandEmpty>
+            {lang === "bn" ? "কোনো ফলাফল পাওয়া যায়নি" : "No results found"}
+          </CommandEmpty>
           {filteredGroups.map((grp) => (
             <CommandGroup key={grp.label} heading={grp.label}>
               {grp.items.map((item) => (

@@ -7,7 +7,7 @@ export function usePermissions() {
     queryFn: async () => {
       const { data: sessionData } = await supabase.auth.getSession();
       const userId = sessionData.session?.user?.id;
-      
+
       if (!userId) {
         return { permissions: new Set<string>(), roles: [], isAdmin: false };
       }
@@ -15,12 +15,14 @@ export function usePermissions() {
       // 1. Get user's roles
       const { data: userRoles, error: rolesError } = await supabase
         .from("user_roles" as any)
-        .select(`
+        .select(
+          `
           role_id,
           roles (
             name
           )
-        `)
+        `,
+        )
         .eq("user_id", userId);
 
       if (rolesError) {
@@ -28,31 +30,36 @@ export function usePermissions() {
         return { permissions: new Set<string>(), roles: [], isAdmin: false };
       }
 
-      const roles = (userRoles || []).flatMap((ur: any) => {
-        if (Array.isArray(ur.roles)) {
-          return ur.roles.map((r: any) => r.name);
-        }
-        return ur.roles?.name ? [ur.roles.name] : [];
-      }).filter(Boolean) as string[];
-      
-      const normalizedRoles = roles.map(r => r.toLowerCase().trim().replace(/ /g, "_"));
+      const roles = (userRoles || [])
+        .flatMap((ur: any) => {
+          if (Array.isArray(ur.roles)) {
+            return ur.roles.map((r: any) => r.name);
+          }
+          return ur.roles?.name ? [ur.roles.name] : [];
+        })
+        .filter(Boolean) as string[];
+
+      const normalizedRoles = roles.map((r) => r.toLowerCase().trim().replace(/ /g, "_"));
       const roleIds = (userRoles || []).map((ur: any) => ur.role_id).filter(Boolean) as string[];
-      
-      const isAdmin = normalizedRoles.includes("super_admin") || normalizedRoles.includes("mosque_admin");
+
+      const isAdmin =
+        normalizedRoles.includes("super_admin") || normalizedRoles.includes("mosque_admin");
       const isSuperAdmin = normalizedRoles.includes("super_admin");
-      
+
       const permSet = new Set<string>();
 
       // 2. Get permissions for those roles
       if (roleIds.length > 0) {
         const { data: perms, error: permsError } = await supabase
           .from("role_permissions" as any)
-          .select(`
+          .select(
+            `
             permissions (
               module,
               action
             )
-          `)
+          `,
+          )
           .in("role_id", roleIds);
 
         if (!permsError && perms) {

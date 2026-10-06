@@ -51,7 +51,10 @@ function EventsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("events").select("*").order("event_date", { ascending: false });
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("event_date", { ascending: false });
       if (error) throw error;
       return data as EventRow[];
     },
@@ -59,7 +62,11 @@ function EventsPage() {
 
   const save = useMutation({
     mutationFn: async () => {
-      const payload: any = { ...form, event_date: new Date(form.event_date).toISOString() };
+      const eventDate = form.event_date ? new Date(form.event_date) : new Date();
+      const validDateIso = isNaN(eventDate.getTime())
+        ? new Date().toISOString()
+        : eventDate.toISOString();
+      const payload: any = { ...form, event_date: validDateIso };
       if (editing) {
         const { error } = await supabase.from("events").update(payload).eq("id", editing.id);
         if (error) throw error;
@@ -68,7 +75,11 @@ function EventsPage() {
         if (error) throw error;
       }
     },
-    onSuccess: () => { toast.success(t("saved")); qc.invalidateQueries({ queryKey: ["events"] }); setOpen(false); },
+    onSuccess: () => {
+      toast.success(t("saved"));
+      qc.invalidateQueries({ queryKey: ["events"] });
+      setOpen(false);
+    },
     onError: (e: any) => toast.error(e.message),
   });
   const del = useMutation({
@@ -76,7 +87,10 @@ function EventsPage() {
       const { error } = await supabase.from("events").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success(t("deleted")); qc.invalidateQueries({ queryKey: ["events"] }); },
+    onSuccess: () => {
+      toast.success(t("deleted"));
+      qc.invalidateQueries({ queryKey: ["events"] });
+    },
   });
 
   const fmtDt = (d: string) => {
@@ -87,64 +101,159 @@ function EventsPage() {
   };
 
   const columns: Column<EventRow>[] = [
-    { key: "date", header: t("date"), cell: (e) => <span className="text-xs">{fmtDt(e.event_date)}</span> },
-    { key: "title", header: t("title"), cell: (e) => (
-      <div>
-        <div className="font-medium">{e.title}</div>
-        {e.description && <div className="text-xs text-muted-foreground truncate max-w-md">{e.description}</div>}
-      </div>
-    )},
-    { key: "loc", header: lang === "bn" ? "স্থান" : "Location", cell: (e) => e.location ? (
-      <span className="flex items-center gap-1 text-xs"><MapPin className="w-3 h-3" /> {e.location}</span>
-    ) : "—" },
+    {
+      key: "date",
+      header: t("date"),
+      cell: (e) => <span className="text-xs">{fmtDt(e.event_date)}</span>,
+    },
+    {
+      key: "title",
+      header: t("title"),
+      cell: (e) => (
+        <div>
+          <div className="font-medium">{e.title}</div>
+          {e.description && (
+            <div className="text-xs text-muted-foreground truncate max-w-md">{e.description}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "loc",
+      header: lang === "bn" ? "স্থান" : "Location",
+      cell: (e) =>
+        e.location ? (
+          <span className="flex items-center gap-1 text-xs">
+            <MapPin className="w-3 h-3" /> {e.location}
+          </span>
+        ) : (
+          "—"
+        ),
+    },
     { key: "type", header: t("type"), cell: (e) => e.event_type ?? "—" },
-    { key: "act", header: t("actions"), className: "text-right", cell: (e) => (
-      <div className="flex gap-1 justify-end">
-        <PermissionGuard module="Events" action="Edit" fallback={<></>}>
-          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(e); setForm({
-            title: e.title, description: e.description ?? "", location: e.location ?? "",
-            event_type: e.event_type ?? "general", event_date: e.event_date.slice(0, 16),
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
-        </PermissionGuard>
-        <PermissionGuard module="Events" action="Delete" fallback={<></>}>
-          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
-            <Trash2 className="w-4 h-4 text-destructive" />
-          </Button></Hint>
-        </PermissionGuard>
-      </div>
-    )},
+    {
+      key: "act",
+      header: t("actions"),
+      className: "text-right",
+      cell: (e) => (
+        <div className="flex gap-1 justify-end">
+          <PermissionGuard module="Events" action="Edit" fallback={<></>}>
+            <Hint label={t("edit")}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  setEditing(e);
+                  setForm({
+                    title: e.title,
+                    description: e.description ?? "",
+                    location: e.location ?? "",
+                    event_type: e.event_type ?? "general",
+                    event_date: e.event_date.slice(0, 16),
+                  });
+                  setOpen(true);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+          <PermissionGuard module="Events" action="Delete" fallback={<></>}>
+            <Hint label={t("delete")}>
+              <Button size="icon" variant="ghost" onClick={() => setDeleteId(e.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Calendar} title={t("events")} subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি ইভেন্ট" : "events"}`}
-        actionLabel={canCreate ? t("add") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
-      <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["title", "location"]} />
-      <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("add")} onSubmit={() => save.mutate()} saving={save.isPending}>
+      <PageHeader
+        icon={Calendar}
+        title={t("events")}
+        subtitle={`${data?.length ?? 0} ${lang === "bn" ? "টি ইভেন্ট" : "events"}`}
+        actionLabel={canCreate ? t("add") : undefined}
+        onAction={
+          canCreate
+            ? () => {
+                setEditing(null);
+                setForm(empty);
+                setOpen(true);
+              }
+            : undefined
+        }
+      />
+      <DataTable
+        data={data}
+        columns={columns}
+        loading={isLoading}
+        searchKeys={["title", "location"]}
+      />
+      <CrudDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={editing ? t("edit") : t("add")}
+        onSubmit={() => save.mutate()}
+        saving={save.isPending}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1 md:col-span-2">
             <Label required>{t("title")}</Label>
-            <Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={lang === "bn" ? "যেমন: মিলাদ মাহফিল" : "e.g. Milad Mahfil"} />
+            <Input
+              required
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: মিলাদ মাহফিল" : "e.g. Milad Mahfil"}
+            />
           </div>
           <div>
-            <Label>{t("date")} & {lang === "bn" ? "সময়" : "Time"}</Label>
-            <Input type="datetime-local" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} />
+            <Label>
+              {t("date")} & {lang === "bn" ? "সময়" : "Time"}
+            </Label>
+            <Input
+              type="datetime-local"
+              value={form.event_date}
+              onChange={(e) => setForm({ ...form, event_date: e.target.value })}
+            />
           </div>
           <div>
             <Label>{t("type")}</Label>
-            <Input value={form.event_type} onChange={(e) => setForm({ ...form, event_type: e.target.value })} placeholder={lang === "bn" ? "যেমন: ধর্মীয় মাহফিল" : "e.g. Religious Gathering"} />
+            <Input
+              value={form.event_type}
+              onChange={(e) => setForm({ ...form, event_type: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: ধর্মীয় মাহফিল" : "e.g. Religious Gathering"}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{lang === "bn" ? "স্থান" : "Location"}</Label>
-            <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={lang === "bn" ? "যেমন: মসজিদ হলরুম" : "e.g. Mosque Main Hall"} />
+            <Input
+              value={form.location}
+              onChange={(e) => setForm({ ...form, location: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: মসজিদ হলরুম" : "e.g. Mosque Main Hall"}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("description")}</Label>
-            <Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={lang === "bn" ? "ইভেন্টের বিস্তারিত তথ্য লিখুন..." : "Enter event details..."} />
+            <Textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              placeholder={
+                lang === "bn" ? "ইভেন্টের বিস্তারিত তথ্য লিখুন..." : "Enter event details..."
+              }
+            />
           </div>
         </div>
       </CrudDialog>
-      <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
+      <DeleteDialog
+        id={deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={(id) => del.mutate(id)}
+      />
     </div>
   );
 }

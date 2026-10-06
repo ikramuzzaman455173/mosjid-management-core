@@ -13,7 +13,13 @@ import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
 import { TrendingUp, Pencil, Trash2 } from "lucide-react";
@@ -55,7 +61,10 @@ function IncomePage() {
   const { data, isLoading } = useQuery({
     queryKey: ["income"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("income").select("*").order("income_date", { ascending: false });
+      const { data, error } = await supabase
+        .from("income")
+        .select("*")
+        .order("income_date", { ascending: false });
       if (error) throw error;
       return data as Income[];
     },
@@ -80,7 +89,11 @@ function IncomePage() {
         if (error) throw error;
       }
     },
-    onSuccess: () => { toast.success(t("saved")); qc.invalidateQueries({ queryKey: ["income"] }); setOpen(false); },
+    onSuccess: () => {
+      toast.success(t("saved"));
+      qc.invalidateQueries({ queryKey: ["income"] });
+      setOpen(false);
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -89,7 +102,10 @@ function IncomePage() {
       const { error } = await supabase.from("income").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success(t("deleted")); qc.invalidateQueries({ queryKey: ["income"] }); },
+    onSuccess: () => {
+      toast.success(t("deleted"));
+      qc.invalidateQueries({ queryKey: ["income"] });
+    },
   });
 
   const total = (data ?? []).reduce((s, d) => s + Number(d.amount || 0), 0);
@@ -97,68 +113,162 @@ function IncomePage() {
 
   const columns: Column<Income>[] = [
     { key: "date", header: t("date"), cell: (i) => fmtDate(i.income_date, lang) },
-    { key: "cat", header: t("category"), cell: (i) => <span className="font-medium">{i.category}</span> },
+    {
+      key: "cat",
+      header: t("category"),
+      cell: (i) => <span className="font-medium">{i.category}</span>,
+    },
     { key: "src", header: lang === "bn" ? "উৎস" : "Source", cell: (i) => i.source ?? "—" },
     { key: "acc", header: t("account"), cell: (i) => accName(i.account_id) },
-    { key: "amt", header: t("amount"), className: "text-right", cell: (i) => (
-      <span className="font-semibold text-success">{fmtCurrency(Number(i.amount), lang)}</span>
-    )},
-    { key: "act", header: t("actions"), className: "text-right", cell: (i) => (
-      <div className="flex gap-1 justify-end">
-        <PermissionGuard module="Income & Expense" action="Edit" fallback={<></>}>
-          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(i); setForm({
-            category: i.category, source: i.source ?? "", amount: Number(i.amount), income_date: i.income_date ?? "",
-            account_id: i.account_id ?? "", notes: i.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
-        </PermissionGuard>
-        <PermissionGuard module="Income & Expense" action="Delete" fallback={<></>}>
-          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
-            <Trash2 className="w-4 h-4 text-destructive" />
-          </Button></Hint>
-        </PermissionGuard>
-      </div>
-    )},
+    {
+      key: "amt",
+      header: t("amount"),
+      className: "text-right",
+      cell: (i) => (
+        <span className="font-semibold text-success">{fmtCurrency(Number(i.amount), lang)}</span>
+      ),
+    },
+    {
+      key: "act",
+      header: t("actions"),
+      className: "text-right",
+      cell: (i) => (
+        <div className="flex gap-1 justify-end">
+          <PermissionGuard module="Income & Expense" action="Edit" fallback={<></>}>
+            <Hint label={t("edit")}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  setEditing(i);
+                  setForm({
+                    category: i.category,
+                    source: i.source ?? "",
+                    amount: Number(i.amount),
+                    income_date: i.income_date ?? "",
+                    account_id: i.account_id ?? "",
+                    notes: i.notes ?? "",
+                  });
+                  setOpen(true);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+          <PermissionGuard module="Income & Expense" action="Delete" fallback={<></>}>
+            <Hint label={t("delete")}>
+              <Button size="icon" variant="ghost" onClick={() => setDeleteId(i.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={TrendingUp} title={t("income")} subtitle={`${t("total")}: ${fmtCurrency(total, lang)}`}
-        actionLabel={canCreate ? t("new_entry") : undefined} onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined} />
-      <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["category", "source"]} />
-      <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : t("new_entry")} onSubmit={() => save.mutate()} saving={save.isPending}>
+      <PageHeader
+        icon={TrendingUp}
+        title={t("income")}
+        subtitle={`${t("total")}: ${fmtCurrency(total, lang)}`}
+        actionLabel={canCreate ? t("new_entry") : undefined}
+        onAction={
+          canCreate
+            ? () => {
+                setEditing(null);
+                setForm(empty);
+                setOpen(true);
+              }
+            : undefined
+        }
+      />
+      <DataTable
+        data={data}
+        columns={columns}
+        loading={isLoading}
+        searchKeys={["category", "source"]}
+      />
+      <CrudDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={editing ? t("edit") : t("new_entry")}
+        onSubmit={() => save.mutate()}
+        saving={save.isPending}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label required>{t("category")}</Label>
-            <Input required value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder={lang === "bn" ? "যেমন: ভাড়া" : "e.g. Rent"} />
+            <Input
+              required
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: ভাড়া" : "e.g. Rent"}
+            />
           </div>
           <div>
             <Label>{lang === "bn" ? "উৎস" : "Source"}</Label>
-            <Input value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} placeholder={lang === "bn" ? "যেমন: দোকান নং ২" : "e.g. Shop No 2"} />
+            <Input
+              value={form.source}
+              onChange={(e) => setForm({ ...form, source: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: দোকান নং ২" : "e.g. Shop No 2"}
+            />
           </div>
           <div>
             <Label required>{t("amount")} (৳)</Label>
-            <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="5000" />
+            <Input
+              required
+              type="number"
+              min="0"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
+              placeholder="5000"
+            />
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <DatePicker  value={form.income_date} onChange={(v) => setForm({ ...form, income_date: v })} />
+            <DatePicker
+              value={form.income_date}
+              onChange={(v) => setForm({ ...form, income_date: v })}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("account")}</Label>
-            <Select value={form.account_id} onValueChange={(v) => setForm({ ...form, account_id: v })}>
-              <SelectTrigger><SelectValue placeholder={t("select_option")} /></SelectTrigger>
+            <Select
+              value={form.account_id}
+              onValueChange={(v) => setForm({ ...form, account_id: v })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t("select_option")} />
+              </SelectTrigger>
               <SelectContent>
-                {(accounts ?? []).map((a: any) => <SelectItem key={a.id} value={a.id}>{a.name} ({a.kind})</SelectItem>)}
+                {(accounts ?? []).map((a: any) => (
+                  <SelectItem key={a.id} value={a.id}>
+                    {a.name} ({a.kind})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
-            <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
+            <Textarea
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder={
+                lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."
+              }
+            />
           </div>
         </div>
       </CrudDialog>
-      <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
+      <DeleteDialog
+        id={deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={(id) => del.mutate(id)}
+      />
     </div>
   );
 }

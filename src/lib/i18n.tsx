@@ -382,7 +382,18 @@ export function useI18n() {
 export function toBnNum(n: number | string, lang: Lang = "bn"): string {
   const s = String(n);
   if (lang !== "bn") return s;
-  const map: Record<string, string> = { "0": "০", "1": "১", "2": "২", "3": "৩", "4": "৪", "5": "৫", "6": "৬", "7": "৭", "8": "৮", "9": "৯" };
+  const map: Record<string, string> = {
+    "0": "০",
+    "1": "১",
+    "2": "২",
+    "3": "৩",
+    "4": "৪",
+    "5": "৫",
+    "6": "৬",
+    "7": "৭",
+    "8": "৮",
+    "9": "৯",
+  };
   return s.replace(/[0-9]/g, (d) => map[d]);
 }
 

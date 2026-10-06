@@ -12,29 +12,37 @@ function VerifyMemberPage() {
   const { qrToken } = Route.useParams();
   const { lang } = useI18n();
 
-  const { data: member, isLoading, error } = useQuery({
+  const {
+    data: member,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["verify-member", qrToken],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("members")
-        .select("id, member_code, full_name, membership_type, phone, blood_group, status, photo_url, expiry_date, joining_date")
+        .select(
+          "id, member_code, full_name, membership_type, phone, blood_group, status, photo_url, expiry_date, joining_date",
+        )
         .eq("qr_token", qrToken)
         .single();
-      
+
       if (error) {
-        if (error.code === 'PGRST116') return null; // Not found
+        if (error.code === "PGRST116") return null; // Not found
         throw error;
       }
       return data;
     },
-    retry: false
+    retry: false,
   });
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <div className="w-12 h-12 border-4 border-[#005B3A] border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-600 font-medium">{lang === "bn" ? "ভেরিফাই করা হচ্ছে..." : "Verifying..."}</p>
+        <p className="text-gray-600 font-medium">
+          {lang === "bn" ? "ভেরিফাই করা হচ্ছে..." : "Verifying..."}
+        </p>
       </div>
     );
   }
@@ -48,9 +56,14 @@ function VerifyMemberPage() {
             {lang === "bn" ? "সদস্য পাওয়া যায়নি" : "Member Not Found"}
           </h2>
           <p className="text-gray-600 mb-6">
-            {lang === "bn" ? "এই QR কোডটি কোনো বৈধ সদস্যের সাথে যুক্ত নয়।" : "This QR code is not associated with any valid member."}
+            {lang === "bn"
+              ? "এই QR কোডটি কোনো বৈধ সদস্যের সাথে যুক্ত নয়।"
+              : "This QR code is not associated with any valid member."}
           </p>
-          <a href="/" className="inline-block bg-[#005B3A] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#004a2f] transition-colors">
+          <a
+            href="/"
+            className="inline-block bg-[#005B3A] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#004a2f] transition-colors"
+          >
             {lang === "bn" ? "হোম পেজে যান" : "Go to Home"}
           </a>
         </div>
@@ -58,7 +71,8 @@ function VerifyMemberPage() {
     );
   }
 
-  const isActive = member.status === "active" || (member.status as string) === "সক্রিয়" || !member.status;
+  const isActive =
+    member.status === "active" || (member.status as string) === "সক্রিয়" || !member.status;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -74,7 +88,9 @@ function VerifyMemberPage() {
               )}
             </div>
             {/* Status Badge Icon */}
-            <div className={`absolute bottom-0 right-0 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center ${isActive ? "bg-green-500" : "bg-red-500"}`}>
+            <div
+              className={`absolute bottom-0 right-0 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center ${isActive ? "bg-green-500" : "bg-red-500"}`}
+            >
               {isActive ? (
                 <CheckCircle className="w-4 h-4 text-white" />
               ) : (
@@ -82,12 +98,20 @@ function VerifyMemberPage() {
               )}
             </div>
           </div>
-          
+
           <h1 className="text-2xl font-bold text-white mb-1">{member.full_name}</h1>
-          <p className="text-white/80 font-medium mb-3">ID: {member.member_code || member.id.substring(0, 8).toUpperCase()}</p>
-          
+          <p className="text-white/80 font-medium mb-3">
+            ID: {member.member_code || member.id.substring(0, 8).toUpperCase()}
+          </p>
+
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-semibold">
-            {isActive ? (lang === "bn" ? "সক্রিয় সদস্য" : "Active Member") : (lang === "bn" ? "নিষ্ক্রিয় সদস্য" : "Inactive Member")}
+            {isActive
+              ? lang === "bn"
+                ? "সক্রিয় সদস্য"
+                : "Active Member"
+              : lang === "bn"
+                ? "নিষ্ক্রিয় সদস্য"
+                : "Inactive Member"}
           </div>
         </div>
 
@@ -99,8 +123,12 @@ function VerifyMemberPage() {
                 <User className="w-5 h-5 text-[#005B3A]" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{lang === "bn" ? "সদস্য ধরন" : "Membership Type"}</p>
-                <p className="font-semibold text-gray-900 capitalize">{member.membership_type || "General"}</p>
+                <p className="text-sm text-gray-500">
+                  {lang === "bn" ? "সদস্য ধরন" : "Membership Type"}
+                </p>
+                <p className="font-semibold text-gray-900 capitalize">
+                  {member.membership_type || "General"}
+                </p>
               </div>
             </div>
 
@@ -110,7 +138,9 @@ function VerifyMemberPage() {
                   <Droplet className="w-5 h-5 text-red-500" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">{lang === "bn" ? "রক্তের গ্রুপ" : "Blood Group"}</p>
+                  <p className="text-xs text-gray-500">
+                    {lang === "bn" ? "রক্তের গ্রুপ" : "Blood Group"}
+                  </p>
                   <p className="font-semibold text-gray-900">{member.blood_group || "—"}</p>
                 </div>
               </div>
@@ -121,7 +151,9 @@ function VerifyMemberPage() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">{lang === "bn" ? "মোবাইল" : "Mobile"}</p>
-                  <p className="font-semibold text-gray-900 text-sm truncate">{member.phone || "—"}</p>
+                  <p className="font-semibold text-gray-900 text-sm truncate">
+                    {member.phone || "—"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -134,8 +166,12 @@ function VerifyMemberPage() {
                       <Calendar className="w-5 h-5 text-blue-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">{lang === "bn" ? "যোগদানের তারিখ" : "Join Date"}</p>
-                      <p className="font-semibold text-gray-900 text-sm">{fmtDate(member.joining_date, lang)}</p>
+                      <p className="text-xs text-gray-500">
+                        {lang === "bn" ? "যোগদানের তারিখ" : "Join Date"}
+                      </p>
+                      <p className="font-semibold text-gray-900 text-sm">
+                        {fmtDate(member.joining_date, lang)}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -145,8 +181,12 @@ function VerifyMemberPage() {
                       <AlertTriangle className="w-5 h-5 text-amber-500" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">{lang === "bn" ? "মেয়াদোত্তীর্ণ" : "Valid Thru"}</p>
-                      <p className="font-semibold text-gray-900 text-sm">{fmtDate(member.expiry_date, lang)}</p>
+                      <p className="text-xs text-gray-500">
+                        {lang === "bn" ? "মেয়াদোত্তীর্ণ" : "Valid Thru"}
+                      </p>
+                      <p className="font-semibold text-gray-900 text-sm">
+                        {fmtDate(member.expiry_date, lang)}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -159,7 +199,9 @@ function VerifyMemberPage() {
               {lang === "bn" ? "বায়তুল মামুর জামে মসজিদ" : "Baytul Mamur Mosque"}
             </h3>
             <p className="text-xs text-gray-500">
-              {lang === "bn" ? "অফিসিয়াল সদস্য ভেরিফিকেশন পোর্টাল" : "Official Member Verification Portal"}
+              {lang === "bn"
+                ? "অফিসিয়াল সদস্য ভেরিফিকেশন পোর্টাল"
+                : "Official Member Verification Portal"}
             </p>
           </div>
         </div>

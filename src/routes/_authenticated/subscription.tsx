@@ -9,7 +9,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Coins, Printer, Bell, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -35,9 +42,13 @@ function SubscriptionPage() {
   // States for custom popups
   const [alertConfirmOpen, setAlertConfirmOpen] = useState(false);
   const [alertDefaulters, setAlertDefaulters] = useState<any[]>([]);
-  
+
   const [collectOpen, setCollectOpen] = useState(false);
-  const [collectData, setCollectData] = useState<{member: any, amount: number, paid: string} | null>(null);
+  const [collectData, setCollectData] = useState<{
+    member: any;
+    amount: number;
+    paid: string;
+  } | null>(null);
 
   const printRef = useRef<HTMLDivElement>(null);
   const [printData, setPrintData] = useState<ReceiptData | null>(null);
@@ -56,11 +67,20 @@ function SubscriptionPage() {
 
   const { data: members } = useQuery({
     queryKey: ["members-active"],
-    queryFn: async () => (await supabase.from("members").select("id, full_name, member_code, monthly_subscription, phone").eq("status", "active").order("full_name")).data ?? [],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("members")
+          .select("id, full_name, member_code, monthly_subscription, phone")
+          .eq("status", "active")
+          .order("full_name")
+      ).data ?? [],
   });
   const { data: subs } = useQuery({
     queryKey: ["subs", year, month],
-    queryFn: async () => (await supabase.from("subscriptions").select("*").eq("year", year).eq("month", month)).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("subscriptions").select("*").eq("year", year).eq("month", month)).data ??
+      [],
   });
 
   const collect = useMutation({
@@ -68,27 +88,55 @@ function SubscriptionPage() {
       const existing = subs?.find((s: any) => s.member_id === member.id);
       const status = paid >= amount ? "paid" : paid > 0 ? "partial" : "due";
       const payload: any = {
-        member_id: member.id, year, month, amount, paid_amount: paid, status,
+        member_id: member.id,
+        year,
+        month,
+        amount,
+        paid_amount: paid,
+        status,
         paid_date: paid > 0 ? new Date().toISOString().slice(0, 10) : null,
       };
       if (existing) {
-        const { error } = await supabase.from("subscriptions").update(payload).eq("id", existing.id);
+        const { error } = await supabase
+          .from("subscriptions")
+          .update(payload)
+          .eq("id", existing.id);
         if (error) throw error;
       } else {
         const { error } = await supabase.from("subscriptions").insert(payload);
         if (error) throw error;
       }
     },
-    onSuccess: () => { toast.success(t("saved")); qc.invalidateQueries({ queryKey: ["subs", year, month] }); },
+    onSuccess: () => {
+      toast.success(t("saved"));
+      qc.invalidateQueries({ queryKey: ["subs", year, month] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
-  const totalDue = (members ?? []).reduce((s: number, m: any) => s + Number(m.monthly_subscription || 0), 0);
+  const totalDue = (members ?? []).reduce(
+    (s: number, m: any) => s + Number(m.monthly_subscription || 0),
+    0,
+  );
   const totalPaid = (subs ?? []).reduce((s: number, x: any) => s + Number(x.paid_amount || 0), 0);
 
-  const months = lang === "bn"
-    ? ["জানু", "ফেব্রু", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্ট", "অক্টো", "নভে", "ডিসে"]
-    : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months =
+    lang === "bn"
+      ? [
+          "জানু",
+          "ফেব্রু",
+          "মার্চ",
+          "এপ্রিল",
+          "মে",
+          "জুন",
+          "জুলাই",
+          "আগস্ট",
+          "সেপ্ট",
+          "অক্টো",
+          "নভে",
+          "ডিসে",
+        ]
+      : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   const confirmSendDueAlerts = () => {
     if (!members) return;
@@ -111,23 +159,28 @@ function SubscriptionPage() {
     setAlertConfirmOpen(false);
     setSendingAlerts(true);
     let successCount = 0;
-    
+
     for (const m of alertDefaulters) {
       const sub = subs?.find((s: any) => s.member_id === m.id);
       const paid = Number(sub?.paid_amount ?? 0);
       const amt = Number(m.monthly_subscription ?? 0);
       const due = amt - paid;
-      
-      const msg = lang === "bn"
-        ? `আসসালামু আলাইকুম ${m.full_name}, আপনার ${months[month - 1]} ${year} এর মাসিক চাঁদা ${due} টাকা বকেয়া রয়েছে। অনুগ্রহ করে পরিশোধ করুন। - বায়তুল মামুর জামে মসজিদ`
-        : `Assalamu Alaikum ${m.full_name}, your subscription of ${due} BDT for ${months[month - 1]} ${year} is due. Please pay soon. - Baytul Mamur Jame Mosque`;
-        
+
+      const msg =
+        lang === "bn"
+          ? `আসসালামু আলাইকুম ${m.full_name}, আপনার ${months[month - 1]} ${year} এর মাসিক চাঁদা ${due} টাকা বকেয়া রয়েছে। অনুগ্রহ করে পরিশোধ করুন। - বায়তুল মামুর জামে মসজিদ`
+          : `Assalamu Alaikum ${m.full_name}, your subscription of ${due} BDT for ${months[month - 1]} ${year} is due. Please pay soon. - Baytul Mamur Jame Mosque`;
+
       const sent = await sendSms(m.phone as string, msg);
       if (sent) successCount++;
     }
-    
+
     setSendingAlerts(false);
-    toast.success(lang === "bn" ? `${successCount} টি SMS পাঠানো হয়েছে` : `${successCount} SMS sent successfully`);
+    toast.success(
+      lang === "bn"
+        ? `${successCount} টি SMS পাঠানো হয়েছে`
+        : `${successCount} SMS sent successfully`,
+    );
   };
 
   const openCollectDialog = (m: any, amt: number) => {
@@ -141,7 +194,7 @@ function SubscriptionPage() {
       collect.mutate({
         member: collectData.member,
         amount: collectData.amount,
-        paid: Number(collectData.paid) || 0
+        paid: Number(collectData.paid) || 0,
       });
     }
     setCollectOpen(false);
@@ -149,19 +202,47 @@ function SubscriptionPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Coins} title={t("subscription")} subtitle={`${toBnNum(totalPaid, lang)} / ${toBnNum(totalDue, lang)} ৳`} />
+      <PageHeader
+        icon={Coins}
+        title={t("subscription")}
+        subtitle={`${toBnNum(totalPaid, lang)} / ${toBnNum(totalDue, lang)} ৳`}
+      />
       <Card className="p-3 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
-          <Input type="number" min="2020" max="2099" value={year} onChange={(e) => setYear(Number(e.target.value))} className="w-28" />
+          <Input
+            type="number"
+            min="2020"
+            max="2099"
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+            className="w-28"
+          />
           <div className="flex gap-1 flex-wrap">
             {months.map((m, i) => (
-              <Button key={i} size="sm" variant={month === i + 1 ? "default" : "outline"} onClick={() => setMonth(i + 1)} className={month === i + 1 ? "bg-primary" : ""}>{m}</Button>
+              <Button
+                key={i}
+                size="sm"
+                variant={month === i + 1 ? "default" : "outline"}
+                onClick={() => setMonth(i + 1)}
+                className={month === i + 1 ? "bg-primary" : ""}
+              >
+                {m}
+              </Button>
             ))}
           </div>
         </div>
         <PermissionGuard module="Monthly Chanda" action="Create" fallback={<></>}>
-          <Button variant="outline" className="text-destructive border-destructive hover:bg-destructive/10" onClick={confirmSendDueAlerts} disabled={sendingAlerts}>
-            {sendingAlerts ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Bell className="w-4 h-4 mr-2" />}
+          <Button
+            variant="outline"
+            className="text-destructive border-destructive hover:bg-destructive/10"
+            onClick={confirmSendDueAlerts}
+            disabled={sendingAlerts}
+          >
+            {sendingAlerts ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Bell className="w-4 h-4 mr-2" />
+            )}
             {lang === "bn" ? "বকেয়া SMS পাঠান" : "Send Due Alerts"}
           </Button>
         </PermissionGuard>
@@ -190,33 +271,55 @@ function SubscriptionPage() {
                     <div className="text-xs text-muted-foreground">{m.member_code ?? "—"}</div>
                   </td>
                   <td className="p-3 text-right">{fmtCurrency(amt, lang)}</td>
-                  <td className="p-3 text-right text-success font-semibold">{fmtCurrency(paid, lang)}</td>
+                  <td className="p-3 text-right text-success font-semibold">
+                    {fmtCurrency(paid, lang)}
+                  </td>
                   <td className="p-3">
-                    <Badge className={status === "paid" ? "bg-success text-success-foreground" : status === "partial" ? "bg-warning text-warning-foreground" : "bg-destructive text-destructive-foreground"}>
+                    <Badge
+                      className={
+                        status === "paid"
+                          ? "bg-success text-success-foreground"
+                          : status === "partial"
+                            ? "bg-warning text-warning-foreground"
+                            : "bg-destructive text-destructive-foreground"
+                      }
+                    >
                       {status}
                     </Badge>
                   </td>
                   <td className="p-3 text-right">
                     <div className="flex justify-end gap-1">
                       {paid > 0 && (
-                      <Hint label={lang === "bn" ? "প্রিন্ট রসিদ" : "Print Receipt"}>
-                        <Button size="icon" variant="outline" className="text-primary border-primary hover:bg-primary/10" onClick={() => {
-                          triggerPrint({
-                            id: sub?.id ?? `SUB-${m.id}-${year}-${month}`,
-                            type: "subscription",
-                            date: sub?.paid_date ?? new Date().toISOString().slice(0, 10),
-                            amount: paid,
-                            name: m.full_name,
-                            memberId: m.member_code ?? "",
-                            details: lang === "bn" ? `${months[month - 1]} ${year} এর চাঁদা` : `Subscription for ${months[month - 1]} ${year}`
-                          });
-                        }}>
-                          <Printer className="w-4 h-4" />
-                        </Button>
-                      </Hint>
+                        <Hint label={lang === "bn" ? "প্রিন্ট রসিদ" : "Print Receipt"}>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="text-primary border-primary hover:bg-primary/10"
+                            onClick={() => {
+                              triggerPrint({
+                                id: sub?.id ?? `SUB-${m.id}-${year}-${month}`,
+                                type: "subscription",
+                                date: sub?.paid_date ?? new Date().toISOString().slice(0, 10),
+                                amount: paid,
+                                name: m.full_name,
+                                memberId: m.member_code ?? "",
+                                details:
+                                  lang === "bn"
+                                    ? `${months[month - 1]} ${year} এর চাঁদা`
+                                    : `Subscription for ${months[month - 1]} ${year}`,
+                              });
+                            }}
+                          >
+                            <Printer className="w-4 h-4" />
+                          </Button>
+                        </Hint>
                       )}
                       <PermissionGuard module="Monthly Chanda" action="Create" fallback={<></>}>
-                        <Button size="sm" className="bg-primary h-9" onClick={() => openCollectDialog(m, amt)}>
+                        <Button
+                          size="sm"
+                          className="bg-primary h-9"
+                          onClick={() => openCollectDialog(m, amt)}
+                        >
                           {lang === "bn" ? "আদায়" : "Collect"}
                         </Button>
                       </PermissionGuard>
@@ -226,12 +329,16 @@ function SubscriptionPage() {
               );
             })}
             {(members ?? []).length === 0 && (
-              <tr><td colSpan={5} className="text-center py-10 text-muted-foreground">{t("no_data")}</td></tr>
+              <tr>
+                <td colSpan={5} className="text-center py-10 text-muted-foreground">
+                  {t("no_data")}
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
       </Card>
-      
+
       {/* Hidden Print Area */}
       <div className="hidden">
         {printData && <PrintableReceipt ref={printRef} data={printData} />}
@@ -243,8 +350,8 @@ function SubscriptionPage() {
           <DialogHeader>
             <DialogTitle>{lang === "bn" ? "এসএমএস নিশ্চিতকরণ" : "Confirm SMS"}</DialogTitle>
             <DialogDescription className="py-4 text-base">
-              {lang === "bn" 
-                ? `মোট ${alertDefaulters.length} জনকে বকেয়া SMS পাঠানো হবে। আপনি কি নিশ্চিত?` 
+              {lang === "bn"
+                ? `মোট ${alertDefaulters.length} জনকে বকেয়া SMS পাঠানো হবে। আপনি কি নিশ্চিত?`
                 : `Send due SMS to ${alertDefaulters.length} members? Are you sure?`}
             </DialogDescription>
           </DialogHeader>
@@ -252,7 +359,10 @@ function SubscriptionPage() {
             <Button variant="outline" onClick={() => setAlertConfirmOpen(false)}>
               {lang === "bn" ? "বাতিল" : "Cancel"}
             </Button>
-            <Button onClick={handleSendDueAlerts} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <Button
+              onClick={handleSendDueAlerts}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               <Bell className="w-4 h-4 mr-2" />
               {lang === "bn" ? "পাঠান" : "Send"}
             </Button>
@@ -267,21 +377,24 @@ function SubscriptionPage() {
             <DialogHeader>
               <DialogTitle>{lang === "bn" ? "চাঁদা আদায়" : "Collect Subscription"}</DialogTitle>
               <DialogDescription>
-                {collectData && (lang === "bn" 
-                  ? `${collectData.member.full_name} এর চাঁদা আদায় করছেন।`
-                  : `Collecting subscription for ${collectData.member.full_name}.`)}
+                {collectData &&
+                  (lang === "bn"
+                    ? `${collectData.member.full_name} এর চাঁদা আদায় করছেন।`
+                    : `Collecting subscription for ${collectData.member.full_name}.`)}
               </DialogDescription>
             </DialogHeader>
             <div className="py-6">
               <div className="grid gap-2">
                 <Label htmlFor="amount">{lang === "bn" ? "প্রাপ্ত টাকা:" : "Paid amount:"}</Label>
-                <Input 
-                  id="amount" 
-                  type="number" 
+                <Input
+                  id="amount"
+                  type="number"
                   min="0"
                   autoFocus
                   value={collectData?.paid || ""}
-                  onChange={(e) => setCollectData(prev => prev ? {...prev, paid: e.target.value} : null)} 
+                  onChange={(e) =>
+                    setCollectData((prev) => (prev ? { ...prev, paid: e.target.value } : null))
+                  }
                 />
               </div>
             </div>

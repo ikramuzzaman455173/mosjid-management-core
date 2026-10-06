@@ -1,4 +1,13 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useI18n } from "@/lib/i18n";
 
 interface DeleteDialogProps {
@@ -20,16 +29,17 @@ export function DeleteDialog({ id, onClose, onConfirm, title, description }: Del
             {title || (lang === "bn" ? "আপনি কি নিশ্চিত?" : "Are you sure?")}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {description || (lang === "bn" 
-              ? "এই তথ্যটি ডিলিট করলে তা আর ফিরে পাওয়া যাবে না।" 
-              : "This action cannot be undone. This will permanently delete the record.")}
+            {description ||
+              (lang === "bn"
+                ? "এই তথ্যটি ডিলিট করলে তা আর ফিরে পাওয়া যাবে না।"
+                : "This action cannot be undone. This will permanently delete the record.")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onClose}>
             {lang === "bn" ? "বাতিল" : "Cancel"}
           </AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={() => {
               if (id) {

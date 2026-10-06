@@ -50,7 +50,8 @@ function ZakatPage() {
   const { t, lang } = useI18n();
   const qc = useQueryClient();
   const { data: permData } = usePermissions();
-  const canCreate = permData?.isSuperAdmin || permData?.permissions?.has("donations & zakat.create");
+  const canCreate =
+    permData?.isSuperAdmin || permData?.permissions?.has("donations & zakat.create");
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<any>(null);
   const [editing, setEditing] = useState<Donation | null>(null);
@@ -60,7 +61,11 @@ function ZakatPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["zakat-donations"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("donations").select("*").eq("kind", "zakat").order("donation_date", { ascending: false });
+      const { data, error } = await supabase
+        .from("donations")
+        .select("*")
+        .eq("kind", "zakat")
+        .order("donation_date", { ascending: false });
       if (error) throw error;
       return data as Donation[];
     },
@@ -90,7 +95,10 @@ function ZakatPage() {
       const { error } = await supabase.from("donations").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => { toast.success(t("deleted")); qc.invalidateQueries({ queryKey: ["zakat-donations"] }); },
+    onSuccess: () => {
+      toast.success(t("deleted"));
+      qc.invalidateQueries({ queryKey: ["zakat-donations"] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -98,31 +106,68 @@ function ZakatPage() {
 
   const columns: Column<Donation>[] = [
     { key: "date", header: t("date"), cell: (d) => fmtDate(d.donation_date, lang) },
-    { key: "donor", header: lang === "bn" ? "দাতা" : "Donor", cell: (d) => (
-      <div>
-        <div className="font-medium">{d.donor_name}</div>
-        <div className="text-xs text-muted-foreground">{d.donor_phone ?? "—"}</div>
-      </div>
-    )},
-    { key: "receipt", header: lang === "bn" ? "রসিদ নং" : "Receipt", cell: (d) => d.receipt_no ?? "—" },
-    { key: "amt", header: t("amount"), className: "text-right", cell: (d) => (
-      <span className="font-semibold text-success">{fmtCurrency(Number(d.amount), lang)}</span>
-    )},
-    { key: "act", header: t("actions"), className: "text-right", cell: (d) => (
-      <div className="flex gap-1 justify-end">
-        <PermissionGuard module="Donations & Zakat" action="Edit" fallback={<></>}>
-          <Hint label={t("edit")}><Button size="icon" variant="ghost" onClick={() => { setEditing(d); setForm({
-            donor_name: d.donor_name, donor_phone: d.donor_phone ?? "", amount: Number(d.amount), kind: d.kind,
-            donation_date: d.donation_date ?? "", receipt_no: d.receipt_no ?? "", notes: d.notes ?? "",
-          }); setOpen(true); }}><Pencil className="w-4 h-4" /></Button></Hint>
-        </PermissionGuard>
-        <PermissionGuard module="Donations & Zakat" action="Delete" fallback={<></>}>
-          <Hint label={t("delete")}><Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
-            <Trash2 className="w-4 h-4 text-destructive" />
-          </Button></Hint>
-        </PermissionGuard>
-      </div>
-    )},
+    {
+      key: "donor",
+      header: lang === "bn" ? "দাতা" : "Donor",
+      cell: (d) => (
+        <div>
+          <div className="font-medium">{d.donor_name}</div>
+          <div className="text-xs text-muted-foreground">{d.donor_phone ?? "—"}</div>
+        </div>
+      ),
+    },
+    {
+      key: "receipt",
+      header: lang === "bn" ? "রসিদ নং" : "Receipt",
+      cell: (d) => d.receipt_no ?? "—",
+    },
+    {
+      key: "amt",
+      header: t("amount"),
+      className: "text-right",
+      cell: (d) => (
+        <span className="font-semibold text-success">{fmtCurrency(Number(d.amount), lang)}</span>
+      ),
+    },
+    {
+      key: "act",
+      header: t("actions"),
+      className: "text-right",
+      cell: (d) => (
+        <div className="flex gap-1 justify-end">
+          <PermissionGuard module="Donations & Zakat" action="Edit" fallback={<></>}>
+            <Hint label={t("edit")}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  setEditing(d);
+                  setForm({
+                    donor_name: d.donor_name,
+                    donor_phone: d.donor_phone ?? "",
+                    amount: Number(d.amount),
+                    kind: d.kind,
+                    donation_date: d.donation_date ?? "",
+                    receipt_no: d.receipt_no ?? "",
+                    notes: d.notes ?? "",
+                  });
+                  setOpen(true);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+          <PermissionGuard module="Donations & Zakat" action="Delete" fallback={<></>}>
+            <Hint label={t("delete")}>
+              <Button size="icon" variant="ghost" onClick={() => setDeleteId(d.id)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
+            </Hint>
+          </PermissionGuard>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -131,60 +176,119 @@ function ZakatPage() {
         icon={HandCoins}
         title={lang === "bn" ? "যাকাত" : "Zakat"}
         subtitle={`${t("total")} ${lang === "bn" ? "সংগ্রহ" : "Collection"}: ${fmtCurrency(total, lang)}`}
-        actionLabel={canCreate ? (lang === "bn" ? "নতুন যাকাত এন্ট্রি" : "New Zakat Entry") : undefined}
-        onAction={canCreate ? () => { setEditing(null); setForm(empty); setOpen(true); } : undefined}
+        actionLabel={
+          canCreate ? (lang === "bn" ? "নতুন যাকাত এন্ট্রি" : "New Zakat Entry") : undefined
+        }
+        onAction={
+          canCreate
+            ? () => {
+                setEditing(null);
+                setForm(empty);
+                setOpen(true);
+              }
+            : undefined
+        }
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <Card className="p-4 bg-primary/5 border-primary/20">
-          <h3 className="font-semibold text-primary mb-1">{lang === "bn" ? "যাকাত ক্যালকুলেটর" : "Zakat Calculator"}</h3>
-          <p className="text-xs text-muted-foreground mb-3">{lang === "bn" ? "সহজেই যাকাতের পরিমাণ হিসাব করুন।" : "Easily calculate zakat amount."}</p>
+          <h3 className="font-semibold text-primary mb-1">
+            {lang === "bn" ? "যাকাত ক্যালকুলেটর" : "Zakat Calculator"}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">
+            {lang === "bn" ? "সহজেই যাকাতের পরিমাণ হিসাব করুন।" : "Easily calculate zakat amount."}
+          </p>
           <Button variant="outline" size="sm" className="w-full" onClick={() => setCalcOpen(true)}>
             {lang === "bn" ? "ক্যালকুলেটর খুলুন" : "Open Calculator"}
           </Button>
         </Card>
       </div>
 
-      <DataTable data={data} columns={columns} loading={isLoading} searchKeys={["donor_name", "donor_phone", "receipt_no"]} />
+      <DataTable
+        data={data}
+        columns={columns}
+        loading={isLoading}
+        searchKeys={["donor_name", "donor_phone", "receipt_no"]}
+      />
 
-      <CrudDialog open={open} onOpenChange={setOpen} title={editing ? t("edit") : (lang === "bn" ? "নতুন যাকাত" : "New Zakat")} onSubmit={() => save.mutate()} saving={save.isPending}>
+      <CrudDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={editing ? t("edit") : lang === "bn" ? "নতুন যাকাত" : "New Zakat"}
+        onSubmit={() => save.mutate()}
+        saving={save.isPending}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1 md:col-span-2">
             <Label required>{lang === "bn" ? "দাতার নাম" : "Donor name"}</Label>
-            <Input required value={form.donor_name} onChange={(e) => setForm({ ...form, donor_name: e.target.value })} placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"} />
+            <Input
+              required
+              value={form.donor_name}
+              onChange={(e) => setForm({ ...form, donor_name: e.target.value })}
+              placeholder={lang === "bn" ? "যেমন: আব্দুর রহমান" : "e.g. Abdur Rahman"}
+            />
           </div>
           <div>
             <Label>{t("phone")}</Label>
-            <Input value={form.donor_phone} onChange={(e) => setForm({ ...form, donor_phone: e.target.value })} placeholder="01XXXXXXXXX" />
+            <Input
+              value={form.donor_phone}
+              onChange={(e) => setForm({ ...form, donor_phone: e.target.value })}
+              placeholder="01XXXXXXXXX"
+            />
           </div>
           <div>
             <Label required>{t("amount")} (৳)</Label>
-            <Input required type="number" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} placeholder="5000" />
+            <Input
+              required
+              type="number"
+              min="0"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
+              placeholder="5000"
+            />
           </div>
           <div>
             <Label>{t("date")}</Label>
-            <DatePicker  value={form.donation_date} onChange={(v) => setForm({ ...form, donation_date: v })} />
+            <DatePicker
+              value={form.donation_date}
+              onChange={(v) => setForm({ ...form, donation_date: v })}
+            />
           </div>
           <div>
             <Label>{lang === "bn" ? "রসিদ নং" : "Receipt No"}</Label>
-            <Input value={form.receipt_no} onChange={(e) => setForm({ ...form, receipt_no: e.target.value })} placeholder={lang === "bn" ? "রসিদ নং (ঐচ্ছিক)" : "Receipt No (optional)"} />
+            <Input
+              value={form.receipt_no}
+              onChange={(e) => setForm({ ...form, receipt_no: e.target.value })}
+              placeholder={lang === "bn" ? "রসিদ নং (ঐচ্ছিক)" : "Receipt No (optional)"}
+            />
           </div>
           <div className="col-span-1 md:col-span-2">
             <Label>{t("notes")}</Label>
-            <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder={lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."} />
+            <Textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder={
+                lang === "bn" ? "যেকোনো মন্তব্য বা বিবরণ..." : "Any comments or details..."
+              }
+            />
           </div>
         </div>
       </CrudDialog>
-      <DeleteDialog id={deleteId} onClose={() => setDeleteId(null)} onConfirm={(id) => del.mutate(id)} />
+      <DeleteDialog
+        id={deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={(id) => del.mutate(id)}
+      />
 
-      <ZakatCalculator 
-        open={calcOpen} 
-        onOpenChange={setCalcOpen} 
+      <ZakatCalculator
+        open={calcOpen}
+        onOpenChange={setCalcOpen}
         onApplyZakat={(amount) => {
           setEditing(null);
           setForm({ ...empty, amount });
           setOpen(true);
-        }} 
+        }}
       />
     </div>
   );

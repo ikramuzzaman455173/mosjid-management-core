@@ -38,10 +38,23 @@ export function FileUpload({ folder, onUploaded, accept, label }: FileUploadProp
         type="file"
         accept={accept}
         className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) handle(f); }}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handle(f);
+        }}
       />
-      <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => inputRef.current?.click()}>
-        {busy ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={busy}
+        onClick={() => inputRef.current?.click()}
+      >
+        {busy ? (
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+        ) : (
+          <Upload className="w-4 h-4 mr-2" />
+        )}
         {label ?? (lang === "bn" ? "ফাইল আপলোড" : "Upload file")}
       </Button>
     </div>

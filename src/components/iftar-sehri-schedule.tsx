@@ -25,8 +25,13 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
   const [timings, setTimings] = useState<Timings | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<{ type: "Iftar" | "Sehri"; hours: number; minutes: number; seconds: number } | null>(null);
-  
+  const [timeLeft, setTimeLeft] = useState<{
+    type: "Iftar" | "Sehri";
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
+
   const city = settings.prayerCity || "Dhaka";
   const country = settings.prayerCountry || "Bangladesh";
 
@@ -53,7 +58,9 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
     setError(false);
     try {
       // Using Aladhan API (Free, no key required)
-      const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=1`);
+      const res = await fetch(
+        `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=1`,
+      );
       const data = await res.json();
       if (data.code === 200) {
         setTimings({
@@ -73,7 +80,7 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
 
   const calculateTimeLeft = (t: Timings) => {
     const now = new Date();
-    
+
     // Parse Fajr (Sehri) and Maghrib (Iftar) times for today
     const [fajrHour, fajrMin] = t.Fajr.split(":").map(Number);
     const [maghribHour, maghribMin] = t.Maghrib.split(":").map(Number);
@@ -103,7 +110,7 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
     }
 
     const diff = targetTime.getTime() - now.getTime();
-    
+
     if (diff > 0) {
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -133,7 +140,6 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
         </DialogHeader>
 
         <div className="py-4 space-y-6">
-          
           <div className="flex items-center justify-between">
             <Badge variant="outline" className="flex items-center gap-1.5 px-3 py-1">
               <MapPin className="w-3 h-3" />
@@ -151,7 +157,12 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
             </div>
           ) : error ? (
             <div className="text-center py-10 text-destructive">
-              <p>{tbn("Failed to load schedule. Please check your internet connection.", "সময়সূচি লোড করতে ব্যর্থ। ইন্টারনেট সংযোগ চেক করুন।")}</p>
+              <p>
+                {tbn(
+                  "Failed to load schedule. Please check your internet connection.",
+                  "সময়সূচি লোড করতে ব্যর্থ। ইন্টারনেট সংযোগ চেক করুন।",
+                )}
+              </p>
             </div>
           ) : timings ? (
             <>
@@ -159,27 +170,40 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
               {timeLeft && (
                 <Card className="p-6 bg-gradient-to-br from-gold/20 to-primary/10 border-0 flex flex-col items-center justify-center relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-4 opacity-10">
-                    {timeLeft.type === "Iftar" ? <Sunset className="w-24 h-24" /> : <Sunrise className="w-24 h-24" />}
+                    {timeLeft.type === "Iftar" ? (
+                      <Sunset className="w-24 h-24" />
+                    ) : (
+                      <Sunrise className="w-24 h-24" />
+                    )}
                   </div>
-                  
+
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    {tbn(`Time remaining for ${timeLeft.type}`, `পরবর্তী ${timeLeft.type === "Iftar" ? "ইফতারের" : "সেহরির"} বাকি`)}
+                    {tbn(
+                      `Time remaining for ${timeLeft.type}`,
+                      `পরবর্তী ${timeLeft.type === "Iftar" ? "ইফতারের" : "সেহরির"} বাকি`,
+                    )}
                   </h3>
-                  
+
                   <div className="flex items-center gap-3 text-3xl sm:text-4xl font-bold font-mono text-primary">
                     <div className="flex flex-col items-center">
-                      <span>{String(timeLeft.hours).padStart(2, '0')}</span>
-                      <span className="text-xs text-muted-foreground font-sans mt-1">{tbn("hrs", "ঘণ্টা")}</span>
+                      <span>{String(timeLeft.hours).padStart(2, "0")}</span>
+                      <span className="text-xs text-muted-foreground font-sans mt-1">
+                        {tbn("hrs", "ঘণ্টা")}
+                      </span>
                     </div>
                     <span className="pb-5 animate-pulse">:</span>
                     <div className="flex flex-col items-center">
-                      <span>{String(timeLeft.minutes).padStart(2, '0')}</span>
-                      <span className="text-xs text-muted-foreground font-sans mt-1">{tbn("min", "মিনিট")}</span>
+                      <span>{String(timeLeft.minutes).padStart(2, "0")}</span>
+                      <span className="text-xs text-muted-foreground font-sans mt-1">
+                        {tbn("min", "মিনিট")}
+                      </span>
                     </div>
                     <span className="pb-5 animate-pulse">:</span>
                     <div className="flex flex-col items-center">
-                      <span className="text-gold">{String(timeLeft.seconds).padStart(2, '0')}</span>
-                      <span className="text-xs text-muted-foreground font-sans mt-1">{tbn("sec", "সেকেন্ড")}</span>
+                      <span className="text-gold">{String(timeLeft.seconds).padStart(2, "0")}</span>
+                      <span className="text-xs text-muted-foreground font-sans mt-1">
+                        {tbn("sec", "সেকেন্ড")}
+                      </span>
                     </div>
                   </div>
                 </Card>
@@ -193,7 +217,9 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
                   <div className="text-2xl font-bold text-primary">
                     {formatTime12h(timings.Fajr)}
                   </div>
-                  <div className="text-xs text-muted-foreground">{tbn("Fajr Time", "ফজর ওয়াক্ত শুরু")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {tbn("Fajr Time", "ফজর ওয়াক্ত শুরু")}
+                  </div>
                 </Card>
 
                 <Card className="p-4 flex flex-col items-center text-center space-y-2 border-gold/20 bg-gold/5">
@@ -202,12 +228,13 @@ export function IftarSehriSchedule({ open, onOpenChange }: Props) {
                   <div className="text-2xl font-bold text-gold">
                     {formatTime12h(timings.Maghrib)}
                   </div>
-                  <div className="text-xs text-muted-foreground">{tbn("Maghrib Time", "মাগরিব ওয়াক্ত শুরু")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {tbn("Maghrib Time", "মাগরিব ওয়াক্ত শুরু")}
+                  </div>
                 </Card>
               </div>
             </>
           ) : null}
-          
         </div>
       </DialogContent>
     </Dialog>

@@ -56,7 +56,11 @@ export const rolesService = {
 
   async toggleRolePermission(roleId: string, permissionId: string, assign: boolean) {
     // Prevent modifying super admin permissions
-    const { data: role } = await supabase.from("roles" as any).select("name").eq("id", roleId).single();
+    const { data: role } = await supabase
+      .from("roles" as any)
+      .select("name")
+      .eq("id", roleId)
+      .single();
     if ((role as any)?.name === "super_admin") {
       throw new Error("Super Admin permissions cannot be modified");
     }
@@ -86,10 +90,8 @@ export const rolesService = {
 
     // Insert new
     if (permissionIds.length > 0) {
-      const inserts = permissionIds.map(pid => ({ role_id: roleId, permission_id: pid }));
-      const { error: insertErr } = await supabase
-        .from("role_permissions" as any)
-        .insert(inserts);
+      const inserts = permissionIds.map((pid) => ({ role_id: roleId, permission_id: pid }));
+      const { error: insertErr } = await supabase.from("role_permissions" as any).insert(inserts);
       if (insertErr) throw insertErr;
     }
   },
@@ -97,7 +99,8 @@ export const rolesService = {
   async getAssignedUsers(roleId: string) {
     const { data, error } = await supabase
       .from("user_roles" as any)
-      .select(`
+      .select(
+        `
         user_id,
         role_id,
         profiles (
@@ -106,14 +109,15 @@ export const rolesService = {
           email,
           avatar_url
         )
-      `)
+      `,
+      )
       .eq("role_id", roleId);
     if (error) throw error;
     // Map to flatter structure
     return data.map((ur: any) => ({
       user_id: ur.user_id,
       role_id: ur.role_id,
-      ...ur.profiles
+      ...ur.profiles,
     }));
   },
 
@@ -133,7 +137,11 @@ export const rolesService = {
 
   async updateRole(id: string, updates: Partial<Role>) {
     // Prevent modifying super admin metadata
-    const { data: role } = await supabase.from("roles" as any).select("name").eq("id", id).single();
+    const { data: role } = await supabase
+      .from("roles" as any)
+      .select("name")
+      .eq("id", id)
+      .single();
     if ((role as any)?.name === "super_admin") {
       throw new Error("Super Admin role cannot be modified");
     }
@@ -150,29 +158,39 @@ export const rolesService = {
 
   async deleteRole(id: string) {
     // Check if it's a system role
-    const { data: role } = await supabase.from("roles" as any).select("is_system").eq("id", id).single();
+    const { data: role } = await supabase
+      .from("roles" as any)
+      .select("is_system")
+      .eq("id", id)
+      .single();
     if ((role as any)?.is_system) {
       throw new Error("System roles cannot be deleted");
     }
 
-    const { error } = await supabase.from("roles" as any).delete().eq("id", id);
+    const { error } = await supabase
+      .from("roles" as any)
+      .delete()
+      .eq("id", id);
     if (error) throw error;
   },
-  
+
   async getStats() {
     const [rolesRes, usersRes] = await Promise.all([
-      supabase.from("roles" as any).select("*", { count: 'exact', head: true }),
-      supabase.from("user_roles" as any).select("*", { count: 'exact', head: true })
+      supabase.from("roles" as any).select("*", { count: "exact", head: true }),
+      supabase.from("user_roles" as any).select("*", { count: "exact", head: true }),
     ]);
-    
+
     // Get custom roles count
-    const { count: customRolesCount } = await supabase.from("roles" as any).select("*", { count: 'exact', head: true }).eq("is_system", false);
-    
+    const { count: customRolesCount } = await supabase
+      .from("roles" as any)
+      .select("*", { count: "exact", head: true })
+      .eq("is_system", false);
+
     return {
       totalRoles: rolesRes.count || 0,
       activeUsers: usersRes.count || 0,
       customRoles: customRolesCount || 0,
-      pendingRequests: 0 // Mock for now
+      pendingRequests: 0, // Mock for now
     };
-  }
+  },
 };

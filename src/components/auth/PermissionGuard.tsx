@@ -11,19 +11,19 @@ interface PermissionGuardProps {
   fallbackType?: "null" | "page"; // Determines what to show if 'fallback' is not explicitly provided
 }
 
-export function PermissionGuard({ 
-  module, 
-  action, 
-  children, 
-  fallback, 
+export function PermissionGuard({
+  module,
+  action,
+  children,
+  fallback,
   requireAdmin = false,
-  fallbackType = "null"
+  fallbackType = "null",
 }: PermissionGuardProps) {
   const { data, isLoading } = usePermissions();
 
   if (isLoading) {
     // Return null or a skeleton while loading permissions to prevent layout shift or flash of unauthorized content
-    return null; 
+    return null;
   }
 
   // Super Admins bypass all permission checks
@@ -39,7 +39,9 @@ export function PermissionGuard({
 
   // If no specific action is required, just checking if they have ANY permission for this module
   if (!action) {
-    const hasAnyModuleAccess = Array.from(data?.permissions || []).some(p => p.startsWith(`${module.toLowerCase()}.`));
+    const hasAnyModuleAccess = Array.from(data?.permissions || []).some((p) =>
+      p.startsWith(`${module.toLowerCase()}.`),
+    );
     if (!hasAnyModuleAccess) {
       const defaultFallback = fallbackType === "page" ? <AccessDenied /> : null;
       const renderFallback = fallback !== undefined ? fallback : defaultFallback;

@@ -58,7 +58,9 @@ function PrayerPage() {
 
   const { data: existing } = useQuery({
     queryKey: ["prayer", "exact", date],
-    queryFn: async () => (await supabase.from("prayer_times").select("*").eq("effective_date", date).maybeSingle()).data,
+    queryFn: async () =>
+      (await supabase.from("prayer_times").select("*").eq("effective_date", date).maybeSingle())
+        .data,
   });
 
   const { data: active } = useQuery({
@@ -72,11 +74,18 @@ function PrayerPage() {
         .limit(1)
         .maybeSingle();
       return data;
-    }
+    },
   });
   const { data: list, isLoading } = useQuery({
     queryKey: ["prayer-list"],
-    queryFn: async () => (await supabase.from("prayer_times").select("*").order("effective_date", { ascending: false }).limit(20)).data ?? [],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("prayer_times")
+          .select("*")
+          .order("effective_date", { ascending: false })
+          .limit(20)
+      ).data ?? [],
   });
 
   const [form, setForm] = useState<Record<string, string>>({});
@@ -84,20 +93,21 @@ function PrayerPage() {
   const save = useMutation({
     mutationFn: async () => {
       let payload: any = { effective_date: date };
-      
+
       // If there is no exact record, we will create a new one. Pre-fill with the active record's values so unaffected times carry over.
       if (!existing) {
-        SLOTS.forEach(s => {
+        SLOTS.forEach((s) => {
           payload[s.key] = (active as any)?.[s.key] ?? DEFAULT_TIMES[s.key].azan;
-          payload[`${s.key}_iqamah`] = (active as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah;
+          payload[`${s.key}_iqamah`] =
+            (active as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah;
         });
       }
 
       // Override with user changes
       payload = { ...payload, ...form };
-      
+
       // Clean empty strings and invalid columns
-      Object.keys(payload).forEach(k => payload[k] === "" && delete payload[k]);
+      Object.keys(payload).forEach((k) => payload[k] === "" && delete payload[k]);
       delete payload.jummah_iqamah; // Jummah iqamah column does not exist in schema
 
       if (existing) {
@@ -108,43 +118,77 @@ function PrayerPage() {
         if (error) throw error;
       }
     },
-    onSuccess: () => { 
-      toast.success(t("saved")); 
-      qc.invalidateQueries({ queryKey: ["prayer"] }); 
-      qc.invalidateQueries({ queryKey: ["prayer-list"] }); 
+    onSuccess: () => {
+      toast.success(t("saved"));
+      qc.invalidateQueries({ queryKey: ["prayer"] });
+      qc.invalidateQueries({ queryKey: ["prayer-list"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
 
   return (
     <div className="space-y-4">
-      <PageHeader icon={Clock} title={t("prayer_times")} subtitle={lang === "bn" ? "দৈনিক নামাজের সময়সূচী" : "Daily prayer schedule"} />
+      <PageHeader
+        icon={Clock}
+        title={t("prayer_times")}
+        subtitle={lang === "bn" ? "দৈনিক নামাজের সময়সূচী" : "Daily prayer schedule"}
+      />
 
       <Card className="p-4">
         <div className="flex items-center gap-3 mb-4">
           <Label className="shrink-0">{t("date")}:</Label>
-          <DatePicker  value={date} onChange={(v) => { setDate(v); setForm({}); }} className="max-w-xs" />
+          <DatePicker
+            value={date}
+            onChange={(v) => {
+              setDate(v);
+              setForm({});
+            }}
+            className="max-w-xs"
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {SLOTS.map((s) => {
             const Icon = s.icon;
             return (
-              <div key={s.key} className="p-4 border rounded-xl bg-card shadow-sm flex flex-col gap-3">
+              <div
+                key={s.key}
+                className="p-4 border rounded-xl bg-card shadow-sm flex flex-col gap-3"
+              >
                 <div className="flex items-center gap-2 border-b border-border/50 pb-2">
                   <div className="p-1.5 rounded-md bg-primary/10 text-primary">
                     <Icon className="w-4 h-4" />
                   </div>
                   <h4 className="font-semibold text-primary">{lang === "bn" ? s.bn : s.en}</h4>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-muted-foreground">{lang === "bn" ? "আযান/শুরু" : "Azan/Start"}</span>
-                    <TimePicker value={form[s.key] ?? (existing as any)?.[s.key] ?? (active as any)?.[s.key] ?? DEFAULT_TIMES[s.key].azan} onChange={(v) => setForm({ ...form, [s.key]: v })} />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {lang === "bn" ? "আযান/শুরু" : "Azan/Start"}
+                    </span>
+                    <TimePicker
+                      value={
+                        form[s.key] ??
+                        (existing as any)?.[s.key] ??
+                        (active as any)?.[s.key] ??
+                        DEFAULT_TIMES[s.key].azan
+                      }
+                      onChange={(v) => setForm({ ...form, [s.key]: v })}
+                    />
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-muted-foreground">{lang === "bn" ? "ইকামত" : "Iqamah"}</span>
-                    <TimePicker value={form[`${s.key}_iqamah`] ?? (existing as any)?.[`${s.key}_iqamah`] ?? (active as any)?.[`${s.key}_iqamah`] ?? DEFAULT_TIMES[s.key].iqamah} onChange={(v) => setForm({ ...form, [`${s.key}_iqamah`]: v })} />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {lang === "bn" ? "ইকামত" : "Iqamah"}
+                    </span>
+                    <TimePicker
+                      value={
+                        form[`${s.key}_iqamah`] ??
+                        (existing as any)?.[`${s.key}_iqamah`] ??
+                        (active as any)?.[`${s.key}_iqamah`] ??
+                        DEFAULT_TIMES[s.key].iqamah
+                      }
+                      onChange={(v) => setForm({ ...form, [`${s.key}_iqamah`]: v })}
+                    />
                   </div>
                 </div>
               </div>
@@ -152,14 +196,20 @@ function PrayerPage() {
           })}
         </div>
         <PermissionGuard module="Prayer Schedule" action="Edit" fallback={<></>}>
-          <Button className="mt-4 bg-primary w-full sm:w-auto" onClick={() => save.mutate()} disabled={save.isPending}>
+          <Button
+            className="mt-4 bg-primary w-full sm:w-auto"
+            onClick={() => save.mutate()}
+            disabled={save.isPending}
+          >
             {save.isPending ? t("saving") : t("save")}
           </Button>
         </PermissionGuard>
       </Card>
 
       <div className="space-y-3">
-        <h3 className="font-semibold text-primary px-1">{lang === "bn" ? "সাম্প্রতিক সময়সূচী" : "Recent schedules"}</h3>
+        <h3 className="font-semibold text-primary px-1">
+          {lang === "bn" ? "সাম্প্রতিক সময়সূচী" : "Recent schedules"}
+        </h3>
         <DataTable
           data={list as any[]}
           columns={[
@@ -168,11 +218,15 @@ function PrayerPage() {
               header: t("date"),
               cell: (r) => <span className="font-medium">{fmtDate(r.effective_date, lang)}</span>,
             },
-            ...SLOTS.map(s => ({
+            ...SLOTS.map((s) => ({
               key: s.key,
               header: lang === "bn" ? s.bn : s.en,
-              cell: (r: any) => <span className="text-xs">{r[s.key] ? toBnNum(format12h(r[s.key].slice(0, 5)), lang) : "—"}</span>,
-            }))
+              cell: (r: any) => (
+                <span className="text-xs">
+                  {r[s.key] ? toBnNum(format12h(r[s.key].slice(0, 5)), lang) : "—"}
+                </span>
+              ),
+            })),
           ]}
           loading={isLoading}
           hidePagination

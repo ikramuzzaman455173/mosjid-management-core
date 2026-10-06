@@ -2,7 +2,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 const BUCKET = "mosque-files";
 
-export async function uploadFile(folder: string, file: File): Promise<{ path: string; url: string }> {
+export async function uploadFile(
+  folder: string,
+  file: File,
+): Promise<{ path: string; url: string }> {
   const ext = file.name.split(".").pop() ?? "bin";
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const path = `${folder}/${Date.now()}_${safeName}`;

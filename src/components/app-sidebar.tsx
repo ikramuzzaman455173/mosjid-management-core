@@ -1,16 +1,45 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, HandCoins, Gift, TrendingUp, TrendingDown,
-  Wallet, Landmark, Smartphone, Package, Boxes, CalendarDays, UsersRound,
-  Megaphone, CalendarHeart, HandHeart, Beef, Sparkles, Image as ImageIcon,
-  BarChart3, Settings, ShieldCheck, FileText, Search, X
+  LayoutDashboard,
+  Users,
+  HandCoins,
+  Gift,
+  TrendingUp,
+  TrendingDown,
+  Wallet,
+  Landmark,
+  Smartphone,
+  Package,
+  Boxes,
+  CalendarDays,
+  UsersRound,
+  Megaphone,
+  CalendarHeart,
+  HandHeart,
+  Beef,
+  Sparkles,
+  Image as ImageIcon,
+  BarChart3,
+  Settings,
+  ShieldCheck,
+  FileText,
+  Search,
+  X,
 } from "lucide-react";
 import { MosqueIcon } from "@/components/ui/mosque-icon";
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -38,7 +67,12 @@ const groups: { label: string; items: Item[] }[] = [
       { key: "expenses", url: "/expenses", icon: TrendingDown, module: "Income & Expense" },
       { key: "cash_accounts", url: "/cash", icon: Wallet, module: "Cash Management" },
       { key: "bank_accounts", url: "/bank", icon: Landmark, module: "Bank & Mobile Banking" },
-      { key: "mobile_banking", url: "/mobile-banking", icon: Smartphone, module: "Bank & Mobile Banking" },
+      {
+        key: "mobile_banking",
+        url: "/mobile-banking",
+        icon: Smartphone,
+        module: "Bank & Mobile Banking",
+      },
     ],
   },
   {
@@ -72,7 +106,12 @@ const groups: { label: string; items: Item[] }[] = [
       { key: "gallery", url: "/gallery", icon: ImageIcon, module: "Gallery" },
       { key: "reports", url: "/reports", icon: BarChart3, module: "Reports" },
       { key: "users", url: "/users", icon: ShieldCheck, module: "User Management" },
-      { key: "role_permissions", url: "/roles-permissions", icon: ShieldCheck, module: "Role & Permission" },
+      {
+        key: "role_permissions",
+        url: "/roles-permissions",
+        icon: ShieldCheck,
+        module: "Role & Permission",
+      },
       { key: "audit_logs", url: "/audit-logs", icon: FileText, module: "Audit Logs" },
       { key: "settings", url: "/settings", icon: Settings, module: "Settings" },
     ],
@@ -99,33 +138,49 @@ export function AppSidebar() {
   // We are not capturing Cmd+K in the sidebar anymore, we will leave it for the global search.
   // The sidebar search is just a local filter now.
 
-  const filteredGroups = groups.map(grp => ({
-    ...grp,
-    items: grp.items.filter(item => {
-      // 1. Text filter
-      const matchesSearch = t(item.key).toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            item.key.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchesSearch) return false;
+  const filteredGroups = groups
+    .map((grp) => ({
+      ...grp,
+      items: grp.items.filter((item) => {
+        // 1. Text filter
+        const matchesSearch =
+          t(item.key).toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.key.toLowerCase().includes(searchQuery.toLowerCase());
+        if (!matchesSearch) return false;
 
-      // 2. Permission filter
-      if (isPermsLoading) return true; // Prevent layout shift while loading
-      if (permData?.isSuperAdmin) return true;
-      const requiredPerm = `${item.module.toLowerCase()}.view`;
-      return permData?.permissions?.has(requiredPerm) ?? false;
-    })
-  })).filter(grp => grp.items.length > 0);
+        // 2. Permission filter
+        if (isPermsLoading) return true; // Prevent layout shift while loading
+        if (permData?.isSuperAdmin) return true;
+        const requiredPerm = `${item.module.toLowerCase()}.view`;
+        return permData?.permissions?.has(requiredPerm) ?? false;
+      }),
+    }))
+    .filter((grp) => grp.items.length > 0);
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      <SidebarHeader className={cn("border-b border-sidebar-border py-4 transition-all duration-200", collapsed ? "px-0 items-center" : "px-3")}>
+      <SidebarHeader
+        className={cn(
+          "border-b border-sidebar-border py-4 transition-all duration-200",
+          collapsed ? "px-0 items-center" : "px-3",
+        )}
+      >
         <Link
           to="/dashboard"
           onClick={() => {
             if (isMobile) setOpenMobile(false);
           }}
-          className={cn("flex items-center cursor-pointer transition-opacity hover:opacity-90", collapsed ? "justify-center" : "gap-2.5")}
+          className={cn(
+            "flex items-center cursor-pointer transition-opacity hover:opacity-90",
+            collapsed ? "justify-center" : "gap-2.5",
+          )}
         >
-          <div className={cn("rounded-md bg-gradient-gold flex items-center justify-center shrink-0 transition-all duration-200", collapsed ? "w-8 h-8" : "w-9 h-9")}>
+          <div
+            className={cn(
+              "rounded-md bg-gradient-gold flex items-center justify-center shrink-0 transition-all duration-200",
+              collapsed ? "w-8 h-8" : "w-9 h-9",
+            )}
+          >
             <MosqueIcon className={cn("text-primary", collapsed ? "w-4 h-4" : "w-5 h-5")} />
           </div>
           {!collapsed && (
@@ -146,7 +201,7 @@ export function AppSidebar() {
               className="pl-10 pr-10 h-10 bg-sidebar-accent/30 hover:bg-sidebar-accent/50 border border-sidebar-border/50 text-sidebar-foreground focus-visible:bg-sidebar-accent/70 focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:border-sidebar-border shadow-sm text-sm rounded-md transition-all duration-300 placeholder:text-sidebar-foreground/50"
             />
             {searchQuery && (
-              <button 
+              <button
                 onClick={() => {
                   setSearchQuery("");
                   searchInputRef.current?.focus();
@@ -172,12 +227,19 @@ export function AppSidebar() {
               <SidebarMenu>
                 {grp.items.map((item) => {
                   const active = pathname === item.url || pathname.startsWith(item.url + "/");
-                  
+
                   if (isPermsLoading) {
                     return (
                       <SidebarMenuItem key={`skel-${item.url}`}>
-                        <div className={cn("flex w-full items-center gap-2 overflow-hidden rounded-md", collapsed ? "justify-center p-2 size-8" : "p-2 h-8")}>
-                          <Skeleton className={cn("shrink-0 rounded-md", collapsed ? "w-5 h-5" : "w-4 h-4")} />
+                        <div
+                          className={cn(
+                            "flex w-full items-center gap-2 overflow-hidden rounded-md",
+                            collapsed ? "justify-center p-2 size-8" : "p-2 h-8",
+                          )}
+                        >
+                          <Skeleton
+                            className={cn("shrink-0 rounded-md", collapsed ? "w-5 h-5" : "w-4 h-4")}
+                          />
                           {!collapsed && <Skeleton className="h-3.5 flex-1 max-w-[60%]" />}
                         </div>
                       </SidebarMenuItem>
@@ -187,7 +249,12 @@ export function AppSidebar() {
                   return (
                     <PermissionGuard key={item.url} module={item.module} action="View">
                       <SidebarMenuItem>
-                        <SidebarMenuButton asChild isActive={active} tooltip={t(item.key)} className={cn(collapsed && "justify-center")}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={active}
+                          tooltip={t(item.key)}
+                          className={cn(collapsed && "justify-center")}
+                        >
                           <Link
                             to={item.url}
                             onClick={() => {
@@ -195,9 +262,14 @@ export function AppSidebar() {
                                 setOpenMobile(false);
                               }
                             }}
-                            className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}
+                            className={cn(
+                              "flex items-center",
+                              collapsed ? "justify-center" : "gap-2.5",
+                            )}
                           >
-                            <item.icon className={cn("shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
+                            <item.icon
+                              className={cn("shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")}
+                            />
                             {!collapsed && <span className="truncate text-sm">{t(item.key)}</span>}
                           </Link>
                         </SidebarMenuButton>

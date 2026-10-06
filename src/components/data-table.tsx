@@ -1,12 +1,35 @@
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Hint } from "@/components/ui/hint";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis, PaginationFirst, PaginationLast } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+} from "@/components/ui/pagination";
 import { Search, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useMemo, useEffect, type ReactNode } from "react";
 
@@ -129,115 +152,126 @@ export function DataTable<T extends { id: string }>({
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Pagination Footer */}
       {!hidePagination && (
         <div className="flex items-center justify-between px-4 py-3 border-t bg-muted/10">
-        <div className="flex-1 flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex-1 flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline">
+                {lang === "bn" ? "প্রতি পৃষ্ঠায়:" : "Rows per page:"}
+              </span>
+              <Select
+                value={pageSize.toString()}
+                onValueChange={(v) => {
+                  setPageSize(Number(v));
+                  setPageIndex(0);
+                }}
+                disabled={!hasData}
+              >
+                <SelectTrigger className="h-8 w-[70px]">
+                  <SelectValue placeholder={pageSize} />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[5, 10, 20, 50, 100].map((size) => (
+                    <SelectItem key={size} value={size.toString()}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              {hasData ? (
+                <>
+                  {lang === "bn" ? "দেখাচ্ছে" : "Showing"} {pageIndex * pageSize + 1}{" "}
+                  {lang === "bn" ? "থেকে" : "to"}{" "}
+                  {Math.min((pageIndex + 1) * pageSize, filtered.length)}{" "}
+                  {lang === "bn" ? "মোট" : "of"} {filtered.length}{" "}
+                  {lang === "bn" ? "টি" : "entries"}
+                </>
+              ) : lang === "bn" ? (
+                "কোনো ডাটা নেই"
+              ) : (
+                "No entries found"
+              )}
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline">{lang === "bn" ? "প্রতি পৃষ্ঠায়:" : "Rows per page:"}</span>
-            <Select
-              value={pageSize.toString()}
-              onValueChange={(v) => {
-                setPageSize(Number(v));
-                setPageIndex(0);
-              }}
-              disabled={!hasData}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[5, 10, 20, 50, 100].map((size) => (
-                  <SelectItem key={size} value={size.toString()}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="hidden sm:block">
-            {hasData ? (
-              <>
-                {lang === "bn" ? "দেখাচ্ছে" : "Showing"} {pageIndex * pageSize + 1} {lang === "bn" ? "থেকে" : "to"}{" "}
-                {Math.min((pageIndex + 1) * pageSize, filtered.length)} {lang === "bn" ? "মোট" : "of"} {filtered.length} {lang === "bn" ? "টি" : "entries"}
-              </>
-            ) : (
-              lang === "bn" ? "কোনো ডাটা নেই" : "No entries found"
-            )}
+            <Pagination className="mx-0 justify-end w-auto">
+              <PaginationContent>
+                <PaginationItem>
+                  <Hint label={lang === "bn" ? "প্রথম পাতা" : "First Page"} side="top">
+                    <PaginationFirst
+                      onClick={() => setPageIndex(0)}
+                      disabled={!hasData || pageIndex === 0}
+                    />
+                  </Hint>
+                </PaginationItem>
+                <PaginationItem>
+                  <Hint label={lang === "bn" ? "পূর্ববর্তী পাতা" : "Previous Page"} side="top">
+                    <PaginationPrevious
+                      onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+                      disabled={!hasData || pageIndex === 0}
+                    />
+                  </Hint>
+                </PaginationItem>
+
+                <div className="hidden md:flex flex-row items-center gap-1">
+                  {Array.from({ length: totalPages }).map((_, i) => {
+                    if (
+                      i === 0 ||
+                      i === totalPages - 1 ||
+                      (i >= pageIndex - 1 && i <= pageIndex + 1)
+                    ) {
+                      return (
+                        <PaginationItem key={i}>
+                          <PaginationLink
+                            isActive={pageIndex === i}
+                            onClick={() => setPageIndex(i)}
+                            className="cursor-pointer"
+                          >
+                            {i + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    }
+                    if (i === pageIndex - 2 || i === pageIndex + 2) {
+                      return (
+                        <PaginationItem key={i}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <div className="text-sm font-medium mx-2 md:hidden flex items-center">
+                  {pageIndex + 1} / {Math.max(1, totalPages)}
+                </div>
+
+                <PaginationItem>
+                  <Hint label={lang === "bn" ? "পরবর্তী পাতা" : "Next Page"} side="top">
+                    <PaginationNext
+                      onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
+                      disabled={!hasData || pageIndex >= totalPages - 1}
+                    />
+                  </Hint>
+                </PaginationItem>
+                <PaginationItem>
+                  <Hint label={lang === "bn" ? "শেষ পাতা" : "Last Page"} side="top">
+                    <PaginationLast
+                      onClick={() => setPageIndex(totalPages - 1)}
+                      disabled={!hasData || pageIndex >= totalPages - 1}
+                    />
+                  </Hint>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
-        
-        <div className="flex items-center gap-2">
-          <Pagination className="mx-0 justify-end w-auto">
-            <PaginationContent>
-              <PaginationItem>
-                <Hint label={lang === "bn" ? "প্রথম পাতা" : "First Page"} side="top">
-                  <PaginationFirst
-                    onClick={() => setPageIndex(0)}
-                    disabled={!hasData || pageIndex === 0}
-                  />
-                </Hint>
-              </PaginationItem>
-              <PaginationItem>
-                <Hint label={lang === "bn" ? "পূর্ববর্তী পাতা" : "Previous Page"} side="top">
-                  <PaginationPrevious
-                    onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-                    disabled={!hasData || pageIndex === 0}
-                  />
-                </Hint>
-              </PaginationItem>
-              
-              <div className="hidden md:flex flex-row items-center gap-1">
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  if (i === 0 || i === totalPages - 1 || (i >= pageIndex - 1 && i <= pageIndex + 1)) {
-                    return (
-                      <PaginationItem key={i}>
-                        <PaginationLink
-                          isActive={pageIndex === i}
-                          onClick={() => setPageIndex(i)}
-                          className="cursor-pointer"
-                        >
-                          {i + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  }
-                  if (i === pageIndex - 2 || i === pageIndex + 2) {
-                    return (
-                      <PaginationItem key={i}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-
-              <div className="text-sm font-medium mx-2 md:hidden flex items-center">
-                {pageIndex + 1} / {Math.max(1, totalPages)}
-              </div>
-
-              <PaginationItem>
-                <Hint label={lang === "bn" ? "পরবর্তী পাতা" : "Next Page"} side="top">
-                  <PaginationNext
-                    onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
-                    disabled={!hasData || pageIndex >= totalPages - 1}
-                  />
-                </Hint>
-              </PaginationItem>
-              <PaginationItem>
-                <Hint label={lang === "bn" ? "শেষ পাতা" : "Last Page"} side="top">
-                  <PaginationLast
-                    onClick={() => setPageIndex(totalPages - 1)}
-                    disabled={!hasData || pageIndex >= totalPages - 1}
-                  />
-                </Hint>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      </div>
       )}
     </Card>
   );

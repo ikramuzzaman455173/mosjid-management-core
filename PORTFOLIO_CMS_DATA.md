@@ -13,9 +13,9 @@ Published Date: 2026-10-03
 Live URL: https://smart-mosjid-core.vercel.app
 Admin URL: https://smart-mosjid-core.vercel.app/dashboard
 Repo Frontend URL: https://github.com/ikramuzzaman455173/mosjid-management-core
-Repo Backend URL: 
-Docs URL: 
-Figma URL: 
+Repo Backend URL:
+Docs URL:
+Figma URL:
 
 Tech Stack: React 19, TanStack Start, TanStack Router, TypeScript, Supabase PostgreSQL, Nitro SSR
 Tools: Tailwind CSS v4, Radix UI, TanStack Query, Recharts, jsPDF, Lucide React, Zod
@@ -28,13 +28,13 @@ Description (Copy the Markdown below into your Rich Text Editor):
 
 ## ⚡ Project Snapshot
 
-| Project Attribute | Details |
-| :--- | :--- |
-| **Product / Domain** | **Mosque Operations & Accounts ERP** (Modeled for Maijzhena Baytul Mamur Jame Mosque) |
-| **Agency Partner** | **[Shopnojal IT](https://shopnojalit.com/)** (Software & ERP Solutions) |
-| **Role & Execution** | **Lead Full-Stack Developer** (Built in 5 weeks, working part-time alongside a full-time job) |
-| **Core Architecture** | React 19 + TanStack Start (SSR) + Supabase PostgreSQL + Tailwind CSS v4 |
-| **Key Integrations** | Supabase Auth, Recharts, Browser PDF Printing, QR Code Generator |
+| Project Attribute         | Details                                                                                                                            |
+| :------------------------ | :--------------------------------------------------------------------------------------------------------------------------------- |
+| **Product / Domain**      | **Mosque Operations & Accounts ERP** (Modeled for Maijzhena Baytul Mamur Jame Mosque)                                              |
+| **Agency Partner**        | **[Shopnojal IT](https://shopnojalit.com/)** (Software & ERP Solutions)                                                            |
+| **Role & Execution**      | **Lead Full-Stack Developer** (Built in 5 weeks, working part-time alongside a full-time job)                                      |
+| **Core Architecture**     | React 19 + TanStack Start (SSR) + Supabase PostgreSQL + Tailwind CSS v4                                                            |
+| **Key Integrations**      | Supabase Auth, Recharts, Browser PDF Printing, QR Code Generator                                                                   |
 | **Live Interactive Test** | **[smart-mosjid-core.vercel.app](https://smart-mosjid-core.vercel.app)** (Guest Login: `mosqueadmin@info.com` / `MosqueAdmin@123`) |
 
 > 💡 **Product Showcase Note:**
@@ -68,34 +68,44 @@ Description (Copy the Markdown below into your Rich Text Editor):
 ## 🖼️ Key Interfaces & Live Interactive Testing
 
 ### 1. 📊 Accounts & Analytics Dashboard
+
 <!-- [IMAGE_PLACEHOLDER: Accounts & Analytics Dashboard] -->
+
 - **What it does:** Displays total cash in hand, bank balance, monthly collection charts, and today's prayer schedule.
 - **Who can access:** Mosque Committee & Admin.
-- **Live Test Link:** *⚡ [Open Live Dashboard](https://smart-mosjid-core.vercel.app/dashboard) — 1-Click Guest Admin login available.*
+- **Live Test Link:** _⚡ [Open Live Dashboard](https://smart-mosjid-core.vercel.app/dashboard) — 1-Click Guest Admin login available._
 
 ### 2. 📺 Smart TV Prayer Screen (For Mosque Prayer Hall)
+
 <!-- [IMAGE_PLACEHOLDER: Smart TV Prayer Hall Screen] -->
+
 - **What it does:** Full-screen layout made for 55"+ TVs showing large clock, next prayer countdown, and authentic Hadiths.
 - **Who can access:** Public screen for the mosque prayer hall (no login needed).
-- **Live Test Link:** *⚡ [Open Smart TV Display](https://smart-mosjid-core.vercel.app/tv-display) — Real-time live countdown.*
+- **Live Test Link:** _⚡ [Open Smart TV Display](https://smart-mosjid-core.vercel.app/tv-display) — Real-time live countdown._
 
 ### 3. 👥 Member List & Printable QR ID Cards
+
 <!-- [IMAGE_PLACEHOLDER: Member List & Printable QR ID Cards] -->
+
 - **What it does:** Add and edit mosque members, track monthly subscriptions, and print plastic ID cards with QR codes.
 - **Who can access:** Committee Secretary & Admin.
-- **Live Test Link:** *⚡ [Open Member Directory](https://smart-mosjid-core.vercel.app/members) — View members and print cards.*
+- **Live Test Link:** _⚡ [Open Member Directory](https://smart-mosjid-core.vercel.app/members) — View members and print cards._
 
 ### 4. 🧾 Money Receipts & Financial Records
+
 <!-- [IMAGE_PLACEHOLDER: Money Receipts & Financial Records] -->
+
 - **What it does:** Record donations and monthly fees by cash, bank, or bKash/Nagad, and print instant PDF money receipts.
 - **Who can access:** Cashier, Accountant, and Admin.
-- **Live Test Link:** *⚡ [Open Income & Receipts](https://smart-mosjid-core.vercel.app/income) — Test 1-click receipt printing.*
+- **Live Test Link:** _⚡ [Open Income & Receipts](https://smart-mosjid-core.vercel.app/income) — Test 1-click receipt printing._
 
 ### 5. 🌙 Islamic Tools (Ramadan, Zakat & Qurbani)
+
 <!-- [IMAGE_PLACEHOLDER: Islamic Tools (Ramadan, Zakat & Qurbani)] -->
+
 - **What it does:** 30-day Sehri and Iftar schedule, simple Zakat/Fitra calculator, and Eid Qurbani meat share management.
 - **Who can access:** Mosque Imam & Committee.
-- **Live Test Link:** *⚡ [Open Islamic Tools](https://smart-mosjid-core.vercel.app/ramadan) — Explore Ramadan and calculators.*
+- **Live Test Link:** _⚡ [Open Islamic Tools](https://smart-mosjid-core.vercel.app/ramadan) — Explore Ramadan and calculators._
 
 ---
 
@@ -110,6 +120,7 @@ Description (Copy the Markdown below into your Rich Text Editor):
 > "By keeping the code simple, focusing on what the mosque users actually need, and avoiding unnecessary complexity, we built a reliable system that replaced months of paper hassle in just 5 weeks."
 
 Features Array:
+
 1. Title: Accounts & Financial Dashboard
    Short Description: Shows total income, expenses, cash in hand, bank balance, and monthly collection charts in one place.
    Order: 1
@@ -141,6 +152,7 @@ Features Array:
    Icon: Moon
 
 Metrics Array:
+
 - Label: Architecture | Value: React 19 + TanStack Start SSR
 - Label: Agency & Delivery | Value: Shopnojal IT (100% On-Time 5-Week Sprint)
 - Label: Work Model | Value: Part-Time Contract alongside Full-Time Job

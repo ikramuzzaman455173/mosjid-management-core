@@ -27,8 +27,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toaster]:!bg-rose-50 dark:group-[.toaster]:!bg-rose-950/40 group-[.toaster]:!border-rose-500/30 group-[.toaster]:!text-rose-900 dark:group-[.toaster]:!text-rose-200",
           warning:
             "group-[.toaster]:!bg-amber-50 dark:group-[.toaster]:!bg-amber-950/40 group-[.toaster]:!border-amber-500/30 group-[.toaster]:!text-amber-900 dark:group-[.toaster]:!text-amber-200",
-          info:
-            "group-[.toaster]:!bg-blue-50 dark:group-[.toaster]:!bg-blue-950/40 group-[.toaster]:!border-blue-500/30 group-[.toaster]:!text-blue-900 dark:group-[.toaster]:!text-blue-200",
+          info: "group-[.toaster]:!bg-blue-50 dark:group-[.toaster]:!bg-blue-950/40 group-[.toaster]:!border-blue-500/30 group-[.toaster]:!text-blue-900 dark:group-[.toaster]:!text-blue-200",
         },
       }}
       {...props}

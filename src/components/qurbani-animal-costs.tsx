@@ -32,11 +32,14 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
   const { data: animals = [], isLoading } = useQuery({
     queryKey: ["qurbani_animals"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("qurbani_animals").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from("qurbani_animals")
+        .select("*")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
-    enabled: open
+    enabled: open,
   });
 
   const addMutation = useMutation({
@@ -46,9 +49,15 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["qurbani_animals"] });
-      setForm({ type: "Cow", cost: "", processing_cost: "", vendor: "", purchase_date: new Date().toISOString().slice(0, 10) });
+      setForm({
+        type: "Cow",
+        cost: "",
+        processing_cost: "",
+        vendor: "",
+        purchase_date: new Date().toISOString().slice(0, 10),
+      });
       toast.success(tbn("Added successfully", "সফলভাবে যুক্ত হয়েছে"));
-    }
+    },
   });
 
   const deleteMutation = useMutation({
@@ -59,7 +68,7 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["qurbani_animals"] });
       toast.success(tbn("Deleted successfully", "মুছে ফেলা হয়েছে"));
-    }
+    },
   });
 
   const handleAdd = () => {
@@ -69,18 +78,28 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
       cost: Number(form.cost),
       processing_cost: Number(form.processing_cost) || 0,
       vendor: form.vendor,
-      purchase_date: form.purchase_date
+      purchase_date: form.purchase_date,
     });
   };
 
   const handleDelete = (id: string) => {
-    if (confirm(tbn("Are you sure you want to delete this record?", "আপনি কি নিশ্চিত যে এটি মুছে ফেলতে চান?"))) {
+    if (
+      confirm(
+        tbn(
+          "Are you sure you want to delete this record?",
+          "আপনি কি নিশ্চিত যে এটি মুছে ফেলতে চান?",
+        ),
+      )
+    ) {
       deleteMutation.mutate(id);
     }
   };
 
   const totalAnimalCost = animals.reduce((sum: number, a: any) => sum + Number(a.cost), 0);
-  const totalOtherCosts = animals.reduce((sum: number, a: any) => sum + Number(a.processing_cost || 0), 0);
+  const totalOtherCosts = animals.reduce(
+    (sum: number, a: any) => sum + Number(a.processing_cost || 0),
+    0,
+  );
   const grandTotal = totalAnimalCost + totalOtherCosts;
 
   return (
@@ -95,15 +114,14 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
 
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-muted/20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
             <Card className="p-4 md:col-span-1 space-y-4 h-fit sticky top-0">
               <h3 className="font-semibold">{tbn("Add New Expense", "নতুন খরচ যোগ করুন")}</h3>
-              
+
               <div>
                 <Label>{tbn("Animal Type", "পশুর ধরন")}</Label>
-                <select 
+                <select
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1 cursor-pointer"
-                  value={form.type} 
+                  value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value })}
                 >
                   <option value="Cow">{tbn("Cow (গরু)", "গরু (Cow)")}</option>
@@ -115,20 +133,43 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
 
               <div>
                 <Label>{tbn("Animal Price", "পশুর মূল্য")} (৳) *</Label>
-                <Input type="number" min="0" value={form.cost} onChange={e => setForm({...form, cost: e.target.value})} placeholder="85000" className="mt-1" />
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.cost}
+                  onChange={(e) => setForm({ ...form, cost: e.target.value })}
+                  placeholder="85000"
+                  className="mt-1"
+                />
               </div>
 
               <div>
                 <Label>{tbn("Processing/Transport Cost", "অন্যান্য খরচ")} (৳)</Label>
-                <Input type="number" min="0" value={form.processing_cost} onChange={e => setForm({...form, processing_cost: e.target.value})} placeholder="5000" className="mt-1" />
-              </div>
-              
-              <div>
-                <Label>{tbn("Vendor/Source", "বিক্রেতা/উৎস")}</Label>
-                <Input value={form.vendor} onChange={e => setForm({...form, vendor: e.target.value})} placeholder={tbn("e.g. Gabtoli Haat", "যেমন: গাবতলী হাট")} className="mt-1" />
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.processing_cost}
+                  onChange={(e) => setForm({ ...form, processing_cost: e.target.value })}
+                  placeholder="5000"
+                  className="mt-1"
+                />
               </div>
 
-              <Button className="w-full" onClick={handleAdd} disabled={!form.cost || addMutation.isPending}>
+              <div>
+                <Label>{tbn("Vendor/Source", "বিক্রেতা/উৎস")}</Label>
+                <Input
+                  value={form.vendor}
+                  onChange={(e) => setForm({ ...form, vendor: e.target.value })}
+                  placeholder={tbn("e.g. Gabtoli Haat", "যেমন: গাবতলী হাট")}
+                  className="mt-1"
+                />
+              </div>
+
+              <Button
+                className="w-full"
+                onClick={handleAdd}
+                disabled={!form.cost || addMutation.isPending}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 {tbn("Add to List", "তালিকায় যুক্ত করুন")}
               </Button>
@@ -137,21 +178,33 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
             <div className="md:col-span-2 space-y-4">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <Card className="p-3 bg-primary/5 border-primary/20">
-                  <div className="text-xs text-muted-foreground">{tbn("Total Animal Cost", "মোট পশুর মূল্য")}</div>
-                  <div className="font-bold text-lg text-primary">{fmtCurrency(totalAnimalCost, lang)}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {tbn("Total Animal Cost", "মোট পশুর মূল্য")}
+                  </div>
+                  <div className="font-bold text-lg text-primary">
+                    {fmtCurrency(totalAnimalCost, lang)}
+                  </div>
                 </Card>
                 <Card className="p-3 bg-warning/5 border-warning/20">
-                  <div className="text-xs text-muted-foreground">{tbn("Other Costs", "অন্যান্য খরচ")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {tbn("Other Costs", "অন্যান্য খরচ")}
+                  </div>
                   <div className="font-bold text-lg">{fmtCurrency(totalOtherCosts, lang)}</div>
                 </Card>
                 <Card className="p-3 bg-destructive/5 border-destructive/20 col-span-2 sm:col-span-1">
-                  <div className="text-xs text-muted-foreground">{tbn("Grand Total", "সর্বমোট")}</div>
-                  <div className="font-bold text-lg text-destructive">{fmtCurrency(grandTotal, lang)}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {tbn("Grand Total", "সর্বমোট")}
+                  </div>
+                  <div className="font-bold text-lg text-destructive">
+                    {fmtCurrency(grandTotal, lang)}
+                  </div>
                 </Card>
               </div>
 
-              <h3 className="font-semibold text-lg mt-6">{tbn("Purchased Animals", "ক্রয়কৃত পশু")} ({animals.length})</h3>
-              
+              <h3 className="font-semibold text-lg mt-6">
+                {tbn("Purchased Animals", "ক্রয়কৃত পশু")} ({animals.length})
+              </h3>
+
               {isLoading ? (
                 <div className="text-center p-8">{tbn("Loading...", "লোড হচ্ছে...")}</div>
               ) : animals.length === 0 ? (
@@ -162,11 +215,27 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
               ) : (
                 <div className="space-y-3">
                   {animals.map((a: any, i: number) => (
-                    <Card key={a.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <Card
+                      key={a.id}
+                      className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="outline" className="bg-primary/5">#{animals.length - i}</Badge>
-                          <span className="font-bold">{tbn(a.type, a.type === "Cow" ? "গরু" : a.type === "Goat" ? "ছাগল" : a.type === "Sheep" ? "ভেড়া" : "উট")}</span>
+                          <Badge variant="outline" className="bg-primary/5">
+                            #{animals.length - i}
+                          </Badge>
+                          <span className="font-bold">
+                            {tbn(
+                              a.type,
+                              a.type === "Cow"
+                                ? "গরু"
+                                : a.type === "Goat"
+                                  ? "ছাগল"
+                                  : a.type === "Sheep"
+                                    ? "ভেড়া"
+                                    : "উট",
+                            )}
+                          </span>
                           <span className="text-sm text-muted-foreground">• {a.purchase_date}</span>
                         </div>
                         <div className="text-sm">
@@ -190,7 +259,6 @@ export function QurbaniAnimalCosts({ open, onOpenChange }: Props) {
                 </div>
               )}
             </div>
-            
           </div>
         </div>
       </DialogContent>

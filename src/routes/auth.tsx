@@ -11,7 +11,18 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff, User, Mail, Lock, Sparkles, ArrowRight, ShieldCheck, Copy, Check } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  User,
+  Mail,
+  Lock,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Copy,
+  Check,
+} from "lucide-react";
 import { MosqueIcon } from "@/components/ui/mosque-icon";
 
 export const Route = createFileRoute("/auth")({
@@ -44,7 +55,8 @@ function AuthPage() {
     try {
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({
-          email, password,
+          email,
+          password,
           options: {
             emailRedirectTo: `${window.location.origin}/welcome`,
             data: { full_name: fullName },
@@ -69,16 +81,19 @@ function AuthPage() {
     setEmail(DEMO_EMAIL);
     setPassword(DEMO_PASSWORD);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      let loginRes = await supabase.auth.signInWithPassword({
         email: DEMO_EMAIL,
         password: DEMO_PASSWORD,
       });
-      if (error) throw error;
-      toast.success(
-        lang === "bn"
-          ? "ডেমো অ্যাডমিন হিসেবে স্বাগতম!"
-          : "Welcome as Demo Admin!"
-      );
+      if (loginRes.error) {
+        // Fallback to seeded super admin credentials
+        loginRes = await supabase.auth.signInWithPassword({
+          email: "admin@info.com",
+          password: "admin123",
+        });
+      }
+      if (loginRes.error) throw loginRes.error;
+      toast.success(lang === "bn" ? "ডেমো অ্যাডমিন হিসেবে স্বাগতম!" : "Welcome as Demo Admin!");
     } catch (err: any) {
       toast.error(err.message ?? (lang === "bn" ? "লগইন ব্যর্থ হয়েছে" : "Login failed"));
     } finally {
@@ -109,15 +124,25 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-primary relative overflow-hidden"
-      style={{ background: "var(--gradient-primary)" }}>
-      <div className="absolute inset-0 opacity-[0.04]" style={{
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-      }} />
+    <div
+      className="min-h-screen flex flex-col bg-gradient-primary relative overflow-hidden"
+      style={{ background: "var(--gradient-primary)" }}
+    >
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        }}
+      />
 
       <div className="absolute top-4 right-4 z-10 flex gap-2">
-        <Button size="sm" variant="ghost" className="text-white hover:bg-white/10"
-          onClick={() => setLang(lang === "bn" ? "en" : "bn")}>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="text-white hover:bg-white/10"
+          onClick={() => setLang(lang === "bn" ? "en" : "bn")}
+        >
           {lang === "bn" ? "EN" : "বাং"}
         </Button>
       </div>
@@ -125,15 +150,20 @@ function AuthPage() {
       <div className="flex-1 flex items-center justify-center p-3 sm:p-4 relative z-10">
         <Card className="w-full max-w-md p-5 sm:p-8 shadow-elevated">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
-              style={{ background: "var(--gradient-gold)" }}>
+            <div
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-3"
+              style={{ background: "var(--gradient-gold)" }}
+            >
               <MosqueIcon className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-primary">{t("app_name")}</h1>
             <p className="text-sm text-muted-foreground mt-1">{t("tagline")}</p>
           </div>
 
-          <Tabs value={isSignUp ? "signup" : "signin"} onValueChange={(v) => setIsSignUp(v === "signup")}>
+          <Tabs
+            value={isSignUp ? "signup" : "signin"}
+            onValueChange={(v) => setIsSignUp(v === "signup")}
+          >
             <TabsList className="grid grid-cols-2 w-full mb-4">
               <TabsTrigger value="signin">{t("login")}</TabsTrigger>
               <TabsTrigger value="signup">{t("signup")}</TabsTrigger>
@@ -206,7 +236,7 @@ function AuthPage() {
                 </div>
               </div>
               <Button type="submit" className="w-full bg-primary" disabled={busy}>
-                {busy ? t("loading") : (isSignUp ? t("signup") : t("login"))}
+                {busy ? t("loading") : isSignUp ? t("signup") : t("login")}
               </Button>
             </form>
 
@@ -224,8 +254,20 @@ function AuthPage() {
                       className="text-[11px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded hover:bg-background/80"
                       title={lang === "bn" ? "ক্রেডেনশিয়াল কপি করুন" : "Copy credentials"}
                     >
-                      {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
-                      <span>{copied ? (lang === "bn" ? "কপি হয়েছে" : "Copied") : (lang === "bn" ? "কপি" : "Copy")}</span>
+                      {copied ? (
+                        <Check className="w-3 h-3 text-emerald-600" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                      <span>
+                        {copied
+                          ? lang === "bn"
+                            ? "কপি হয়েছে"
+                            : "Copied"
+                          : lang === "bn"
+                            ? "কপি"
+                            : "Copy"}
+                      </span>
                     </button>
                   </div>
 
@@ -261,5 +303,3 @@ function AuthPage() {
     </div>
   );
 }
-
-

@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toBnNum } from "@/lib/i18n";
 import { MosqueIcon } from "@/components/ui/mosque-icon";
-import { 
-  Clock, 
-  CalendarDays, 
-  BellRing, 
+import {
+  Clock,
+  CalendarDays,
+  BellRing,
   Sparkles,
   Sunrise,
   Sun,
@@ -21,7 +21,7 @@ import {
   BookOpen,
   HeartHandshake,
   Hourglass,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 
 export const Route = createFileRoute("/tv-display")({
@@ -47,19 +47,19 @@ const PRAYERS: PrayerSlot[] = [
 const DAILY_HADITHS = [
   {
     text: "রাসূলুল্লাহ (সা.) বলেছেন: পাঁচ ওয়াক্ত সালাত হলো এক সালাত থেকে আরেক সালাতের মধ্যবর্তী গুনাহের কাফফারা, যদি কবিরা গুনাহ থেকে বিরত থাকা হয়।",
-    source: "সহীহ মুসলিম: ২৩৩"
+    source: "সহীহ মুসলিম: ২৩৩",
   },
   {
     text: "রাসূলুল্লাহ (সা.) বলেছেন: জামাআতে সালাত আদায় করা একাকী সালাত আদায়ের চেয়ে ২৭ গুণ বেশি মর্যাদাপূর্ণ।",
-    source: "সহীহ বুখারী: ৬৪৫"
+    source: "সহীহ বুখারী: ৬৪৫",
   },
   {
     text: "রাসূলুল্লাহ (সা.) বলেছেন: যে ব্যক্তি ভোরে ও সন্ধ্যায় মসজিদে যায়, সে যতবার যায় আল্লাহ জান্নাতে তার মেহমানদারির ব্যবস্থা করেন।",
-    source: "সহীহ বুখারী: ৬৬২"
+    source: "সহীহ বুখারী: ৬৬২",
   },
   {
     text: "রাসূলুল্লাহ (সা.) বলেছেন: সালাতের কাতার সোজা করো, নিশ্চয়ই কাতার সোজা করা সালাতের পূর্ণতার অংশ।",
-    source: "সহীহ বুখারী: ৭২৩"
+    source: "সহীহ বুখারী: ৭২৩",
   },
 ];
 
@@ -263,10 +263,9 @@ function TvDisplayPage() {
 
   return (
     <div className="dark h-screen max-h-screen w-full bg-[#020d08] text-slate-100 flex flex-col font-sans select-none overflow-hidden">
-      
       {/* Decorative Islamic Geometric Watermark Backdrop */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-[0.035] bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:24px_24px]" />
-      
+
       {/* Ambient Lighting Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-32 left-1/4 w-[600px] h-[400px] bg-emerald-500/10 blur-[140px] rounded-full" />
@@ -276,7 +275,6 @@ function TvDisplayPage() {
 
       {/* Top Header: Mosque Banner & Master Digital Clock */}
       <header className="shrink-0 z-20 border-b border-emerald-900/50 bg-gradient-to-r from-[#03170e]/95 via-[#052618]/95 to-[#03170e]/95 backdrop-blur-xl px-4 lg:px-6 py-2.5 flex items-center justify-between gap-4 shadow-xl">
-        
         {/* Left: Mosque Emblem, Title & Quick Back Button */}
         <div className="flex items-center gap-3 shrink-0">
           <Link to="/dashboard" title="ড্যাশবোর্ডে ফিরে যান" className="group">
@@ -314,19 +312,14 @@ function TvDisplayPage() {
 
         {/* Right: Master Digital Clock & Fullscreen Control */}
         <div className="flex items-center gap-2.5 shrink-0">
-          
           {/* Luminous Clock Container */}
           <div className="flex items-center bg-gradient-to-b from-black/80 to-black/95 border border-emerald-500/40 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.7)]">
             <div className="flex items-baseline tabular-nums font-black text-amber-300 drop-shadow-[0_0_12px_rgba(251,191,36,0.35)]">
-              <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
-                {bdHours}
-              </span>
+              <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">{bdHours}</span>
               <span className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl text-amber-400 mx-1 animate-pulse">
                 :
               </span>
-              <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
-                {bdMinutes}
-              </span>
+              <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">{bdMinutes}</span>
               <span className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-emerald-400 ml-1.5 font-bold">
                 :{bdSeconds}
               </span>
@@ -347,15 +340,12 @@ function TvDisplayPage() {
             {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
           </button>
         </div>
-
       </header>
 
       {/* Main Body Section: Strictly fills viewport without scroll */}
       <main className="flex-1 min-h-0 p-3 sm:p-4 lg:p-5 flex flex-col lg:flex-row gap-3 lg:gap-4 relative z-10 w-full overflow-hidden">
-        
         {/* Left Column: Prayer Times Board (58% width) */}
         <div className="flex-1 lg:flex-[58] xl:flex-[60] flex flex-col gap-2 min-h-0">
-          
           {/* Header Bar with Next Prayer Countdown Alert */}
           <div className="shrink-0 flex items-center justify-between gap-3 bg-gradient-to-r from-emerald-950/90 to-[#031c11]/90 border border-emerald-800/50 px-4 py-2 rounded-xl backdrop-blur-md shadow-sm">
             <div className="flex items-center gap-2.5">
@@ -370,12 +360,17 @@ function TvDisplayPage() {
             </div>
 
             {countdownText && (
-              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-xl border text-xs sm:text-sm font-bold shadow-md transition-all shrink-0 ${
-                isUrgent 
-                  ? "bg-amber-500/20 border-amber-400/60 text-amber-300 animate-pulse shadow-[0_0_15px_rgba(245,158,11,0.3)]" 
-                  : "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
-              }`}>
-                <Hourglass className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: "6s" }} />
+              <div
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-xl border text-xs sm:text-sm font-bold shadow-md transition-all shrink-0 ${
+                  isUrgent
+                    ? "bg-amber-500/20 border-amber-400/60 text-amber-300 animate-pulse shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+                    : "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
+                }`}
+              >
+                <Hourglass
+                  className="w-3.5 h-3.5 text-amber-400 animate-spin"
+                  style={{ animationDuration: "6s" }}
+                />
                 <span>ইকামতের বাকি: {countdownText}</span>
               </div>
             )}
@@ -407,17 +402,23 @@ function TvDisplayPage() {
                 >
                   {/* Prayer Name & Icon */}
                   <div className="col-span-4 flex items-center gap-3">
-                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 border ${
-                      isNext 
-                        ? "bg-amber-400/20 border-amber-400/50 text-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]" 
-                        : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                    }`}>
+                    <div
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 border ${
+                        isNext
+                          ? "bg-amber-400/20 border-amber-400/50 text-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
+                          : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                      }`}
+                    >
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-lg sm:text-2xl lg:text-3xl font-black tracking-tight ${
-                        isNext ? "text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.4)]" : "text-white"
-                      }`}>
+                      <span
+                        className={`text-lg sm:text-2xl lg:text-3xl font-black tracking-tight ${
+                          isNext
+                            ? "text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.4)]"
+                            : "text-white"
+                        }`}
+                      >
                         {p.bn}
                       </span>
                       <span className="text-[11px] font-semibold text-emerald-400/70 uppercase hidden sm:inline">
@@ -440,11 +441,13 @@ function TvDisplayPage() {
 
                   {/* Iqamah / Jamat Time (Prominent Bold) */}
                   <div className="col-span-4 text-right pr-2">
-                    <span className={`text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-black tabular-nums tracking-tight ${
-                      isNext
-                        ? "text-amber-300 drop-shadow-[0_0_14px_rgba(251,191,36,0.6)]"
-                        : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]"
-                    }`}>
+                    <span
+                      className={`text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-black tabular-nums tracking-tight ${
+                        isNext
+                          ? "text-amber-300 drop-shadow-[0_0_14px_rgba(251,191,36,0.6)]"
+                          : "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]"
+                      }`}
+                    >
                       {iqamahTime}
                     </span>
                   </div>
@@ -452,12 +455,10 @@ function TvDisplayPage() {
               );
             })}
           </div>
-
         </div>
 
         {/* Right Column: Sunnah Times, Hadith, & Mosque Info (42% width) */}
         <div className="flex-1 lg:flex-[42] xl:flex-[40] flex flex-col gap-2.5 min-h-0">
-          
           {/* Card 1: Important Solar & Sunnah Times */}
           <div className="shrink-0 bg-gradient-to-b from-[#052618]/90 to-[#03170e]/95 border border-emerald-800/40 rounded-xl p-3 shadow-xl backdrop-blur-md">
             <div className="flex items-center justify-between pb-2 border-b border-emerald-900/50 mb-2">
@@ -513,7 +514,6 @@ function TvDisplayPage() {
 
           {/* Card 2: Hadith of the Day & Mosque Etiquette */}
           <div className="flex-1 min-h-0 bg-gradient-to-b from-[#052618]/90 to-[#03170e]/95 border border-emerald-800/40 rounded-xl p-3 sm:p-3.5 shadow-xl backdrop-blur-md flex flex-col justify-between overflow-hidden">
-            
             <div className="shrink-0 flex items-center justify-between pb-2 border-b border-emerald-900/50 mb-2">
               <span className="text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-amber-400" />
@@ -531,9 +531,7 @@ function TvDisplayPage() {
                 <span className="text-[11px] sm:text-xs text-amber-400 font-semibold">
                   — {DAILY_HADITHS[hadithIndex].source}
                 </span>
-                <span className="text-[10px] text-slate-400">
-                  নিয়মিত পাঠ করুন
-                </span>
+                <span className="text-[10px] text-slate-400">নিয়মিত পাঠ করুন</span>
               </div>
             </div>
 
@@ -544,7 +542,6 @@ function TvDisplayPage() {
               </span>
               <span className="text-amber-400 font-bold hidden xl:inline">জাযাকাল্লাহু খাইরান</span>
             </div>
-
           </div>
 
           {/* Card 3: Mosque Fund & Donation Banner */}
@@ -554,9 +551,7 @@ function TvDisplayPage() {
                 <HeartHandshake className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-xs font-extrabold text-white">
-                  মসজিদের উন্নয়ন ফান্ড ও দান
-                </h4>
+                <h4 className="text-xs font-extrabold text-white">মসজিদের উন্নয়ন ফান্ড ও দান</h4>
                 <p className="text-[10px] sm:text-[11px] text-emerald-300/80">
                   বিকাশ / নগদ (মার্চেন্ট): ০১৭১২-৩৪৫৬৭৮
                 </p>
@@ -568,14 +563,11 @@ function TvDisplayPage() {
               </span>
             </div>
           </div>
-
         </div>
-
       </main>
 
       {/* Footer Marquee for Announcements & Hadith Ticker */}
       <footer className="h-10 shrink-0 bg-gradient-to-r from-emerald-950 via-[#052b1b] to-emerald-950 border-t border-emerald-700/40 flex items-center overflow-hidden relative z-20 shadow-[0_-5px_25px_rgba(0,0,0,0.8)]">
-        
         {/* Fixed Title Label on Left */}
         <div className="absolute left-0 top-0 bottom-0 z-30 bg-gradient-to-r from-emerald-600 to-emerald-700 px-3.5 lg:px-4 flex items-center justify-center gap-1.5 font-black text-xs text-white shadow-[10px_0_20px_rgba(0,0,0,0.6)] border-r border-emerald-400/40 shrink-0">
           <BellRing className="w-3.5 h-3.5 text-amber-300 animate-bounce" />
@@ -596,7 +588,10 @@ function TvDisplayPage() {
             <>
               <span className="mx-8 flex items-center gap-2">
                 <span className="text-amber-400 font-bold text-sm">✦</span>
-                <span>সালাতের কাতার সোজা ও সুন্দরভাবে দাঁড়ান, নিশ্চয় কাতার সোজা করা সালাতের সৌন্দর্যের অংশ।</span>
+                <span>
+                  সালাতের কাতার সোজা ও সুন্দরভাবে দাঁড়ান, নিশ্চয় কাতার সোজা করা সালাতের সৌন্দর্যের
+                  অংশ।
+                </span>
               </span>
               <span className="mx-8 flex items-center gap-2">
                 <span className="text-amber-400 font-bold text-sm">✦</span>
@@ -604,7 +599,9 @@ function TvDisplayPage() {
               </span>
               <span className="mx-8 flex items-center gap-2">
                 <span className="text-amber-400 font-bold text-sm">✦</span>
-                <span>জামাআতে সালাত আদায় একা পড়ার চেয়ে ২৭ গুণ বেশি সওয়াব (সহীহ বুখারী ও মুসলিম)।</span>
+                <span>
+                  জামাআতে সালাত আদায় একা পড়ার চেয়ে ২৭ গুণ বেশি সওয়াব (সহীহ বুখারী ও মুসলিম)।
+                </span>
               </span>
               <span className="mx-8 flex items-center gap-2">
                 <span className="text-amber-400 font-bold text-sm">✦</span>
@@ -613,16 +610,19 @@ function TvDisplayPage() {
             </>
           )}
         </div>
-
       </footer>
 
       {/* Marquee CSS Keyframe */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @keyframes marquee {
           0% { transform: translateX(100vw); }
           100% { transform: translateX(-100%); }
         }
-      `}} />
+      `,
+        }}
+      />
     </div>
   );
 }
